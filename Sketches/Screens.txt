@@ -1,0 +1,5 @@
+1. Start Screen (Eigene Liste)
+2. Suche Screen
+3. Detailansicht (1-2)
+4. Top 30 Screen
+5. Freunde Screen
