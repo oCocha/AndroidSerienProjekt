@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
+    <item android:id="@+id/series_Search" android:title="@string/series_Search"
+        android:orderInCategory="100" app:showAsAction="always" />
+    <item android:id="@+id/series_Top_30" android:title="@string/series_Top_30"
+        android:orderInCategory="100" app:showAsAction="always" />
+    <item android:id="@+id/series_Friend" android:title="@string/series_Friend"
+        android:orderInCategory="100" app:showAsAction="always" />
+</menu>
