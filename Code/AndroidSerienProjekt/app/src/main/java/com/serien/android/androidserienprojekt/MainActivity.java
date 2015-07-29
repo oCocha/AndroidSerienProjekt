@@ -1,5 +1,6 @@
 package com.serien.android.androidserienprojekt;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -38,14 +39,17 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.series_Search) {
             Intent startSearchActivity = new Intent(this, SearchActivity.class);
             startActivity(startSearchActivity);
+            MainActivity.this.finish();
             return true;
         }else if (id == R.id.series_Top_30) {
             Intent startTop30Activity = new Intent(this, Top30Activity.class);
             startActivity(startTop30Activity);
+            MainActivity.this.finish();
             return true;
         }else if (id == R.id.series_Friend) {
             Intent startFriendsActivity = new Intent(this, FriendsActivity.class);
             startActivity(startFriendsActivity);
+            MainActivity.this.finish();
             return true;
         }
 

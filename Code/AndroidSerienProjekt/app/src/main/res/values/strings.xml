@@ -8,11 +8,16 @@
     <string name="seriesRating">Serienwertung</string>
     <string name="seriesActors">Serienschauspieler</string>
     <string name="seriesPlot">Plot der Serie</string>
+
     <string name="searchButton">Suche</string>
+    <string name="addButton">Hinzufügen</string>
+
     <string name="action_settings">Noch nicht gesetzt</string>
     <string name="series_Search">Suche</string>
     <string name="series_Top_30">Top 30</string>
+    <string name="series_Main">Start</string>
     <string name="series_Friend">Freunde</string>
+
     <string name="title_activity_test">TestActivity</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_top30">Top30Activity</string>

@@ -1,10 +1,12 @@
 package com.serien.android.androidserienprojekt.activities;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.serien.android.androidserienprojekt.MainActivity;
 import com.serien.android.androidserienprojekt.R;
 
 public class Top30Activity extends ActionBarActivity {
@@ -30,7 +32,20 @@ public class Top30Activity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.series_Search) {
+            Intent startSearchActivity = new Intent(this, SearchActivity.class);
+            startActivity(startSearchActivity);
+            Top30Activity.this.finish();
+            return true;
+        }else if (id == R.id.series_Main) {
+            Intent startMainActivity = new Intent(this, MainActivity.class);
+            startActivity(startMainActivity);
+            Top30Activity.this.finish();
+            return true;
+        }else if (id == R.id.series_Friend) {
+            Intent startFriendsActivity = new Intent(this, FriendsActivity.class);
+            startActivity(startFriendsActivity);
+            Top30Activity.this.finish();
             return true;
         }
 

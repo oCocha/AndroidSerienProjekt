@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import com.serien.android.androidserienprojekt.activities.SearchActivity;
 import com.serien.android.androidserienprojekt.activities.TestActivity;
+import com.serien.android.androidserienprojekt.domain.SeriesItem;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -40,6 +41,7 @@ public class SeriesDataProvider {
     public final String URL_KEY_RATING = "imdbRating";
     public final String URL_KEY_PLOT = "Plot";
     public final String URL_KEY_IMAGE = "Poster";
+    SeriesItem tempSeriesItem;
     String searchURL = "";
     String tempImageURL;
     String tempName;
@@ -50,7 +52,7 @@ public class SeriesDataProvider {
 
 
     public void startSeriesFetching(String searchURL) {
-        this.searchURL = searchURL;
+        this.searchURL = searchURL.replace(" ", "+");;
         getSeriesData(searchURL);
     }
 
@@ -113,15 +115,16 @@ public class SeriesDataProvider {
                 tempActors = seriesSearchResult.getString(URL_KEY_ACTORS);
                 tempPlot = seriesSearchResult.getString(URL_KEY_PLOT);
                 tempImageURL = seriesSearchResult.getString(URL_KEY_IMAGE);
+                tempSeriesItem = new SeriesItem(tempName, tempYear, tempActors, tempRating, tempPlot, tempImageURL);
             } catch (Throwable t) {
-
+                System.out.println("Spackt");
             }
-            SearchActivity.nameTextView.setText(tempName);
-            SearchActivity.actorsTextView.setText(tempRating);
-            SearchActivity.ratingTextView.setText(tempActors);
-            SearchActivity.yearTextView.setText(tempYear);
-            SearchActivity.plotTextView.setText(tempPlot);
-            new ImageDownloader(SearchActivity.seriesImageView).execute(tempImageURL);
+            SearchActivity.nameTextView.setText(tempSeriesItem.getName());
+            SearchActivity.actorsTextView.setText(tempSeriesItem.getActors());
+            SearchActivity.ratingTextView.setText(tempSeriesItem.getRating());
+            SearchActivity.yearTextView.setText(tempSeriesItem.getYear());
+            SearchActivity.plotTextView.setText(tempSeriesItem.getPlot());
+            new ImageDownloader(SearchActivity.seriesImageView).execute(tempSeriesItem.getImgPath());
             }
         }
 

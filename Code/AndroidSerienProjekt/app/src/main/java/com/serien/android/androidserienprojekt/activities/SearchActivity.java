@@ -1,5 +1,6 @@
 package com.serien.android.androidserienprojekt.activities;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.serien.android.androidserienprojekt.MainActivity;
 import com.serien.android.androidserienprojekt.R;
 import com.serien.android.androidserienprojekt.persistence.SeriesDataProvider;
 
@@ -31,7 +33,7 @@ public class SearchActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test);
+        setContentView(R.layout.activity_search);
         initUI();
         initListener();
     }
@@ -42,7 +44,8 @@ public class SearchActivity extends ActionBarActivity {
                 String tempString = seriesEditText.getText().toString();
                 sdp.startSeriesFetching(tempString);
             }
-        });    }
+        });
+    }
 
     private void initUI() {
         seriesImageView = (ImageView) findViewById(R.id.seriesImageView);
@@ -58,7 +61,7 @@ public class SearchActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_test, menu);
+        getMenuInflater().inflate(R.menu.menu_search, menu);
         return true;
     }
 
@@ -70,7 +73,20 @@ public class SearchActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.series_Main) {
+            Intent startMainActivity = new Intent(this, MainActivity.class);
+            startActivity(startMainActivity);
+            SearchActivity.this.finish();
+            return true;
+        }else if (id == R.id.series_Top_30) {
+            Intent startTop30Activity = new Intent(this, Top30Activity.class);
+            startActivity(startTop30Activity);
+            SearchActivity.this.finish();
+            return true;
+        }else if (id == R.id.series_Friend) {
+            Intent startFriendsActivity = new Intent(this, FriendsActivity.class);
+            startActivity(startFriendsActivity);
+            SearchActivity.this.finish();
             return true;
         }
 
