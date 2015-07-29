@@ -13,12 +13,14 @@ import android.widget.TextView;
 
 import com.serien.android.androidserienprojekt.MainActivity;
 import com.serien.android.androidserienprojekt.R;
+import com.serien.android.androidserienprojekt.domain.SeriesItem;
+import com.serien.android.androidserienprojekt.persistence.ImageDownloader;
 import com.serien.android.androidserienprojekt.persistence.SeriesDataProvider;
 
 import org.json.JSONObject;
 
 //Dies ist die SearchActivity, in welcher Serien per AsyncTask gesucht und falls vorhanden angezeigt werden
-public class SearchActivity extends ActionBarActivity {
+public class SearchActivity extends ActionBarActivity implements SeriesDataProvider.OnSeriesDataProvidedListener{
 
     public static ImageView seriesImageView;
     public static TextView nameTextView;
@@ -44,9 +46,13 @@ public class SearchActivity extends ActionBarActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String tempString = seriesEditText.getText().toString();
-                sdp.startSeriesFetching(tempString);
+                startDataFetching(tempString);
             }
         });
+    }
+
+    private void startDataFetching(String tempString) {
+        sdp.startSeriesFetching(this, tempString);
     }
 
     //Initialisiert die UI-Elemente
@@ -59,6 +65,16 @@ public class SearchActivity extends ActionBarActivity {
         ratingTextView = (TextView) findViewById(R.id.ratingTextView);
         seriesEditText = (EditText) findViewById(R.id.seriesEditText);
         searchButton = (Button) findViewById(R.id.searchButton);
+    }
+
+    public void onSeriesDataReceived(SeriesItem seriesItem) {
+        System.out.println("CALLLLLLLLLLLLLBACKKKKKKKKKKK");
+        nameTextView.setText(seriesItem.getName());
+        actorsTextView.setText(seriesItem.getActors());
+        ratingTextView.setText(seriesItem.getRating());
+        yearTextView.setText(seriesItem.getYear());
+        plotTextView.setText(seriesItem.getPlot());
+        new ImageDownloader(SearchActivity.seriesImageView).execute(seriesItem.getImgPath());
     }
 
     @Override

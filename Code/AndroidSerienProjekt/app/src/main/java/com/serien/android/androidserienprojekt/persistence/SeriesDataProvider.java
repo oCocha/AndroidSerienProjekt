@@ -27,6 +27,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Created by oCocha on 27.07.2015.
@@ -43,7 +44,8 @@ public class SeriesDataProvider {
     public final String URL_KEY_RATING = "imdbRating";
     public final String URL_KEY_PLOT = "Plot";
     public final String URL_KEY_IMAGE = "Poster";
-    SeriesItem tempSeriesItem;
+    private OnSeriesDataProvidedListener onSeriesDataProvidedListener;
+    SeriesItem seriesData;
     String searchURL = "";
     String tempImageURL;
     String tempName;
@@ -53,7 +55,8 @@ public class SeriesDataProvider {
     String tempPlot;
 
     //wandelt den übergebenen String in eine brauchbare SearchQuery um und übergibt sie weiter
-    public void startSeriesFetching(String searchURL) {
+    public void startSeriesFetching(OnSeriesDataProvidedListener onSeriesDataProvidedListener, String searchURL) {
+        this.onSeriesDataProvidedListener = onSeriesDataProvidedListener;
         this.searchURL = searchURL.replace(" ", "+");;
         getSeriesData(searchURL);
     }
@@ -118,16 +121,19 @@ public class SeriesDataProvider {
                 tempActors = seriesSearchResult.getString(URL_KEY_ACTORS);
                 tempPlot = seriesSearchResult.getString(URL_KEY_PLOT);
                 tempImageURL = seriesSearchResult.getString(URL_KEY_IMAGE);
-                tempSeriesItem = new SeriesItem(tempName, tempYear, tempActors, tempRating, tempPlot, tempImageURL);
             } catch (Throwable t) {
                 System.out.println("Spackt");
             }
+            seriesData = new SeriesItem(tempName, tempYear, tempRating, tempActors, tempPlot, tempImageURL);
+            onSeriesDataProvidedListener.onSeriesDataReceived(seriesData);
+            /*
             SearchActivity.nameTextView.setText(tempSeriesItem.getName());
             SearchActivity.actorsTextView.setText(tempSeriesItem.getActors());
             SearchActivity.ratingTextView.setText(tempSeriesItem.getRating());
             SearchActivity.yearTextView.setText(tempSeriesItem.getYear());
             SearchActivity.plotTextView.setText(tempSeriesItem.getPlot());
             new ImageDownloader(SearchActivity.seriesImageView).execute(tempSeriesItem.getImgPath());
+            */
             }
         }
 
@@ -154,6 +160,11 @@ public class SeriesDataProvider {
         } catch (MalformedURLException e) {
             System.out.println("Unable to create URL: " + e.toString());
         }
+    }
+
+    //Interface für das Bereitstellen der Seriesitems
+    public interface OnSeriesDataProvidedListener {
+        void onSeriesDataReceived(SeriesItem seriesData);
     }
 
 }
