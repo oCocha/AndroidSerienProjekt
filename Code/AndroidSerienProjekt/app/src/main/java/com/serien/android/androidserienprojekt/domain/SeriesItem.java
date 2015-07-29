@@ -3,6 +3,8 @@ package com.serien.android.androidserienprojekt.domain;
 /**
  * Created by oCocha on 29.07.2015.
  */
+
+//Dateiformat zum Abspeichern von Serien
 public class SeriesItem {
 
     private String name;

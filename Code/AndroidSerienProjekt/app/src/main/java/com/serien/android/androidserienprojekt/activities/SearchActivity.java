@@ -17,6 +17,7 @@ import com.serien.android.androidserienprojekt.persistence.SeriesDataProvider;
 
 import org.json.JSONObject;
 
+//Dies ist die SearchActivity, in welcher Serien per AsyncTask gesucht und falls vorhanden angezeigt werden
 public class SearchActivity extends ActionBarActivity {
 
     public static ImageView seriesImageView;
@@ -38,6 +39,7 @@ public class SearchActivity extends ActionBarActivity {
         initListener();
     }
 
+    //Setzt einen Onclicklistener auf den SuchButton, welcher die Suche der Serie startet
     private void initListener() {
         searchButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -47,6 +49,7 @@ public class SearchActivity extends ActionBarActivity {
         });
     }
 
+    //Initialisiert die UI-Elemente
     private void initUI() {
         seriesImageView = (ImageView) findViewById(R.id.seriesImageView);
         nameTextView = (TextView) findViewById(R.id.nameTextView);
@@ -72,7 +75,7 @@ public class SearchActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        //Navigation zwischen den Activities
         if (id == R.id.series_Main) {
             Intent startMainActivity = new Intent(this, MainActivity.class);
             startActivity(startMainActivity);

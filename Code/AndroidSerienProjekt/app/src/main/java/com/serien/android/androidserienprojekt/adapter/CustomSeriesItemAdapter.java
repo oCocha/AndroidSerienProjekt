@@ -11,13 +11,17 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.serien.android.androidserienprojekt.R;
+import com.serien.android.androidserienprojekt.activities.SearchActivity;
 import com.serien.android.androidserienprojekt.domain.SeriesItem;
+import com.serien.android.androidserienprojekt.persistence.ImageDownloader;
 
 import java.util.ArrayList;
 
 /**
  * Created by oCocha on 29.07.2015.
  */
+
+//Adapter um ein Gridview mit Seriesitems aus einer Arraylist zu befüllen
 public class CustomSeriesItemAdapter extends BaseAdapter{
 
     private Context mContext;
@@ -52,14 +56,14 @@ public class CustomSeriesItemAdapter extends BaseAdapter{
             TextView actorsTextView = (TextView) grid.findViewById(R.id.actorsTextView);
             TextView ratingTextView = (TextView) grid.findViewById(R.id.ratingTextView);
             TextView plotTextView = (TextView) grid.findViewById(R.id.plotTextView);
-//            ImageView seriesImageView = (ImageView) grid.findViewById(R.id.seriesImageView);
+            ImageView seriesImageView = (ImageView) grid.findViewById(R.id.seriesImageView);
 
             nameTextView.setText(gridItems.get(position).getName());
             yearTextView.setText(gridItems.get(position).getYear());
             actorsTextView.setText(gridItems.get(position).getActors());
             ratingTextView.setText(gridItems.get(position).getRating());
             plotTextView.setText(gridItems.get(position).getPlot());
-//            seriesImageView.setImageURI(Uri.parse(gridItems.get(position).getPath()));
+            new ImageDownloader(seriesImageView).execute(gridItems.get(position).getImgPath());
         } else {
             grid = (View) convertView;
         }

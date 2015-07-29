@@ -31,6 +31,8 @@ import java.net.URL;
 /**
  * Created by oCocha on 27.07.2015.
  */
+
+//Lädt die Daten zu einer gesuchten Serie und zeigt sie in der Searchactivity an(SCHLECHT -> CALLBACK einbauen)
 public class SeriesDataProvider {
 
     public final String urlBegin = "http://www.omdbapi.com/?t=";
@@ -50,12 +52,13 @@ public class SeriesDataProvider {
     String tempRating;
     String tempPlot;
 
-
+    //wandelt den übergebenen String in eine brauchbare SearchQuery um und übergibt sie weiter
     public void startSeriesFetching(String searchURL) {
         this.searchURL = searchURL.replace(" ", "+");;
         getSeriesData(searchURL);
     }
 
+    //Klasse um ein JSONObject von einer übergebenen URL zu laden
     private class FetchSeries extends AsyncTask<URL, Integer, JSONObject> {
         public String processHttpRequest(String url) {
             HttpClient httpclient = new DefaultHttpClient();
@@ -78,7 +81,7 @@ public class SeriesDataProvider {
             return responseString;
         }
 
-        //gets the mensaDishes from the URL in the background
+        //lädt im Hintergrund die Daten
         protected JSONObject doInBackground(URL... urls) {
             HttpURLConnection urlConnection = null;
             JSONObject searchResultItems = null;
@@ -105,7 +108,7 @@ public class SeriesDataProvider {
             return searchResultItems;
         }
 
-        //after background computation has finished onMensaDishdataProviderListener is called
+        //nach dem Laden des JSONObjects werden die Daten weiterverarbeitet
         protected void onPostExecute(JSONObject seriesSearchResult) {
             super.onPostExecute(seriesSearchResult);
             try {
@@ -127,30 +130,6 @@ public class SeriesDataProvider {
             new ImageDownloader(SearchActivity.seriesImageView).execute(tempSeriesItem.getImgPath());
             }
         }
-
-    class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public ImageDownloader(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String url = urls[0];
-            Bitmap mIcon = null;
-            try {
-                InputStream in = new java.net.URL(url).openStream();
-                mIcon = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-            }
-            return mIcon;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
-    }
 
         //returns the response
         private String readSearchResultInputStream(InputStream in) {

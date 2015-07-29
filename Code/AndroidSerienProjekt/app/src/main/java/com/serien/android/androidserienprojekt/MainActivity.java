@@ -17,7 +17,7 @@ import com.serien.android.androidserienprojekt.domain.SeriesItem;
 
 import java.util.ArrayList;
 
-
+//Dies ist die MainActivity, in welcher die eigenen Serien angezeigt werden
 public class MainActivity extends ActionBarActivity {
 
     private ArrayList<SeriesItem> seriesList = new ArrayList<SeriesItem>();
@@ -33,18 +33,23 @@ public class MainActivity extends ActionBarActivity {
         initAdapter();
     }
 
+    //Zu Testzwecken wird eine Arraylist mit Seriesitems befüllt
+    //Diese werden verwendet um per Adapter das Gridview der Mainactivity zu befüllen
     private void TESTfillArrayListTEST() {
-        for(int i = 0; i < 5; i++) {
-            SeriesItem tempSeriesItem = new SeriesItem("TestSerie", "TestJahr", "TestSchauspieler", "TestWertung", "TestPlot", "TestPfad");
-            seriesList.add(tempSeriesItem);
-        }
+            seriesList.add(new SeriesItem("Dexter", "2007-2013", "Michael C. Hall", "8.9", "TestPlot", "http://ia.media-imdb.com/images/M/MV5BMTM5MjkwMTI0MV5BMl5BanBnXkFtZTcwODQwMTc0OQ@@._V1_SX300.jpg"));
+            seriesList.add(new SeriesItem("The Mentalist", "2008-2015", "TestSchauspieler", "TestWertung", "TestPlot", "http://ia.media-imdb.com/images/M/MV5BMTQ5OTgzOTczM15BMl5BanBnXkFtZTcwMDM2OTY4MQ@@._V1_SX300.jpg"));
+            seriesList.add(new SeriesItem("Game of Thrones", "2012-2015", "TestSchauspieler", "TestWertung", "TestPlot", "http://ia.media-imdb.com/images/M/MV5BNTgxOTI4NzY2M15BMl5BanBnXkFtZTgwMjY3MTM2NDE@._V1_SX300.jpg"));
+            seriesList.add(new SeriesItem("Breaking Bad", "2009-2013", "TestSchauspieler", "TestWertung", "TestPlot", "http://ia.media-imdb.com/images/M/MV5BMTQ0ODYzODc0OV5BMl5BanBnXkFtZTgwMDk3OTcyMDE@._V1_SX300.jpg"));
+            seriesList.add(new SeriesItem("Full House", "1995-2003", "TestSchauspieler", "TestWertung", "TestPlot", "http://ia.media-imdb.com/images/M/MV5BMTk2Njk5ODYzNV5BMl5BanBnXkFtZTcwNzUxNDE0MQ@@._V1_SX300.jpg"));
     }
 
+    //Das Gridview wird mit einem Adapter verknüpft, welcher zu Testzwecken die oben befüllte Arrayliste benutzt
     private void initAdapter() {
         customSeriesItemAdapter = new CustomSeriesItemAdapter(this, seriesList);
         gridView.setAdapter(customSeriesItemAdapter);
     }
 
+    //Die UI Elemente werden initialisiert
     private void initUI() {
         gridView = (GridView) findViewById(R.id.seriesGridView);
     }
@@ -63,7 +68,7 @@ public class MainActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        //Navigation zwischen den verschiedenen Activities
         if (id == R.id.series_Search) {
             Intent startSearchActivity = new Intent(this, SearchActivity.class);
             startActivity(startSearchActivity);
