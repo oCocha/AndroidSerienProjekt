@@ -6,19 +6,47 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.GridView;
 
 import com.serien.android.androidserienprojekt.activities.FriendsActivity;
 import com.serien.android.androidserienprojekt.activities.SearchActivity;
 import com.serien.android.androidserienprojekt.activities.TestActivity;
 import com.serien.android.androidserienprojekt.activities.Top30Activity;
+import com.serien.android.androidserienprojekt.adapter.CustomSeriesItemAdapter;
+import com.serien.android.androidserienprojekt.domain.SeriesItem;
+
+import java.util.ArrayList;
 
 
 public class MainActivity extends ActionBarActivity {
+
+    private ArrayList<SeriesItem> seriesList = new ArrayList<SeriesItem>();
+    CustomSeriesItemAdapter customSeriesItemAdapter;
+    GridView gridView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initUI();
+        TESTfillArrayListTEST();
+        initAdapter();
+    }
+
+    private void TESTfillArrayListTEST() {
+        for(int i = 0; i < 5; i++) {
+            SeriesItem tempSeriesItem = new SeriesItem("TestSerie", "TestJahr", "TestSchauspieler", "TestWertung", "TestPlot", "TestPfad");
+            seriesList.add(tempSeriesItem);
+        }
+    }
+
+    private void initAdapter() {
+        customSeriesItemAdapter = new CustomSeriesItemAdapter(this, seriesList);
+        gridView.setAdapter(customSeriesItemAdapter);
+    }
+
+    private void initUI() {
+        gridView = (GridView) findViewById(R.id.seriesGridView);
     }
 
     @Override
