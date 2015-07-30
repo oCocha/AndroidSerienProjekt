@@ -50,18 +50,18 @@ public class CustomSeriesItemAdapter extends BaseAdapter{
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
             grid = new View(mContext);
-            grid = inflater.inflate(R.layout.activity_test, null);
+            grid = inflater.inflate(R.layout.activity_series_overview, null);
             TextView nameTextView = (TextView) grid.findViewById(R.id.nameTextView);
-            TextView yearTextView = (TextView) grid.findViewById(R.id.yearTextView);
-            TextView actorsTextView = (TextView) grid.findViewById(R.id.actorsTextView);
-            TextView ratingTextView = (TextView) grid.findViewById(R.id.ratingTextView);
+//            TextView yearTextView = (TextView) grid.findViewById(R.id.yearTextView);
+//            TextView actorsTextView = (TextView) grid.findViewById(R.id.actorsTextView);
+//            TextView ratingTextView = (TextView) grid.findViewById(R.id.ratingTextView);
             TextView plotTextView = (TextView) grid.findViewById(R.id.plotTextView);
             ImageView seriesImageView = (ImageView) grid.findViewById(R.id.seriesImageView);
 
             nameTextView.setText(gridItems.get(position).getName());
-            yearTextView.setText(gridItems.get(position).getYear());
-            actorsTextView.setText(gridItems.get(position).getActors());
-            ratingTextView.setText(gridItems.get(position).getRating());
+//            yearTextView.setText(gridItems.get(position).getYear());
+//            actorsTextView.setText(gridItems.get(position).getActors());
+//            ratingTextView.setText(gridItems.get(position).getRating());
             plotTextView.setText(gridItems.get(position).getPlot());
             new ImageDownloader(seriesImageView).execute(gridItems.get(position).getImgPath());
         } else {

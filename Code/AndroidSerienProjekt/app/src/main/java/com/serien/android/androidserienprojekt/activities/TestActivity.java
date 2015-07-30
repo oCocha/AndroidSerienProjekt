@@ -16,6 +16,7 @@ import com.serien.android.androidserienprojekt.persistence.SeriesDataProvider;
 
 import org.json.JSONObject;
 
+//Activity zum Testen
 public class TestActivity extends ActionBarActivity {
 
 

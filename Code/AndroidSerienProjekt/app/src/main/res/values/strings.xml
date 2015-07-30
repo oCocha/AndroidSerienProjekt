@@ -22,4 +22,6 @@
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_top30">Top30Activity</string>
     <string name="title_activity_friends">FriendsActivity</string>
+    <string name="title_activity_series_overview">SeriesOverviewActivity</string>
+    <string name="title_activity_series_detail">SeriesDetailActivity</string>
 </resources>

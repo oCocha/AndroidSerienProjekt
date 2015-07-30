@@ -34,6 +34,14 @@
             android:name=".activities.FriendsActivity"
             android:label="@string/title_activity_friends" >
         </activity>
+        <activity
+            android:name=".activities.SeriesOverviewActivity"
+            android:label="@string/title_activity_series_overview" >
+        </activity>
+        <activity
+            android:name=".activities.SeriesDetailActivity"
+            android:label="@string/title_activity_series_detail" >
+        </activity>
     </application>
 
 </manifest>

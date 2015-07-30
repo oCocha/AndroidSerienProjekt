@@ -5,16 +5,75 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.GridView;
 
 import com.serien.android.androidserienprojekt.MainActivity;
 import com.serien.android.androidserienprojekt.R;
+import com.serien.android.androidserienprojekt.adapter.CustomSeriesItemAdapter;
+import com.serien.android.androidserienprojekt.domain.SeriesItem;
+import com.serien.android.androidserienprojekt.persistence.SeriesDataProvider;
 
-public class Top30Activity extends ActionBarActivity {
+import java.util.ArrayList;
+
+//Dies ist die Top30Activity, in welcher beliebte/gut bewertete Serien per AsynTask geladen und angezeigt werden
+public class Top30Activity extends ActionBarActivity implements SeriesDataProvider.OnSeriesDataProvidedListener{
+    ArrayList<SeriesItem> top30SeriesItemList = new ArrayList<SeriesItem>();
+    ArrayList<String> top30SeriesStringList = new ArrayList<String>();
+    SeriesDataProvider sdp;
+    CustomSeriesItemAdapter customSeriesItemAdapter;
+    GridView gridView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_top30);
+        initUI();
+        setupTop30List();
+    }
+
+    //Sobald ein SeriesDataProvider SeriesItems liefert werden sie in eine ArraList gespeichert und per Adapter angezeigt
+    public void onSeriesDataReceived(SeriesItem seriesItem) {
+        top30SeriesItemList.add(seriesItem);
+        initAdapter();
+    }
+
+    private void setupTop30List() {
+        initTop30List();
+        fetchTop30ListData();
+    }
+
+    //Hier wird die Top30 Liste per AsyncTask aus der OMDBAPI geladen
+    private void fetchTop30ListData() {
+        top30SeriesItemList.clear();
+        for(int i = 0; i < top30SeriesStringList.size(); i++) {
+            sdp = new SeriesDataProvider();
+            sdp.startSeriesFetching(this, top30SeriesStringList.get(i));
+        }
+    }
+
+    //Hier wird die Top30 Liste probeweise manuell erstellt
+    private void initTop30List() {
+        top30SeriesStringList.add("Gotham");
+        top30SeriesStringList.add("American Horror Story");
+        top30SeriesStringList.add("Game of Thrones");
+        top30SeriesStringList.add("Sons of Anarchy");
+        top30SeriesStringList.add("The Walking Dead");
+        top30SeriesStringList.add("Once Upon a Time");
+        top30SeriesStringList.add("Outlander");
+        top30SeriesStringList.add("The Blacklist");
+        top30SeriesStringList.add("The Big Bang Theory");
+        top30SeriesStringList.add("Scorpion");
+    }
+
+    //Hier wird ein Gridviewadapter erstellt und mit dem Gridview verknüpft
+    private void initAdapter() {
+        customSeriesItemAdapter = new CustomSeriesItemAdapter(this, top30SeriesItemList);
+        gridView.setAdapter(customSeriesItemAdapter);
+    }
+
+    //Hier werden die UI Elemente erstellt
+    private void initUI() {
+        gridView = (GridView) findViewById(R.id.seriesTop30GridView);
     }
 
     @Override
