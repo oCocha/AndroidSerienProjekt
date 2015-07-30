@@ -9,48 +9,54 @@
     <TextView
         android:id="@+id/nameTextView"
         android:text="@string/seriesName"
-        android:layout_width="wrap_content"
+        android:background="@android:color/darker_gray"
+        android:padding="3dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="24dp"
-        android:layout_above="@+id/yearTextView"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/seriesImageView"
+        />
 
     <TextView
         android:id="@+id/yearTextView"
         android:text="@string/seriesYear"
-        android:layout_width="wrap_content"
+        android:padding="3dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="24dp"
-        android:layout_above="@+id/actorsTextView"
-        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/nameTextView"
         />
 
     <TextView
         android:id="@+id/actorsTextView"
         android:text="@string/seriesActors"
-        android:layout_width="wrap_content"
+        android:background="@android:color/darker_gray"
+        android:padding="3dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="24dp"
-        android:layout_above="@+id/ratingTextView"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/yearTextView"
+        />
 
     <TextView
         android:id="@+id/ratingTextView"
         android:text="@string/seriesRating"
-        android:layout_width="wrap_content"
+        android:padding="3dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="24dp"
-        android:layout_above="@+id/plotTextView"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/actorsTextView"
+        />
 
     <TextView
         android:id="@+id/plotTextView"
         android:text="@string/seriesPlot"
-        android:layout_width="wrap_content"
+        android:background="@android:color/darker_gray"
+        android:padding="3dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="24dp"
-        android:layout_above="@+id/addButton"
-        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/ratingTextView"
          />
 
     <EditText
@@ -59,9 +65,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="24dp"
-        android:layout_alignTop="@+id/searchButton"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_toLeftOf="@+id/searchButton"
+        />
 
     <Button
         android:layout_width="wrap_content"
@@ -69,24 +74,22 @@
         android:text="@string/searchButton"
         android:id="@+id/searchButton"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/seriesEditText"
-        android:layout_toEndOf="@+id/seriesEditText" />
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/addButton"
         android:id="@+id/addButton"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="42dp"
+        android:layout_below="@+id/plotTextView"
         android:layout_centerHorizontal="true"
         />
 
     <ImageView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/seriesImageView"
-        android:layout_above="@+id/nameTextView"
+        android:layout_below="@+id/seriesEditText"
         android:layout_centerHorizontal="true"
         />
 

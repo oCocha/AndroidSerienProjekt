@@ -35,17 +35,17 @@ public class FriendsActivity extends ActionBarActivity {
         if (id == R.id.series_Search) {
             Intent startSearchActivity = new Intent(this, SearchActivity.class);
             startActivity(startSearchActivity);
-            FriendsActivity.this.finish();
+//            FriendsActivity.this.finish();
             return true;
         }else if (id == R.id.series_Top_30) {
             Intent startTop30Activity = new Intent(this, Top30Activity.class);
             startActivity(startTop30Activity);
-            FriendsActivity.this.finish();
+//            FriendsActivity.this.finish();
             return true;
         }else if (id == R.id.series_Main) {
             Intent startMainActivity = new Intent(this, MainActivity.class);
             startActivity(startMainActivity);
-            FriendsActivity.this.finish();
+//            FriendsActivity.this.finish();
             return true;
         }
 

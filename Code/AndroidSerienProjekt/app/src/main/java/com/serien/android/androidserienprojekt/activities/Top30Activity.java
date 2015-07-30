@@ -94,17 +94,17 @@ public class Top30Activity extends ActionBarActivity implements SeriesDataProvid
         if (id == R.id.series_Search) {
             Intent startSearchActivity = new Intent(this, SearchActivity.class);
             startActivity(startSearchActivity);
-            Top30Activity.this.finish();
+//            Top30Activity.this.finish();
             return true;
         }else if (id == R.id.series_Main) {
             Intent startMainActivity = new Intent(this, MainActivity.class);
             startActivity(startMainActivity);
-            Top30Activity.this.finish();
+//            Top30Activity.this.finish();
             return true;
         }else if (id == R.id.series_Friend) {
             Intent startFriendsActivity = new Intent(this, FriendsActivity.class);
             startActivity(startFriendsActivity);
-            Top30Activity.this.finish();
+//            Top30Activity.this.finish();
             return true;
         }
 

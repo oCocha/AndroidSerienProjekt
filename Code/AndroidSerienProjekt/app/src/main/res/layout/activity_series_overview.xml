@@ -10,6 +10,7 @@
     <TextView
         android:id="@+id/nameTextView"
         android:text="@string/seriesName"
+        android:padding="3dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="24dp"
@@ -19,6 +20,7 @@
     <TextView
         android:id="@+id/plotTextView"
         android:text="@string/seriesPlot"
+        android:padding="3dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="24dp"
