@@ -50,17 +50,21 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
                 startDataFetching(tempString);
             }
         });
+        /*
         addButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startIntent();
             }
         });
+        */
     }
 
+    /*
     private void startIntent() {
         Intent startSeriesSeasonActivity = new Intent(this, SeriesSeasonActivity.class);
         startActivity(startSeriesSeasonActivity);
     }
+    */
 
     private void startDataFetching(String tempString) {
         sdp.startSeriesFetching(this, tempString);

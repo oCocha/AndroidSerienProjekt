@@ -1,10 +1,12 @@
 package com.serien.android.androidserienprojekt.activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 
 import com.serien.android.androidserienprojekt.R;
 import com.serien.android.androidserienprojekt.adapter.CustomSeriesExpandableListAdapter;
@@ -21,11 +23,15 @@ public class SeriesSeasonActivity extends AppCompatActivity {
     List<String> episodeList;
     Map<String, List<String>> seriesCollection;
     ExpandableListView expListView;
+    TextView seriesNameTextView;
+    Intent intent;
+    String seriesName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_series_season);
+        intent = getIntent();
         setupTestData();
         initUI();
         initAdapter();
@@ -40,10 +46,13 @@ public class SeriesSeasonActivity extends AppCompatActivity {
     //erstellt die UI Elemente
     private void initUI() {
         expListView = (ExpandableListView) findViewById(R.id.series_expandableList);
+        seriesNameTextView = (TextView) findViewById(R.id.nameTextView);
+        seriesNameTextView.setText(seriesName);
     }
 
     //erstellt einen Testseriendatensatz
     private void setupTestData() {
+        seriesName = intent.getStringExtra("SeriesName");
         setupSeasonList();
         setupCollection();
     }
