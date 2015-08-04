@@ -30,6 +30,7 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
     public static TextView plotTextView;
     public static EditText seriesEditText;
     public static Button searchButton;
+    public static Button addButton;
     SeriesDataProvider sdp = new SeriesDataProvider();
     public static JSONObject testObject;
 
@@ -49,6 +50,16 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
                 startDataFetching(tempString);
             }
         });
+        addButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startIntent();
+            }
+        });
+    }
+
+    private void startIntent() {
+        Intent startSeriesSeasonActivity = new Intent(this, SeriesSeasonActivity.class);
+        startActivity(startSeriesSeasonActivity);
     }
 
     private void startDataFetching(String tempString) {
@@ -65,6 +76,7 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
         ratingTextView = (TextView) findViewById(R.id.ratingTextView);
         seriesEditText = (EditText) findViewById(R.id.seriesEditText);
         searchButton = (Button) findViewById(R.id.searchButton);
+        addButton = (Button) findViewById(R.id.addButton);
     }
 
     public void onSeriesDataReceived(SeriesItem seriesItem) {

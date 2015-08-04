@@ -42,6 +42,10 @@
             android:name=".activities.SeriesDetailActivity"
             android:label="@string/title_activity_series_detail" >
         </activity>
+        <activity
+            android:name=".activities.SeriesSeasonActivity"
+            android:label="@string/title_activity_series_season" >
+        </activity>
     </application>
 
 </manifest>

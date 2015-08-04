@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AndroidSerienProjekt</string>
+    <string name="app_name">Start</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="seriesName">Serienname</string>
@@ -19,9 +19,10 @@
     <string name="series_Friend">Freunde</string>
 
     <string name="title_activity_test">TestActivity</string>
-    <string name="title_activity_search">SearchActivity</string>
-    <string name="title_activity_top30">Top30Activity</string>
-    <string name="title_activity_friends">FriendsActivity</string>
+    <string name="title_activity_search">Suche</string>
+    <string name="title_activity_top30">Top 30</string>
+    <string name="title_activity_friends">Social</string>
     <string name="title_activity_series_overview">SeriesOverviewActivity</string>
     <string name="title_activity_series_detail">SeriesDetailActivity</string>
+    <string name="title_activity_series_season">Serieninformation</string>
 </resources>

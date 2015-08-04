@@ -65,8 +65,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="24dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_toLeftOf="@+id/searchButton"
-        />
+        android:layout_toStartOf="@+id/searchButton" />
 
     <Button
         android:layout_width="wrap_content"
@@ -74,7 +77,8 @@
         android:text="@string/searchButton"
         android:id="@+id/searchButton"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <Button
         android:layout_width="wrap_content"
@@ -88,6 +92,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         android:id="@+id/seriesImageView"
         android:layout_below="@+id/seriesEditText"
         android:layout_centerHorizontal="true"

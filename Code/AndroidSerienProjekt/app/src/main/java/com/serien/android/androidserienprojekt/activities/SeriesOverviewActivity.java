@@ -7,7 +7,7 @@ import android.view.MenuItem;
 
 import com.serien.android.androidserienprojekt.R;
 
-//Automatisch erstellte Activity
+//Automatisch erstellte Activity (Xml-Datei benötigt)
 public class SeriesOverviewActivity extends ActionBarActivity {
 
     @Override
