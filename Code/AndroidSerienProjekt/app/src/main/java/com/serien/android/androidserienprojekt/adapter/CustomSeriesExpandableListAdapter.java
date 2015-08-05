@@ -23,18 +23,18 @@ import java.util.Map;
 public class CustomSeriesExpandableListAdapter extends BaseExpandableListAdapter {
 
     private Activity context;
-    private Map<String, List<String>> laptopCollections;
-    private List<String> laptops;
+    private Map<String, List<String>> seriesCollections;
+    private List<String> seasons;
 
-    public CustomSeriesExpandableListAdapter(Activity context, List<String> laptops,
-                                 Map<String, List<String>> laptopCollections) {
+    public CustomSeriesExpandableListAdapter(Activity context, List<String> seasons,
+                                 Map<String, List<String>> seriesCollections) {
         this.context = context;
-        this.laptopCollections = laptopCollections;
-        this.laptops = laptops;
+        this.seriesCollections = seriesCollections;
+        this.seasons = seasons;
     }
 
     public Object getChild(int groupPosition, int childPosition) {
-        return laptopCollections.get(laptops.get(groupPosition)).get(childPosition);
+        return seriesCollections.get(seasons.get(groupPosition)).get(childPosition);
     }
 
     public long getChildId(int groupPosition, int childPosition) {
@@ -87,15 +87,15 @@ public class CustomSeriesExpandableListAdapter extends BaseExpandableListAdapter
     }
 
     public int getChildrenCount(int groupPosition) {
-        return laptopCollections.get(laptops.get(groupPosition)).size();
+        return seriesCollections.get(seasons.get(groupPosition)).size();
     }
 
     public Object getGroup(int groupPosition) {
-        return laptops.get(groupPosition);
+        return seasons.get(groupPosition);
     }
 
     public int getGroupCount() {
-        return laptops.size();
+        return seasons.size();
     }
 
     public long getGroupId(int groupPosition) {

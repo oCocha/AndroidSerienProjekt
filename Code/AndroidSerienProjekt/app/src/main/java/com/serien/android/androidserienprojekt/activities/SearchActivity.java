@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.serien.android.androidserienprojekt.MainActivity;
 import com.serien.android.androidserienprojekt.R;
@@ -19,9 +20,16 @@ import com.serien.android.androidserienprojekt.persistence.SeriesDataProvider;
 
 import org.json.JSONObject;
 
+import javax.xml.datatype.Duration;
+
 //Dies ist die SearchActivity, in welcher Serien per AsyncTask gesucht und falls vorhanden angezeigt werden
 public class SearchActivity extends ActionBarActivity implements SeriesDataProvider.OnSeriesDataProvidedListener{
 
+    public static final String SERIES_NAME = "Serienname";
+    public static final String SERIES_ACTORS = "Serienschauspieler";
+    public static final String SERIES_YEAR = "Serienjahr";
+    public static final String SERIES_RATING = "Serienwertung";
+    public static final String SERIES_PLOT = "Plot der Serie";
     public static ImageView seriesImageView;
     public static TextView nameTextView;
     public static TextView yearTextView;
@@ -31,8 +39,9 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
     public static EditText seriesEditText;
     public static Button searchButton;
     public static Button addButton;
+    public static final String NO_SERIES_DATA = "Gesuchte Serie leider nicht gefunden.";
     SeriesDataProvider sdp = new SeriesDataProvider();
-    public static JSONObject testObject;
+    Toast seriesNotFoundToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +92,18 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
         addButton = (Button) findViewById(R.id.addButton);
     }
 
+    public void onSeriesNotFound(String searchQuery) {
+        String toastMessage = NO_SERIES_DATA + " '" + searchQuery + "'";
+        seriesNotFoundToast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
+        nameTextView.setText(SERIES_NAME);
+        actorsTextView.setText(SERIES_ACTORS);
+        ratingTextView.setText(SERIES_RATING);
+        yearTextView.setText(SERIES_YEAR);
+        plotTextView.setText(SERIES_PLOT);
+        System.out.println(SERIES_NAME+SERIES_ACTORS);
+    }
+
+    //zeigt die Serieninformationen an, sobald ein Serienitem erhalten wurde
     public void onSeriesDataReceived(SeriesItem seriesItem) {
         System.out.println("CALLLLLLLLLLLLLBACKKKKKKKKKKK");
         nameTextView.setText(seriesItem.getName());

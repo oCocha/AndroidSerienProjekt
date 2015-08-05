@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.serien.android.androidserienprojekt.MainActivity;
 import com.serien.android.androidserienprojekt.R;
@@ -17,11 +18,13 @@ import java.util.ArrayList;
 
 //Dies ist die Top30Activity, in welcher beliebte/gut bewertete Serien per AsynTask geladen und angezeigt werden
 public class Top30Activity extends ActionBarActivity implements SeriesDataProvider.OnSeriesDataProvidedListener{
+    public static final String NO_SERIES_DATA = "Gesuchte Serie wurde leider nicht gefunden";
     ArrayList<SeriesItem> top30SeriesItemList = new ArrayList<SeriesItem>();
     ArrayList<String> top30SeriesStringList = new ArrayList<String>();
     SeriesDataProvider sdp;
     CustomSeriesItemAdapter customSeriesItemAdapter;
     GridView gridView;
+    Toast seriesNotFoundToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,11 @@ public class Top30Activity extends ActionBarActivity implements SeriesDataProvid
     public void onSeriesDataReceived(SeriesItem seriesItem) {
         top30SeriesItemList.add(seriesItem);
         initAdapter();
+    }
+
+    public void onSeriesNotFound(String searchQuery) {
+        String toastMessage = NO_SERIES_DATA + " '" + searchQuery + "'";
+        seriesNotFoundToast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
     }
 
     private void setupTop30List() {
@@ -65,7 +73,7 @@ public class Top30Activity extends ActionBarActivity implements SeriesDataProvid
         top30SeriesStringList.add("Scorpion");
     }
 
-    //Hier wird ein Gridviewadapter erstellt und mit dem Gridview verknüpft
+    //Hier wird ein Gridviewadapter erstellt und mit dem Gridview verknï¿½pft
     private void initAdapter() {
         customSeriesItemAdapter = new CustomSeriesItemAdapter(this, top30SeriesItemList);
         gridView.setAdapter(customSeriesItemAdapter);

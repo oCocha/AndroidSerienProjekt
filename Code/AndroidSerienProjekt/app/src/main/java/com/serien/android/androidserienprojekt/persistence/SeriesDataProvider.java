@@ -33,7 +33,7 @@ import java.util.ArrayList;
  * Created by oCocha on 27.07.2015.
  */
 
-//Lädt die Daten zu einer gesuchten Serie und zeigt sie in der Searchactivity an(SCHLECHT -> CALLBACK einbauen)
+//Lï¿½dt die Daten zu einer gesuchten Serie und zeigt sie in der Searchactivity an(SCHLECHT -> CALLBACK einbauen)
 public class SeriesDataProvider {
 
     public final String urlBegin = "http://www.omdbapi.com/?t=";
@@ -44,8 +44,10 @@ public class SeriesDataProvider {
     public final String URL_KEY_RATING = "imdbRating";
     public final String URL_KEY_PLOT = "Plot";
     public final String URL_KEY_IMAGE = "Poster";
+    public final String URL_KEY_RESPONSE = "Response";
     private OnSeriesDataProvidedListener onSeriesDataProvidedListener;
     SeriesItem seriesData;
+    String searchQuery;
     String searchURL = "";
     String tempImageURL;
     String tempName;
@@ -53,15 +55,17 @@ public class SeriesDataProvider {
     String tempActors;
     String tempRating;
     String tempPlot;
+    String responseCheck;
 
-    //wandelt den übergebenen String in eine brauchbare SearchQuery um und übergibt sie weiter
-    public void startSeriesFetching(OnSeriesDataProvidedListener onSeriesDataProvidedListener, String searchURL) {
+    //wandelt den ï¿½bergebenen String in eine brauchbare SearchQuery um und ï¿½bergibt sie weiter
+    public void startSeriesFetching(OnSeriesDataProvidedListener onSeriesDataProvidedListener, String searchQuery) {
         this.onSeriesDataProvidedListener = onSeriesDataProvidedListener;
-        this.searchURL = searchURL.replace(" ", "+");;
+        this.searchQuery = searchQuery;
+        searchURL = searchQuery.replace(" ", "+");;
         getSeriesData(searchURL);
     }
 
-    //Klasse um ein JSONObject von einer übergebenen URL zu laden
+    //Klasse um ein JSONObject von einer ï¿½bergebenen URL zu laden
     private class FetchSeries extends AsyncTask<URL, Integer, JSONObject> {
         public String processHttpRequest(String url) {
             HttpClient httpclient = new DefaultHttpClient();
@@ -84,7 +88,7 @@ public class SeriesDataProvider {
             return responseString;
         }
 
-        //lädt im Hintergrund die Daten
+        //lï¿½dt im Hintergrund die Daten
         protected JSONObject doInBackground(URL... urls) {
             HttpURLConnection urlConnection = null;
             JSONObject searchResultItems = null;
@@ -104,9 +108,10 @@ public class SeriesDataProvider {
             }
             try {
                 searchResultItems = new JSONObject(jSONResponse);
+
                 Log.d("My App", searchResultItems.toString());
             } catch (Throwable t) {
-                Log.e("My App", "Could not parse malformed JSON: \"" + searchResultItems + "\"");
+                Log.e("My App", "Could not parse malformed JSON/No JSON Response" + t);
             }
             return searchResultItems;
         }
@@ -121,11 +126,21 @@ public class SeriesDataProvider {
                 tempActors = seriesSearchResult.getString(URL_KEY_ACTORS);
                 tempPlot = seriesSearchResult.getString(URL_KEY_PLOT);
                 tempImageURL = seriesSearchResult.getString(URL_KEY_IMAGE);
+                responseCheck = seriesSearchResult.getString(URL_KEY_RESPONSE);
             } catch (Throwable t) {
-                System.out.println("Spackt");
+                System.out.println("Spackt"+t);
             }
-            seriesData = new SeriesItem(tempName, tempYear, tempRating, tempActors, tempPlot, tempImageURL);
-            onSeriesDataProvidedListener.onSeriesDataReceived(seriesData);
+            try {
+                responseCheck = seriesSearchResult.getString(URL_KEY_RESPONSE);
+            } catch (Throwable t) {
+                System.out.println("Spackt 2");
+            }
+            if(responseCheck.equals("False")) {
+                onSeriesDataProvidedListener.onSeriesNotFound(searchQuery);
+            }else {
+                seriesData = new SeriesItem(tempName, tempYear, tempRating, tempActors, tempPlot, tempImageURL);
+                onSeriesDataProvidedListener.onSeriesDataReceived(seriesData);
+            }
             /*
             SearchActivity.nameTextView.setText(tempSeriesItem.getName());
             SearchActivity.actorsTextView.setText(tempSeriesItem.getActors());
@@ -162,9 +177,10 @@ public class SeriesDataProvider {
         }
     }
 
-    //Interface für das Bereitstellen der Seriesitems
+    //Interface fï¿½r das Bereitstellen der Seriesitems
     public interface OnSeriesDataProvidedListener {
         void onSeriesDataReceived(SeriesItem seriesData);
+        void onSeriesNotFound(String searchQuery);
     }
 
 }

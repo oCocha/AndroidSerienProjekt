@@ -58,36 +58,36 @@ public class SeriesSeasonActivity extends AppCompatActivity {
     }
 
     private void setupCollection() {
-        String[] hpModels = { "Episode 1 - Pilot", "Episode 2 - Mitte",
+        String[] seasonOne = { "Episode 1 - Pilot", "Episode 2 - Mitte",
                 "Episode 3 - Finale" };
-        String[] hclModels = { "Episode 1 - Pilot", "Episode 2 - Mitte",
+        String[] seasonTwo = { "Episode 1 - Pilot", "Episode 2 - Mitte",
                 "Episode 3 - Finale" };
-        String[] lenovoModels = { "Episode 1 - Pilot", "Episode 2 - Mitte",
+        String[] seasonThree = { "Episode 1 - Pilot", "Episode 2 - Mitte",
                 "Episode 3 - Finale" };
-        String[] sonyModels = { "Episode 1 - Pilot", "Episode 2 - Mitte",
+        String[] seasonFour = { "Episode 1 - Pilot", "Episode 2 - Mitte",
                 "Episode 3 - Finale" };
-        String[] dellModels = { "Episode 1 - Pilot", "Episode 2 - Mitte",
+        String[] seasonFive = { "Episode 1 - Pilot", "Episode 2 - Mitte",
                 "Episode 3 - Finale" };
-        String[] samsungModels = { "Episode 1 - Pilot", "Episode 2 - Mitte",
+        String[] seasonSix = { "Episode 1 - Pilot", "Episode 2 - Mitte",
                 "Episode 3 - Finale" };
 
         seriesCollection = new LinkedHashMap<String, List<String>>();
 
-        for (String laptop : seasonList) {
-            if (laptop.equals("Staffel 1")) {
-                loadChild(hpModels);
-            } else if (laptop.equals("Staffel 2"))
-                loadChild(dellModels);
-            else if (laptop.equals("Staffel 3"))
-                loadChild(sonyModels);
-            else if (laptop.equals("Staffel 4"))
-                loadChild(hclModels);
-            else if (laptop.equals("Staffel 5"))
-                loadChild(samsungModels);
+        for (String compareString : seasonList) {
+            if (compareString.equals("Staffel 1")) {
+                loadChild(seasonOne);
+            } else if (compareString.equals("Staffel 2"))
+                loadChild(seasonTwo);
+            else if (compareString.equals("Staffel 3"))
+                loadChild(seasonThree);
+            else if (compareString.equals("Staffel 4"))
+                loadChild(seasonFour);
+            else if (compareString.equals("Staffel 5"))
+                loadChild(seasonFive);
             else
-                loadChild(lenovoModels);
+                loadChild(seasonSix);
 
-            seriesCollection.put(laptop, episodeList);
+            seriesCollection.put(compareString, episodeList);
         }
     }
 

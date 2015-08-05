@@ -12,7 +12,7 @@ import java.io.InputStream;
  * Created by oCocha on 29.07.2015.
  */
 
-//Lädt ein Bild mithilfe einer übergebenen URL und setzt es in ein übergebenes Imageview
+//Lï¿½dt ein Bild mithilfe einer ï¿½bergebenen URL und setzt es in ein ï¿½bergebenes Imageview
 public class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
     ImageView bmImage;
 
@@ -27,7 +27,7 @@ public class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
             InputStream in = new java.net.URL(url).openStream();
             mIcon = BitmapFactory.decodeStream(in);
         } catch (Exception e) {
-            Log.e("Error", e.getMessage());
+            System.out.println("Imagedownloader fehler");
         }
         return mIcon;
     }
