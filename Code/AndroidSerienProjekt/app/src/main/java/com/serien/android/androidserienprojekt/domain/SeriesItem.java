@@ -13,15 +13,21 @@ public class SeriesItem {
     private String rating;
     private String plot;
     private String imgPath;
+    private String imdbID;
 
     //erstellt ein neues SeriesItem
-    public SeriesItem(String name, String year, String actors, String rating, String plot, String imgPath) {
+    public SeriesItem(String name, String year, String actors, String rating, String plot, String imgPath, String imdbID) {
         this.name = name;
         this.year = year;
         this.actors = actors;
         this.rating = rating;
         this.plot = plot;
         this.imgPath = imgPath;
+        this.imdbID = imdbID;
+    }
+
+    public String getImdbID() {
+        return imdbID;
     }
 
     public String getName() {

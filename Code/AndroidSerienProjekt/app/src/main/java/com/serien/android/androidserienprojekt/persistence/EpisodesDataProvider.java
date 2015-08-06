@@ -1,13 +1,8 @@
 package com.serien.android.androidserienprojekt.persistence;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.ImageView;
 
-import com.serien.android.androidserienprojekt.activities.SearchActivity;
-import com.serien.android.androidserienprojekt.activities.TestActivity;
 import com.serien.android.androidserienprojekt.domain.SeriesItem;
 
 import org.apache.http.HttpResponse;
@@ -27,43 +22,32 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 
 /**
- * Created by oCocha on 27.07.2015.
+ * Created by oCocha on 06.08.2015.
  */
+public class EpisodesDataProvider {
 
-//L�dt die Daten zu einer gesuchten Serie und zeigt sie in der Searchactivity an(SCHLECHT -> CALLBACK einbauen)
-public class SeriesDataProvider {
+    public final String GB_API_URL_BASE = "https://api-public.guidebox.com/v1.43/DE/JMKNCpoHXzDVb0gLyl1y1fir7Jerw0/";
+    public final String GB_API_URL_ID = "search/id/imdb/";
+    public final String GB_API_URL_EPISODES_BEGIN = "show/";
+    public final String GB_API_URL_EPISODES_END = "episodes/all/0/100/all/all/?reverse_ordering=true";
+    public final String GB_URL_KEY_ID = "id";
+    public final String GB_URL_KEY_ARRAY = "results";
+    public final String GB_URL_KEY_SEASON_NR = "season_number";
+    public final String GB_URL_KEY_EPISODE_NR = "episode_number";
+    public final String GB_URL_KEY_TITLE = "title";
+    OnSeasonDataProvidedListener onSeasonDataProvidedListener;
+    Integer searchID;
+    String searchURL;
+    Integer testImdbID = 2621;
 
-    public final String OMDB_API_URL_BEGIN = "http://www.omdbapi.com/?t=";
-    public final String OMDB_API_URL_END = "&y=&plot=short&r=json";
-    public final String OMDB_URL_KEY_NAME = "Title";
-    public final String OMDB_URL_KEY_YEAR = "Year";
-    public final String OMDB_URL_KEY_ACTORS = "Actors";
-    public final String OMDB_URL_KEY_RATING = "imdbRating";
-    public final String OMDB_URL_KEY_PLOT = "Plot";
-    public final String OMDB_URL_KEY_IMAGE = "Poster";
-    public final String OMDB_URL_KEY_RESPONSE = "Response";
-    public final String OMDB_URL_KEY_IMDBID = "imdbID";
-    private OnSeriesDataProvidedListener onSeriesDataProvidedListener;
-    SeriesItem seriesData;
-    String searchQuery;
-    String searchURL = "";
-    String tempImageURL;
-    String tempName;
-    String tempYear;
-    String tempActors;
-    String tempRating;
-    String tempPlot;
-    String tempImdbID;
-    String responseCheck;
 
     //wandelt den �bergebenen String in eine brauchbare SearchQuery um und �bergibt sie weiter
-    public void startSeriesFetching(OnSeriesDataProvidedListener onSeriesDataProvidedListener, String searchQuery) {
-        this.onSeriesDataProvidedListener = onSeriesDataProvidedListener;
-        this.searchQuery = searchQuery;
-        searchURL = searchQuery.replace(" ", "+");;
+    public void startSeriesFetching(OnSeasonDataProvidedListener onSeasonDataProvidedListener, Integer searchID) {
+        this.onSeasonDataProvidedListener = onSeasonDataProvidedListener;
+        this.searchID = searchID;
+        searchURL = GB_API_URL_BASE + GB_API_URL_EPISODES_BEGIN + testImdbID.toString() + "/" + GB_API_URL_EPISODES_END;
         getSeriesData(searchURL);
     }
 
@@ -94,7 +78,7 @@ public class SeriesDataProvider {
         protected JSONObject doInBackground(URL... urls) {
             HttpURLConnection urlConnection = null;
             JSONObject searchResultItems = null;
-            String jSONResponse = processHttpRequest(OMDB_API_URL_BEGIN+searchURL+OMDB_API_URL_END);
+            String jSONResponse = processHttpRequest(searchURL);
             if (jSONResponse != null) {
                 try {
                     urlConnection = (HttpURLConnection) urls[0].openConnection();
@@ -121,6 +105,7 @@ public class SeriesDataProvider {
         //nach dem Laden des JSONObjects werden die Daten weiterverarbeitet
         protected void onPostExecute(JSONObject seriesSearchResult) {
             super.onPostExecute(seriesSearchResult);
+            /*
             try {
                 tempName = seriesSearchResult.getString(OMDB_URL_KEY_NAME);
                 tempYear = seriesSearchResult.getString(OMDB_URL_KEY_YEAR);
@@ -144,38 +129,38 @@ public class SeriesDataProvider {
                 seriesData = new SeriesItem(tempName, tempYear, tempRating, tempActors, tempPlot, tempImageURL, tempImdbID);
                 onSeriesDataProvidedListener.onSeriesDataReceived(seriesData);
             }
-            }
+            */
         }
+    }
 
-        //returns the response
-        private String readSearchResultInputStream(InputStream in) {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
-            String response = "";
-            String line;
-            try {
-                while ((line = bufferedReader.readLine()) != null) {
-                    response += line;
-                }
-            } catch (IOException e) {
-                System.out.println("Exception reading response: " + e.toString());
+    //returns the response
+    private String readSearchResultInputStream(InputStream in) {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+        String response = "";
+        String line;
+        try {
+            while ((line = bufferedReader.readLine()) != null) {
+                response += line;
             }
-            return response;
+        } catch (IOException e) {
+            System.out.println("Exception reading response: " + e.toString());
         }
+        return response;
+    }
 
 
     //starts the FetchSeries class with the given name of the series
     public void getSeriesData(String seriesName) {
         try {
-            new FetchSeries().execute(new URL(OMDB_API_URL_BEGIN + seriesName + OMDB_API_URL_END));
+            new FetchSeries().execute(new URL(seriesName));
         } catch (MalformedURLException e) {
             System.out.println("Unable to create URL: " + e.toString());
         }
     }
 
     //Interface f�r das Bereitstellen der Seriesitems
-    public interface OnSeriesDataProvidedListener {
-        void onSeriesDataReceived(SeriesItem seriesData);
-        void onSeriesNotFound(String searchQuery);
+    public interface OnSeasonDataProvidedListener {
+        void onSeasonDataReceived(SeriesItem seriesData);
+//        void onSeasonNotFound(String searchQuery);
     }
-
 }
