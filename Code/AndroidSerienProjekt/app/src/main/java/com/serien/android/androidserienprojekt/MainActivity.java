@@ -1,31 +1,30 @@
 package com.serien.android.androidserienprojekt;
 
-import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.serien.android.androidserienprojekt.activities.FriendsActivity;
 import com.serien.android.androidserienprojekt.activities.SearchActivity;
 import com.serien.android.androidserienprojekt.activities.SeriesSeasonActivity;
-import com.serien.android.androidserienprojekt.activities.TestActivity;
 import com.serien.android.androidserienprojekt.activities.Top30Activity;
 import com.serien.android.androidserienprojekt.adapter.CustomSeriesItemAdapter;
 import com.serien.android.androidserienprojekt.domain.SeriesItem;
+import com.serien.android.androidserienprojekt.persistence.SeriesRepository;
 
 import java.util.ArrayList;
 
 //Dies ist die MainActivity, in welcher die eigenen Serien angezeigt werden
 public class MainActivity extends ActionBarActivity {
 
-    private ArrayList<SeriesItem> seriesList = new ArrayList<SeriesItem>();
+    private SeriesRepository db;
+    private ArrayList<SeriesItem> seriesList = new ArrayList<>();
     CustomSeriesItemAdapter customSeriesItemAdapter;
     GridView gridView;
 
@@ -33,23 +32,37 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initDB();
         initUI();
         TESTfillArrayListTEST();
         initAdapter();
     }
 
+    //
+    private void initDB() {
+        db = new SeriesRepository(this);
+        db.open();
+    }
+
+    @Override
+    protected void onDestroy() {
+        db.close();
+        super.onDestroy();
+    }
+
     //Zu Testzwecken wird eine Arraylist mit Seriesitems bef�llt
     //Diese werden verwendet um per Adapter das Gridview der Mainactivity zu bef�llen
     private void TESTfillArrayListTEST() {
-            seriesList.add(new SeriesItem("Dexter", "2007-2013", "Michael C. Hall", "8.9", "TestPlot", "http://ia.media-imdb.com/images/M/MV5BMTM5MjkwMTI0MV5BMl5BanBnXkFtZTcwODQwMTc0OQ@@._V1_SX300.jpg", "tt07732622"));
-            seriesList.add(new SeriesItem("The Mentalist", "2008-2015", "TestSchauspieler", "TestWertung", "TestPlot", "http://ia.media-imdb.com/images/M/MV5BMTQ5OTgzOTczM15BMl5BanBnXkFtZTcwMDM2OTY4MQ@@._V1_SX300.jpg", "tt07732622"));
-            seriesList.add(new SeriesItem("Game of Thrones", "2012-2015", "TestSchauspieler", "TestWertung", "TestPlot", "http://ia.media-imdb.com/images/M/MV5BNTgxOTI4NzY2M15BMl5BanBnXkFtZTgwMjY3MTM2NDE@._V1_SX300.jpg", "tt07732622"));
-            seriesList.add(new SeriesItem("Breaking Bad", "2009-2013", "TestSchauspieler", "TestWertung", "TestPlot", "http://ia.media-imdb.com/images/M/MV5BMTQ0ODYzODc0OV5BMl5BanBnXkFtZTgwMDk3OTcyMDE@._V1_SX300.jpg", "tt07732622"));
-            seriesList.add(new SeriesItem("Full House", "1995-2003", "TestSchauspieler", "TestWertung", "TestPlot", "http://ia.media-imdb.com/images/M/MV5BMTk2Njk5ODYzNV5BMl5BanBnXkFtZTcwNzUxNDE0MQ@@._V1_SX300.jpg", "tt07732622"));
+        db.addSeriesItem(new SeriesItem("Dexter", "2007-2013", "Michael C. Hall", "8.9", "TestPlot", "http://ia.media-imdb.com/images/M/MV5BMTM5MjkwMTI0MV5BMl5BanBnXkFtZTcwODQwMTc0OQ@@._V1_SX300.jpg", "tt07732622"));
+        db.addSeriesItem(new SeriesItem("The Mentalist", "2008-2015", "TestSchauspieler", "TestWertung", "TestPlot", "http://ia.media-imdb.com/images/M/MV5BMTQ5OTgzOTczM15BMl5BanBnXkFtZTcwMDM2OTY4MQ@@._V1_SX300.jpg", "tt07732622"));
+        db.addSeriesItem(new SeriesItem("Game of Thrones", "2012-2015", "TestSchauspieler", "TestWertung", "TestPlot", "http://ia.media-imdb.com/images/M/MV5BNTgxOTI4NzY2M15BMl5BanBnXkFtZTgwMjY3MTM2NDE@._V1_SX300.jpg", "tt07732622"));
+        db.addSeriesItem(new SeriesItem("Breaking Bad", "2009-2013", "TestSchauspieler", "TestWertung", "TestPlot", "http://ia.media-imdb.com/images/M/MV5BMTQ0ODYzODc0OV5BMl5BanBnXkFtZTgwMDk3OTcyMDE@._V1_SX300.jpg", "tt07732622"));
+        db.addSeriesItem(new SeriesItem("Full House", "1995-2003", "TestSchauspieler", "TestWertung", "TestPlot", "http://ia.media-imdb.com/images/M/MV5BMTk2Njk5ODYzNV5BMl5BanBnXkFtZTcwNzUxNDE0MQ@@._V1_SX300.jpg", "tt07732622"));
     }
 
     //Das Gridview wird mit einem Adapter verkn�pft, welcher zu Testzwecken die oben bef�llte Arrayliste benutzt
     private void initAdapter() {
+        seriesList = db.getAllSeriesItems();
         customSeriesItemAdapter = new CustomSeriesItemAdapter(this, seriesList);
         gridView.setAdapter(customSeriesItemAdapter);
     }
