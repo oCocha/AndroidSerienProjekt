@@ -23,6 +23,8 @@ public class SeriesRepository {
     private SeriesDBOpenHelper dbHelper;
     private SQLiteDatabase db;
     public ArrayList<SeriesItem> allSeriesItems = new ArrayList<>();
+    public ArrayList<String> allSeriesItemsName = new ArrayList<>();
+
 
     public SeriesRepository(Context context){
         dbHelper = new SeriesDBOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -34,6 +36,7 @@ public class SeriesRepository {
 
     public long addSeriesItem(SeriesItem seriesItem) {
         allSeriesItems.add(seriesItem);
+        allSeriesItemsName.add(seriesItem.getName());
         ContentValues values = new ContentValues();
         values.put(KEY_NAME, seriesItem.getName());
         return db.insert(DATABASE_TABLE, null, values);
@@ -41,6 +44,10 @@ public class SeriesRepository {
 
     public ArrayList<SeriesItem> getAllSeriesItems() {
         return allSeriesItems;
+    }
+
+    public boolean checkList(String seriesName) {
+        return allSeriesItemsName.contains(seriesName);
     }
 
     private class SeriesDBOpenHelper extends SQLiteOpenHelper{

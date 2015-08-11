@@ -61,7 +61,7 @@
 
     <EditText
         android:id="@+id/seriesEditText"
-        android:text="@string/seriesEdit"
+        android:hint="@string/seriesEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="24dp"
@@ -88,6 +88,15 @@
         android:layout_below="@+id/plotTextView"
         android:layout_centerHorizontal="true"
         />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/deleteButton"
+        android:id="@+id/deleteButton"
+        android:layout_below="@+id/plotTextView"
+        android:layout_toRightOf="@+id/addButton"
+        android:layout_toEndOf="@+id/addButton" />
 
     <ImageView
         android:layout_width="match_parent"

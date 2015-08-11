@@ -11,6 +11,7 @@
 
     <string name="searchButton">Suche</string>
     <string name="addButton">Hinzufügen</string>
+    <string name="deleteButton">Entfernen</string>
 
     <string name="action_settings">Noch nicht gesetzt</string>
     <string name="series_Search">Suche</string>

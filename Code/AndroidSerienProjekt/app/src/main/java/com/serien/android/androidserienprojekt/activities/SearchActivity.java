@@ -1,8 +1,8 @@
 package com.serien.android.androidserienprojekt.activities;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,10 +17,7 @@ import com.serien.android.androidserienprojekt.R;
 import com.serien.android.androidserienprojekt.domain.SeriesItem;
 import com.serien.android.androidserienprojekt.persistence.ImageDownloader;
 import com.serien.android.androidserienprojekt.persistence.SeriesDataProvider;
-
-import org.json.JSONObject;
-
-import javax.xml.datatype.Duration;
+import com.serien.android.androidserienprojekt.persistence.SeriesRepository;
 
 //Dies ist die SearchActivity, in welcher Serien per AsyncTask gesucht und falls vorhanden angezeigt werden
 public class SearchActivity extends ActionBarActivity implements SeriesDataProvider.OnSeriesDataProvidedListener{
@@ -30,6 +27,9 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
     public static final String SERIES_YEAR = "Serienjahr";
     public static final String SERIES_RATING = "Serienwertung";
     public static final String SERIES_PLOT = "Plot der Serie";
+
+    private String tempString;
+    private SeriesRepository db;
     public static ImageView seriesImageView;
     public static TextView nameTextView;
     public static TextView yearTextView;
@@ -39,26 +39,41 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
     public static EditText seriesEditText;
     public static Button searchButton;
     public static Button addButton;
+    public static Button deleteButton;
     public static final String NO_SERIES_DATA = "Gesuchte Serie leider nicht gefunden.";
     SeriesDataProvider sdp = new SeriesDataProvider();
-    Toast seriesNotFoundToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        initDB();
         initUI();
         initListener();
+    }
+
+    private void initDB() {
+        db = new SeriesRepository(this);
+        db.open();
+    }
+
+    @Override
+    protected void onDestroy() {
+        db.close();
+        super.onDestroy();
     }
 
     //Setzt einen Onclicklistener auf den SuchButton, welcher die Suche der Serie startet
     private void initListener() {
         searchButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String tempString = seriesEditText.getText().toString();
+                tempString = seriesEditText.getText().toString();
                 startDataFetching(tempString);
+
+
             }
         });
+
         /*
         addButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -89,12 +104,15 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
         ratingTextView = (TextView) findViewById(R.id.ratingTextView);
         seriesEditText = (EditText) findViewById(R.id.seriesEditText);
         searchButton = (Button) findViewById(R.id.searchButton);
+        deleteButton = (Button) findViewById(R.id.deleteButton);
         addButton = (Button) findViewById(R.id.addButton);
+        deleteButton.setVisibility(View.GONE);
+        addButton.setVisibility(View.GONE);
     }
 
     public void onSeriesNotFound(String searchQuery) {
         String toastMessage = NO_SERIES_DATA + " '" + searchQuery + "'";
-        seriesNotFoundToast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
         nameTextView.setText(SERIES_NAME);
         actorsTextView.setText(SERIES_ACTORS);
         ratingTextView.setText(SERIES_RATING);
@@ -112,6 +130,12 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
         yearTextView.setText(seriesItem.getYear());
         plotTextView.setText(seriesItem.getPlot());
         new ImageDownloader(SearchActivity.seriesImageView).execute(seriesItem.getImgPath());
+
+        if(db.checkList(tempString)){
+            deleteButton.setVisibility(View.VISIBLE);
+        }else{
+            addButton.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
