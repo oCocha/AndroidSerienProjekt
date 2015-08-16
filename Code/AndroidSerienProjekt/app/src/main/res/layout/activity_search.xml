@@ -87,6 +87,7 @@
         android:id="@+id/addButton"
         android:layout_below="@+id/plotTextView"
         android:layout_centerHorizontal="true"
+        android:visibility="gone"
         />
 
     <Button
@@ -96,7 +97,8 @@
         android:id="@+id/deleteButton"
         android:layout_below="@+id/plotTextView"
         android:layout_toRightOf="@+id/addButton"
-        android:layout_toEndOf="@+id/addButton" />
+        android:layout_toEndOf="@+id/addButton"
+        android:visibility="gone"/>
 
     <ImageView
         android:layout_width="match_parent"

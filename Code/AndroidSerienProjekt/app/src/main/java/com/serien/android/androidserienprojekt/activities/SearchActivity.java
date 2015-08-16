@@ -30,6 +30,7 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
 
     private String tempString;
     private SeriesRepository db;
+    private SeriesItem foundItem;
     public static ImageView seriesImageView;
     public static TextView nameTextView;
     public static TextView yearTextView;
@@ -42,6 +43,8 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
     public static Button deleteButton;
     public static final String NO_SERIES_DATA = "Gesuchte Serie leider nicht gefunden.";
     SeriesDataProvider sdp = new SeriesDataProvider();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,17 +73,31 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
                 tempString = seriesEditText.getText().toString();
                 startDataFetching(tempString);
 
-
             }
         });
 
-        /*
+
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                db.deleteSeries(foundItem.getName());
+                String deleteMessage = "'" + foundItem.getName() + "'" + " wurde aus der Liste entfernt!";
+                Toast.makeText(getApplicationContext(), deleteMessage, Toast.LENGTH_SHORT).show();
+                deleteButton.setVisibility(View.GONE);
+                addButton.setVisibility(View.VISIBLE);
+            }
+        });
+
+
         addButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                startIntent();
+                db.addSeriesItem(foundItem);
+                String addMessage = "'" + foundItem.getName() + "'" + " wurde der Liste hinzugefügt!";
+                Toast.makeText(getApplicationContext(), addMessage, Toast.LENGTH_SHORT).show();
+                deleteButton.setVisibility(View.VISIBLE);
+                addButton.setVisibility(View.GONE);
             }
         });
-        */
     }
 
     /*
@@ -106,9 +123,8 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
         searchButton = (Button) findViewById(R.id.searchButton);
         deleteButton = (Button) findViewById(R.id.deleteButton);
         addButton = (Button) findViewById(R.id.addButton);
-        deleteButton.setVisibility(View.GONE);
-        addButton.setVisibility(View.GONE);
     }
+
 
     public void onSeriesNotFound(String searchQuery) {
         String toastMessage = NO_SERIES_DATA + " '" + searchQuery + "'";
@@ -121,21 +137,28 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
         System.out.println(SERIES_NAME+SERIES_ACTORS);
     }
 
-    //zeigt die Serieninformationen an, sobald ein Serienitem erhalten wurde
-    public void onSeriesDataReceived(SeriesItem seriesItem) {
-        System.out.println("CALLLLLLLLLLLLLBACKKKKKKKKKKK");
-        nameTextView.setText(seriesItem.getName());
-        actorsTextView.setText(seriesItem.getActors());
-        ratingTextView.setText(seriesItem.getRating());
-        yearTextView.setText(seriesItem.getYear());
-        plotTextView.setText(seriesItem.getPlot());
-        new ImageDownloader(SearchActivity.seriesImageView).execute(seriesItem.getImgPath());
 
-        if(db.checkList(tempString)){
+    //zeigt die Serieninformationen an, sobald ein Serienitem erhalten wurde
+    public void onSeriesDataReceived(SeriesItem series) {
+        System.out.println("CALLLLLLLLLLLLLBACKKKKKKKKKKK");
+        nameTextView.setText(series.getName());
+        actorsTextView.setText(series.getActors());
+        ratingTextView.setText(series.getRating());
+        yearTextView.setText(series.getYear());
+        plotTextView.setText(series.getPlot());
+        new ImageDownloader(SearchActivity.seriesImageView).execute(series.getImgPath());
+
+        foundItem = series;
+
+
+        if (db.getSeriesItems(series.getName()) != null) {
             deleteButton.setVisibility(View.VISIBLE);
+            addButton.setVisibility(View.GONE);
         }else{
             addButton.setVisibility(View.VISIBLE);
+            deleteButton.setVisibility(View.GONE);
         }
+
     }
 
     @Override

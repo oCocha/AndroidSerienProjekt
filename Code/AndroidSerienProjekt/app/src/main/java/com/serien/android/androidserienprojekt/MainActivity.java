@@ -53,13 +53,14 @@ public class MainActivity extends ActionBarActivity {
     //Zu Testzwecken wird eine Arraylist mit Seriesitems bef�llt
     //Diese werden verwendet um per Adapter das Gridview der Mainactivity zu bef�llen
     private void TESTfillArrayListTEST() {
-        if (db.getAllSeriesItems().isEmpty()) {
-            db.addSeriesItem(new SeriesItem("Dexter", "2007-2013", "Michael C. Hall", "8.9", "TestPlot", "http://ia.media-imdb.com/images/M/MV5BMTM5MjkwMTI0MV5BMl5BanBnXkFtZTcwODQwMTc0OQ@@._V1_SX300.jpg", "tt07732622"));
+      //  SeriesItem dexter = new SeriesItem("Dexter", "2007-2013", "Michael C. Hall", "8.9", "TestPlot", "http://ia.media-imdb.com/images/M/MV5BMTM5MjkwMTI0MV5BMl5BanBnXkFtZTcwODQwMTc0OQ@@._V1_SX300.jpg", "tt07732622");
+      //  db.addSeriesItem(dexter);
+         /*   db.addSeriesItem(new SeriesItem("Dexter", "2007-2013", "Michael C. Hall", "8.9", "TestPlot", "http://ia.media-imdb.com/images/M/MV5BMTM5MjkwMTI0MV5BMl5BanBnXkFtZTcwODQwMTc0OQ@@._V1_SX300.jpg", "tt07732622"));
             db.addSeriesItem(new SeriesItem("The Mentalist", "2008-2015", "TestSchauspieler", "TestWertung", "TestPlot", "http://ia.media-imdb.com/images/M/MV5BMTQ5OTgzOTczM15BMl5BanBnXkFtZTcwMDM2OTY4MQ@@._V1_SX300.jpg", "tt07732622"));
             db.addSeriesItem(new SeriesItem("Game of Thrones", "2012-2015", "TestSchauspieler", "TestWertung", "TestPlot", "http://ia.media-imdb.com/images/M/MV5BNTgxOTI4NzY2M15BMl5BanBnXkFtZTgwMjY3MTM2NDE@._V1_SX300.jpg", "tt07732622"));
             db.addSeriesItem(new SeriesItem("Breaking Bad", "2009-2013", "TestSchauspieler", "TestWertung", "TestPlot", "http://ia.media-imdb.com/images/M/MV5BMTQ0ODYzODc0OV5BMl5BanBnXkFtZTgwMDk3OTcyMDE@._V1_SX300.jpg", "tt07732622"));
             db.addSeriesItem(new SeriesItem("Full House", "1995-2003", "TestSchauspieler", "TestWertung", "TestPlot", "http://ia.media-imdb.com/images/M/MV5BMTk2Njk5ODYzNV5BMl5BanBnXkFtZTcwNzUxNDE0MQ@@._V1_SX300.jpg", "tt07732622"));
-        }
+        */
     }
 
     //Das Gridview wird mit einem Adapter verkn�pft, welcher zu Testzwecken die oben bef�llte Arrayliste benutzt
