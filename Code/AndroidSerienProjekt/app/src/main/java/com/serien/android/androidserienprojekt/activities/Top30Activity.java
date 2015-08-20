@@ -1,14 +1,10 @@
 package com.serien.android.androidserienprojekt.activities;
 
-import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.ActionBarActivity;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.serien.android.androidserienprojekt.MainActivity;
 import com.serien.android.androidserienprojekt.R;
 import com.serien.android.androidserienprojekt.adapter.CustomSeriesItemAdapter;
 import com.serien.android.androidserienprojekt.domain.SeriesItem;
@@ -84,6 +80,10 @@ public class Top30Activity extends ActionBarActivity implements SeriesDataProvid
         gridView = (GridView) findViewById(R.id.seriesTop30GridView);
     }
 
+
+
+    /*
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -105,7 +105,7 @@ public class Top30Activity extends ActionBarActivity implements SeriesDataProvid
 //            Top30Activity.this.finish();
             return true;
         }else if (id == R.id.series_Main) {
-            Intent startMainActivity = new Intent(this, MainActivity.class);
+            Intent startMainActivity = new Intent(this, ListActivity.class);
             startActivity(startMainActivity);
 //            Top30Activity.this.finish();
             return true;
@@ -118,4 +118,7 @@ public class Top30Activity extends ActionBarActivity implements SeriesDataProvid
 
         return super.onOptionsItemSelected(item);
     }
+
+    */
+
 }

@@ -21,6 +21,7 @@
 
     <string name="title_activity_test">TestActivity</string>
     <string name="title_activity_search">Suche</string>
+    <string name="title_activity_list">Liste</string>
     <string name="title_activity_top30">Top 30</string>
     <string name="title_activity_friends">Social</string>
     <string name="title_activity_series_overview">SeriesOverviewActivity</string>

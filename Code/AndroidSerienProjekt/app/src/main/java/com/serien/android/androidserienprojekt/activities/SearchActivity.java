@@ -1,10 +1,7 @@
 package com.serien.android.androidserienprojekt.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.serien.android.androidserienprojekt.MainActivity;
 import com.serien.android.androidserienprojekt.R;
 import com.serien.android.androidserienprojekt.domain.SeriesItem;
 import com.serien.android.androidserienprojekt.persistence.ImageDownloader;
@@ -161,6 +157,8 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
 
     }
 
+    /*
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -177,7 +175,7 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
 
         //Navigation zwischen den Activities
         if (id == R.id.series_Main) {
-            Intent startMainActivity = new Intent(this, MainActivity.class);
+            Intent startMainActivity = new Intent(this, ListActivity.class);
             startActivity(startMainActivity);
 //            SearchActivity.this.finish();
             return true;
@@ -195,4 +193,7 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
 
         return super.onOptionsItemSelected(item);
     }
+
+    */
+
 }

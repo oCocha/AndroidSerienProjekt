@@ -1,12 +1,8 @@
 package com.serien.android.androidserienprojekt.activities;
 
-import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.ActionBarActivity;
 
-import com.serien.android.androidserienprojekt.MainActivity;
 import com.serien.android.androidserienprojekt.R;
 
 public class FriendsActivity extends ActionBarActivity {
@@ -16,6 +12,8 @@ public class FriendsActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
     }
+
+    /*
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -43,12 +41,17 @@ public class FriendsActivity extends ActionBarActivity {
 //            FriendsActivity.this.finish();
             return true;
         }else if (id == R.id.series_Main) {
-            Intent startMainActivity = new Intent(this, MainActivity.class);
+            Intent startMainActivity = new Intent(this, ListActivity.class);
             startActivity(startMainActivity);
 //            FriendsActivity.this.finish();
             return true;
         }
 
+
         return super.onOptionsItemSelected(item);
     }
+
+
+    */
+
 }

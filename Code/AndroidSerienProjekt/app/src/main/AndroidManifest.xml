@@ -23,16 +23,24 @@
             android:label="@string/title_activity_test" >
         </activity>
         <activity
+            android:name=".activities.ListActivity"
+            android:label="@string/title_activity_list"
+            android:parentActivityName=".MainActivity">
+        </activity>
+        <activity
             android:name=".activities.SearchActivity"
-            android:label="@string/title_activity_search" >
+            android:label="@string/title_activity_search"
+            android:parentActivityName=".MainActivity" >
         </activity>
         <activity
             android:name=".activities.Top30Activity"
-            android:label="@string/title_activity_top30" >
+            android:label="@string/title_activity_top30"
+            android:parentActivityName=".MainActivity" >
         </activity>
         <activity
             android:name=".activities.FriendsActivity"
-            android:label="@string/title_activity_friends" >
+            android:label="@string/title_activity_friends"
+            android:parentActivityName=".MainActivity" >
         </activity>
         <activity
             android:name=".activities.SeriesOverviewActivity"
@@ -44,7 +52,8 @@
         </activity>
         <activity
             android:name=".activities.SeriesSeasonActivity"
-            android:label="@string/title_activity_series_season" >
+            android:label="@string/title_activity_series_season"
+            android:parentActivityName=".activities.ListActivity">
         </activity>
     </application>
 
