@@ -30,7 +30,7 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main1);
+        setContentView(R.layout.activity_main);
 
         GridView gridview = (GridView) findViewById(R.id.startGridView);
         gridview.setAdapter(new startActivityImageAdapter(MainActivity.this, textForIcons, imageIds));

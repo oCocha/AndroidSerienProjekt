@@ -1,17 +1,14 @@
 package com.serien.android.androidserienprojekt.adapter;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.serien.android.androidserienprojekt.R;
-import com.serien.android.androidserienprojekt.activities.SearchActivity;
 import com.serien.android.androidserienprojekt.domain.SeriesItem;
 import com.serien.android.androidserienprojekt.persistence.ImageDownloader;
 
@@ -21,15 +18,15 @@ import java.util.ArrayList;
  * Created by oCocha on 29.07.2015.
  */
 
-//Adapter um ein Gridview mit Seriesitems aus einer Arraylist zu befüllen
+//Adapter um ein Gridview mit Seriesitems aus einer Arraylist zu befï¿½llen
 public class CustomSeriesItemAdapter extends BaseAdapter{
 
     private Context mContext;
     private ArrayList<SeriesItem> gridItems;
 
-    public CustomSeriesItemAdapter(Context c,ArrayList<SeriesItem> griditems) {
+    public CustomSeriesItemAdapter(Context c,ArrayList<SeriesItem> gridItems) {
         mContext = c;
-        this.gridItems = griditems;
+        this.gridItems = gridItems;
     }
 
     public int getCount() {
@@ -44,12 +41,13 @@ public class CustomSeriesItemAdapter extends BaseAdapter{
         return 0;
     }
 
-    // setzt für jedes Gridelement die dazugehörigen Unterelemente
+    // setzt fï¿½r jedes Gridelement die dazugehï¿½rigen Unterelemente
     public View getView(int position, View convertView, ViewGroup parent) {
+
         View grid;
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
         if (convertView == null) {
-            grid = new View(mContext);
             grid = inflater.inflate(R.layout.activity_series_overview, null);
             TextView nameTextView = (TextView) grid.findViewById(R.id.nameTextView);
 //            TextView yearTextView = (TextView) grid.findViewById(R.id.yearTextView);
@@ -65,7 +63,7 @@ public class CustomSeriesItemAdapter extends BaseAdapter{
             plotTextView.setText(gridItems.get(position).getPlot());
             new ImageDownloader(seriesImageView).execute(gridItems.get(position).getImgPath());
         } else {
-            grid = (View) convertView;
+            grid = convertView;
         }
 
         return grid;

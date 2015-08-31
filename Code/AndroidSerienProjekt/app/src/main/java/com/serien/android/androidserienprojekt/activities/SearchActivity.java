@@ -156,44 +156,4 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
         }
 
     }
-
-    /*
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_search, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //Navigation zwischen den Activities
-        if (id == R.id.series_Main) {
-            Intent startMainActivity = new Intent(this, ListActivity.class);
-            startActivity(startMainActivity);
-//            SearchActivity.this.finish();
-            return true;
-        }else if (id == R.id.series_Top_30) {
-            Intent startTop30Activity = new Intent(this, Top30Activity.class);
-            startActivity(startTop30Activity);
-//            SearchActivity.this.finish();
-            return true;
-        }else if (id == R.id.series_Friend) {
-            Intent startFriendsActivity = new Intent(this, FriendsActivity.class);
-            startActivity(startFriendsActivity);
-//            SearchActivity.this.finish();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    */
-
 }
