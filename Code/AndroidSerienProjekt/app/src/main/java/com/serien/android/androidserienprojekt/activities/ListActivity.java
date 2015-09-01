@@ -58,7 +58,8 @@ public class ListActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 TextView tempTextView = (TextView) view.findViewById(R.id.series_title);
                 String seriesName = tempTextView.getText().toString();
-                startIntent(seriesName);
+                SeriesItem tempItem = db.getSeriesItems(seriesName);
+                startIntent(tempItem.getImdbID());
             }
         });
     }

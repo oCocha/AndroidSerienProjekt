@@ -25,6 +25,7 @@ public class SeriesRepository {
     public static final String KEY_PLOT = "plot";
     public static final String KEY_IMGPATH = "path";
     public static final String KEY_IMDBID = "id";
+    public static final String KEY_WATCHED_SERIES = "watched";
 
     private SeriesDBOpenHelper dbHelper;
     private SQLiteDatabase db;
