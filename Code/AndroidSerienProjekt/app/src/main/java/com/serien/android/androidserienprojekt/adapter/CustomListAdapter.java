@@ -18,14 +18,21 @@ import java.util.ArrayList;
 /**
  * Created by Igor on 31.08.2015.
  */
-public class CustomListAdapter extends BaseAdapter{
+public class CustomListAdapter extends BaseAdapter {
     private Activity activity;
-    private LayoutInflater inflater;
     private ArrayList<SeriesItem> seriesItems;
 
-    public CustomListAdapter(Activity activity, ArrayList<SeriesItem> series){
+    public CustomListAdapter(Activity activity, ArrayList<SeriesItem> series) {
         this.activity = activity;
         seriesItems = series;
+    }
+
+    static class ViewHolder {
+        public ImageView seriesImage;
+        public TextView seriesName;
+        public TextView seriesActors;
+        public TextView seriesRating;
+        public TextView seriesYear;
     }
 
     @Override
@@ -45,28 +52,36 @@ public class CustomListAdapter extends BaseAdapter{
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if(inflater == null){
-            inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        }
-        if(convertView == null){
+        ViewHolder viewHolder;
+
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.activity_list_row, null);
 
-            ImageView seriesImage = (ImageView) convertView.findViewById(R.id.series_thumbnail);
-            TextView seriesName = (TextView) convertView.findViewById(R.id.series_title);
-            TextView seriesActors = (TextView) convertView.findViewById(R.id.series_actors);
-            TextView seriesRating = (TextView) convertView.findViewById(R.id.series_rating);
-            TextView seriesYear = (TextView) convertView.findViewById(R.id.series_releaseYear);
+            viewHolder = new ViewHolder();
+            viewHolder.seriesImage = (ImageView) convertView.findViewById(R.id.series_thumbnail);
+            viewHolder.seriesName = (TextView) convertView.findViewById(R.id.series_title);
+            viewHolder.seriesActors = (TextView) convertView.findViewById(R.id.series_actors);
+            viewHolder.seriesRating = (TextView) convertView.findViewById(R.id.series_rating);
+            viewHolder.seriesYear = (TextView) convertView.findViewById(R.id.series_releaseYear);
 
-            SeriesItem item = seriesItems.get(position);
-
-            new ImageDownloader(seriesImage).execute(item.getImgPath());
-            seriesName.setText(item.getName());
-            //falsches Fetching der beiden unteres Sachen
-            seriesActors.setText(item.getRating());
-            seriesRating.setText("Rating: " + item.getActors());
-
-            seriesYear.setText(item.getYear());
+            convertView.setTag(viewHolder);
+        }else{
+            viewHolder = (ViewHolder) convertView.getTag();
         }
+
+        SeriesItem item = seriesItems.get(position);
+
+        viewHolder.seriesName.setText(item.getName());
+        //Actors und Ratings sind vertauscht, fehler beim fetching
+        viewHolder.seriesActors.setText(item.getRating());
+        viewHolder.seriesRating.setText(item.getActors());
+        viewHolder.seriesYear.setText(item.getYear());
+
+        if(viewHolder.seriesImage != null){
+            new ImageDownloader(viewHolder.seriesImage).execute(item.getImgPath());
+        }
+
         return convertView;
     }
 }

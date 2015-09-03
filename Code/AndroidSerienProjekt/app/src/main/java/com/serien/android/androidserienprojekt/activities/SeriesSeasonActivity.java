@@ -46,7 +46,7 @@ public class SeriesSeasonActivity extends AppCompatActivity {
     int seasonId=1;
     String endURL="/0/100/all/all";
     String testId="8523";
-    String guideBoxBase ="http://api-public.guidebox.com/v1.43/US/tpYo46LVz6OxRTeMTyJXnMIOivu3QU/show/";
+    String guideBoxBase ="http://api-public.guidebox.com/v1.43/US/rKLFGBQmcGcVIW3lgmk2KpXr1tbEq7b7/show/";
     boolean episodes = false;
     String guideBoxEpisodes = "/episodes/";
     int testSession = 1;
@@ -75,7 +75,7 @@ public class SeriesSeasonActivity extends AppCompatActivity {
 
     private void convertId(String imdb) {
         try {
-            new FetchSeries().execute(new URL("https://api-public.guidebox.com/v1.43/US/tpYo46LVz6OxRTeMTyJXnMIOivu3QU/search/id/imdb/"+imdb));
+            new FetchSeries().execute(new URL("https://api-public.guidebox.com/v1.43/US/rKLFGBQmcGcVIW3lgmk2KpXr1tbEq7b7/search/id/imdb/"+imdb));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -262,7 +262,7 @@ public class SeriesSeasonActivity extends AppCompatActivity {
         episodes =true;
         try {
             for(int i=1;i<seasonCounter+1;i++) {
-                new FetchSeries().execute(new URL("https://api-public.guidebox.com/v1.43/US/tpYo46LVz6OxRTeMTyJXnMIOivu3QU/show/"+ testId+"/episodes/" + i + endURL));
+                new FetchSeries().execute(new URL("https://api-public.guidebox.com/v1.43/US/rKLFGBQmcGcVIW3lgmk2KpXr1tbEq7b7/show/"+ testId+"/episodes/" + i + endURL));
             }
         } catch (MalformedURLException e) {
             System.out.println("Unable to create URL: " + e.toString());
@@ -286,7 +286,7 @@ public class SeriesSeasonActivity extends AppCompatActivity {
     //starts the FetchSeries class with the given name of the series
     public void getSeriesData(String seriesName) {
         try {
-            new FetchSeries().execute(new URL("https://api-public.guidebox.com/v1.43/US/tpYo46LVz6OxRTeMTyJXnMIOivu3QU/show/"+ testId+"/seasons"));
+            new FetchSeries().execute(new URL("https://api-public.guidebox.com/v1.43/US/rKLFGBQmcGcVIW3lgmk2KpXr1tbEq7b7/show/"+ testId+"/seasons"));
         } catch (MalformedURLException e) {
             System.out.println("Unable to create URL: " + e.toString());
         }
