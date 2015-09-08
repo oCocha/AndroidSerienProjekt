@@ -2,11 +2,11 @@ package com.serien.android.androidserienprojekt.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.serien.android.androidserienprojekt.R;
-import com.serien.android.androidserienprojekt.adapter.CustomSeriesItemAdapter;
+import com.serien.android.androidserienprojekt.adapter.CustomListAdapter;
 import com.serien.android.androidserienprojekt.domain.SeriesItem;
 import com.serien.android.androidserienprojekt.persistence.SeriesDataProvider;
 
@@ -18,8 +18,7 @@ public class Top30Activity extends ActionBarActivity implements SeriesDataProvid
     ArrayList<SeriesItem> top30SeriesItemList = new ArrayList<SeriesItem>();
     ArrayList<String> top30SeriesStringList = new ArrayList<String>();
     SeriesDataProvider sdp;
-    CustomSeriesItemAdapter customSeriesItemAdapter;
-    GridView gridView;
+    ListView gridView;
     Toast seriesNotFoundToast;
 
     @Override
@@ -71,13 +70,13 @@ public class Top30Activity extends ActionBarActivity implements SeriesDataProvid
 
     //Hier wird ein Gridviewadapter erstellt und mit dem Gridview verkn�pft
     private void initAdapter() {
-        customSeriesItemAdapter = new CustomSeriesItemAdapter(this, top30SeriesItemList);
-        gridView.setAdapter(customSeriesItemAdapter);
+        CustomListAdapter customListAdapter = new CustomListAdapter(this, top30SeriesItemList);
+        gridView.setAdapter(customListAdapter);
     }
 
     //Hier werden die UI Elemente erstellt
     private void initUI() {
-        gridView = (GridView) findViewById(R.id.seriesTop30GridView);
+        gridView = (ListView) findViewById(R.id.series_top);
     }
 
 

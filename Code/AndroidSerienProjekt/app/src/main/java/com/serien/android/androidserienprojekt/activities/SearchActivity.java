@@ -104,12 +104,6 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
         inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
-    /*
-    private void startIntent() {
-        Intent startSeriesSeasonActivity = new Intent(this, SeriesSeasonActivity.class);
-        startActivity(startSeriesSeasonActivity);
-    }
-    */
 
     private void startDataFetching(String tempString) {
         sdp.startSeriesFetching(this, tempString);
@@ -117,16 +111,16 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
 
     //Initialisiert die UI-Elemente
     private void initUI() {
-        seriesImageView = (ImageView) findViewById(R.id.seriesImageView);
-        nameTextView = (TextView) findViewById(R.id.nameTextView);
-        yearTextView = (TextView) findViewById(R.id.yearTextView);
-        actorsTextView = (TextView) findViewById(R.id.actorsTextView);
-        plotTextView = (TextView) findViewById(R.id.plotTextView);
-        ratingTextView = (TextView) findViewById(R.id.ratingTextView);
-        seriesEditText = (EditText) findViewById(R.id.seriesEditText);
-        searchButton = (Button) findViewById(R.id.searchButton);
-        deleteButton = (Button) findViewById(R.id.deleteButton);
-        addButton = (Button) findViewById(R.id.addButton);
+        seriesImageView = (ImageView) findViewById(R.id.search_series_image);
+        nameTextView = (TextView) findViewById(R.id.search_series_name);
+        yearTextView = (TextView) findViewById(R.id.search_series_year);
+        actorsTextView = (TextView) findViewById(R.id.search_series_actors);
+        plotTextView = (TextView) findViewById(R.id.search_series_plot);
+        ratingTextView = (TextView) findViewById(R.id.search_series_rating);
+        seriesEditText = (EditText) findViewById(R.id.search_series_searchterm);
+        searchButton = (Button) findViewById(R.id.search_searchButton);
+        deleteButton = (Button) findViewById(R.id.search_deleteButton);
+        addButton = (Button) findViewById(R.id.search_addButton);
     }
 
 
@@ -152,10 +146,12 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
         plotTextView.setText(series.getPlot());
         new ImageDownloader(SearchActivity.seriesImageView).execute(series.getImgPath());
 
+        seriesEditText.setText("");
+
         foundItem = series;
 
 
-        if (db.getSeriesItems(series.getName()) != null) {
+        if (db.getSeriesItem(series.getName()) != null) {
             deleteButton.setVisibility(View.VISIBLE);
             addButton.setVisibility(View.GONE);
         }else{

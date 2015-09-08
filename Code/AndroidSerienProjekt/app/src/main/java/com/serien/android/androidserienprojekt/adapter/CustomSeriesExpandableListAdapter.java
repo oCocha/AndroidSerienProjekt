@@ -51,9 +51,9 @@ public class CustomSeriesExpandableListAdapter extends BaseExpandableListAdapter
             convertView = inflater.inflate(R.layout.episode_item, null);
         }
 
-        TextView episodeTextView = (TextView) convertView.findViewById(R.id.episodeTextView);
+        TextView episodeTextView = (TextView) convertView.findViewById(R.id.episode_series_name);
 
-        CheckBox episodeCheckBox = (CheckBox) convertView.findViewById(R.id.episodeCheckBox);
+        CheckBox episodeCheckBox = (CheckBox) convertView.findViewById(R.id.episode_series_checkBox);
         /*
         delete.setOnClickListener(new OnClickListener() {
 
@@ -111,7 +111,7 @@ public class CustomSeriesExpandableListAdapter extends BaseExpandableListAdapter
             convertView = infalInflater.inflate(R.layout.season_item,
                     null);
         }
-        TextView item = (TextView) convertView.findViewById(R.id.seasonTextView);
+        TextView item = (TextView) convertView.findViewById(R.id.season_series_season_name);
         item.setTypeface(null, Typeface.BOLD);
         item.setText(laptopName);
         return convertView;

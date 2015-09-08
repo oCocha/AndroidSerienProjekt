@@ -49,8 +49,8 @@ public class startActivityImageAdapter extends BaseAdapter{
         if(convertView == null){
 
             grid = inflater.inflate(R.layout.start_activity_single_item, null);
-            TextView textView = (TextView) grid.findViewById(R.id.textView_single_grid);
-            ImageView imageView = (ImageView) grid.findViewById(R.id.imageView_single_grid);
+            TextView textView = (TextView) grid.findViewById(R.id.start_icon_name);
+            ImageView imageView = (ImageView) grid.findViewById(R.id.start_icon);
             textView.setText(imageText[position]);
             imageView.setImageResource(imageId[position]);
         }else{

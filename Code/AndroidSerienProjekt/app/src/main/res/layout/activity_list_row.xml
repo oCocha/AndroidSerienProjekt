@@ -5,40 +5,41 @@
     android:padding="8dp">
 
     <ImageView
-        android:id="@+id/series_thumbnail"
+        android:id="@+id/series_thumbnail_row"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_alignParentLeft="true"
         android:layout_marginRight="8dp"
-        android:background="@drawable/placeholder" />
+        android:background="@drawable/placeholder"
+        android:contentDescription="@string/image_description" />
 
     <TextView
-        android:id="@+id/series_title"
+        android:id="@+id/series_title_row"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/series_thumbnail"
-        android:layout_toRightOf="@+id/series_thumbnail"
+        android:layout_alignTop="@+id/series_thumbnail_row"
+        android:layout_toRightOf="@+id/series_thumbnail_row"
         android:textSize="22dp"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/series_actors"
+        android:id="@+id/series_actors_row"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/series_thumbnail"
-        android:layout_below="@id/series_title"
+        android:layout_toRightOf="@+id/series_thumbnail_row"
+        android:layout_below="@id/series_title_row"
         android:layout_marginTop="1dip"/>
 
     <TextView
-        android:id="@+id/series_rating"
+        android:id="@+id/series_rating_row"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/series_thumbnail"
-        android:layout_below="@id/series_actors"
+        android:layout_toRightOf="@+id/series_thumbnail_row"
+        android:layout_below="@id/series_actors_row"
         android:layout_marginTop="1dip"/>
 
     <TextView
-        android:id="@+id/series_releaseYear"
+        android:id="@+id/series_releaseYear_row"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

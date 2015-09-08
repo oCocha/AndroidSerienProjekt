@@ -19,12 +19,12 @@ import java.util.ArrayList;
  */
 
 //Adapter um ein Gridview mit Seriesitems aus einer Arraylist zu bef�llen
-public class CustomSeriesItemAdapter extends BaseAdapter{
+public class CustomTop30Adapter extends BaseAdapter{
 
     private Context mContext;
     private ArrayList<SeriesItem> gridItems;
 
-    public CustomSeriesItemAdapter(Context c,ArrayList<SeriesItem> gridItems) {
+    public CustomTop30Adapter(Context c, ArrayList<SeriesItem> gridItems) {
         mContext = c;
         this.gridItems = gridItems;
     }
@@ -49,12 +49,12 @@ public class CustomSeriesItemAdapter extends BaseAdapter{
 
         if (convertView == null) {
             grid = inflater.inflate(R.layout.activity_series_overview, null);
-            TextView nameTextView = (TextView) grid.findViewById(R.id.nameTextView);
+            TextView nameTextView = (TextView) grid.findViewById(R.id.season_series_name);
 //            TextView yearTextView = (TextView) grid.findViewById(R.id.yearTextView);
 //            TextView actorsTextView = (TextView) grid.findViewById(R.id.actorsTextView);
 //            TextView ratingTextView = (TextView) grid.findViewById(R.id.ratingTextView);
-            TextView plotTextView = (TextView) grid.findViewById(R.id.plotTextView);
-            ImageView seriesImageView = (ImageView) grid.findViewById(R.id.seriesImageView);
+            TextView plotTextView = (TextView) grid.findViewById(R.id.search_series_plot);
+            ImageView seriesImageView = (ImageView) grid.findViewById(R.id.search_series_image);
 
             nameTextView.setText(gridItems.get(position).getName());
 //            yearTextView.setText(gridItems.get(position).getYear());

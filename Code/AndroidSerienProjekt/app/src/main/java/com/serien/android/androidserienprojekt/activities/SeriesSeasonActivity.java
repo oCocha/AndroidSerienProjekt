@@ -1,15 +1,18 @@
 package com.serien.android.androidserienprojekt.activities;
-import android.content.Intent;
+
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
+
 import com.serien.android.androidserienprojekt.R;
 import com.serien.android.androidserienprojekt.adapter.CustomSeriesExpandableListAdapter;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
@@ -19,6 +22,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -32,16 +36,17 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+
 //Dies ist die SeriesSeasonActivity, in welcher Serien mitsamt aller Staffeln und Episoden angezeigt werden und mithilfe einer Checkbox markiert werden können
-public class SeriesSeasonActivity extends AppCompatActivity {
+public class SeriesSeasonActivity extends Fragment {
     List<String> seasonList;
     List<String> episodeList;
     Map<String, List<String>> seriesCollection;
     ExpandableListView expListView;
     boolean findId=true;
     TextView seriesNameTextView;
-    Intent intent;
-    String seriesName;
+    String seriesID;
     int seasonCounter=0;
     int seasonId=1;
     String endURL="/0/100/all/all";
@@ -59,17 +64,20 @@ public class SeriesSeasonActivity extends AppCompatActivity {
     public final String API_ALTERNATE_TITLE="alternate_title";
     public final String API_DURATION="duration";
     public final String API_RESULTS ="results";
-    ArrayList<Integer> totalResultsInt = new ArrayList<Integer>();
-    ArrayList<ArrayList<String>> titleList = new ArrayList<ArrayList<String>>();
+    ArrayList<Integer> totalResultsInt = new ArrayList<>();
+    ArrayList<ArrayList<String>> titleList = new ArrayList<>();
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_series_season);
-        intent = getIntent();
-        seriesName = intent.getStringExtra("SeriesName");
-        convertId(seriesName);
-        setupTestData();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstancesState){
+        return inflater.inflate(R.layout.activity_series_season, container, false);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        setupSeriesName();
+        convertId(seriesID);
         initUI();
     }
 
@@ -83,32 +91,33 @@ public class SeriesSeasonActivity extends AppCompatActivity {
 
     //erstellt einen ExpandableListViewAdapter und verknüpft diesen mit der erstellten ExpandableList
     private void initAdapter() {
-        final CustomSeriesExpandableListAdapter expListAdapter = new CustomSeriesExpandableListAdapter(this, seasonList, seriesCollection);
+        CustomSeriesExpandableListAdapter expListAdapter = new CustomSeriesExpandableListAdapter(getActivity(), seasonList, seriesCollection);
         expListView.setAdapter(expListAdapter);
     }
     //erstellt die UI Elemente
     private void initUI() {
-        expListView = (ExpandableListView) findViewById(R.id.series_expandableList);
-        seriesNameTextView = (TextView) findViewById(R.id.nameTextView);
-        seriesNameTextView.setText(seriesName);
+        expListView = (ExpandableListView) getView().findViewById(R.id.series_expandableList);
+        seriesNameTextView = (TextView) getView().findViewById(R.id.season_series_name);
+        seriesNameTextView.setText(seriesID);
     }
     //erstellt einen Testseriendatensatz
-    private void setupTestData() {
-        seriesName = intent.getStringExtra("SeriesName");
+    private void setupSeriesName() {
+        SeriesOverviewActivity overView = (SeriesOverviewActivity) getActivity();
+        seriesID = overView.getSeriesID();
         setupSeasonList();
     }
     //sets up the list with all sessions and episodes of a series
     private void setupCollection(ArrayList <ArrayList<String>> title, ArrayList<Integer> totalResultsInt) {
-        ArrayList<ArrayList<String>> seasons = new ArrayList<ArrayList<String>>();
-        ArrayList<String> season = new ArrayList<String>();
+        ArrayList<ArrayList<String>> seasons = new ArrayList<>();
+        ArrayList<String> season = new ArrayList<>();
         for(int j=0;j<seasonCounter;j++) {
             for (int i = 0; i < totalResultsInt.get(j); i++) {
-                season.add("Episode " +(i+1)+ "  " + title.get(j).get(i));
+                season.add("Episode " +(i+1)+ ":  " + title.get(j).get(i));
             }
             seasons.add(j, season);
-            season= new ArrayList<String>();
+            season= new ArrayList<>();
         }
-        seriesCollection = new LinkedHashMap<String, List<String>>();
+        seriesCollection = new LinkedHashMap<>();
         int c=0;
         for (String compareString : seasonList) {
             c++;
@@ -121,31 +130,14 @@ public class SeriesSeasonActivity extends AppCompatActivity {
     }
     //loads all episodes of a season in the list
     private void loadChild(ArrayList<String> s) {
-        episodeList = new ArrayList<String>();
+        episodeList = new ArrayList<>();
         for (String model : s)
             episodeList.add(model);
     }
     private void setupSeasonList() {
-        seasonList = new ArrayList<String>();
+        seasonList = new ArrayList<>();
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_series_season, menu);
-        return true;
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+
 
     private class FetchSeries extends AsyncTask<URL, Integer, JSONObject> {
         public String processHttpRequest(String url) {
@@ -198,12 +190,12 @@ public class SeriesSeasonActivity extends AppCompatActivity {
         protected void onPostExecute(JSONObject seriesSearchResult) {
             super.onPostExecute(seriesSearchResult);
             //gets called once at the beginning to get the guideboxId from the imdbId
-            if(findId==true) {
+            if(findId) {
                 if (seriesSearchResult.has("id")) {
                     try {
                         String guideboxId = seriesSearchResult.getString("id");
                         String guideboxName = seriesSearchResult.getString("title");
-                        seriesNameTextView = (TextView) findViewById(R.id.nameTextView);
+                        //seriesNameTextView = (TextView) getView().findViewById(R.id.nameTextView);
                         seriesNameTextView.setText(guideboxName);
                         findId = false;
                         testId = guideboxId;
@@ -216,7 +208,7 @@ public class SeriesSeasonActivity extends AppCompatActivity {
 
             }else {
                 //gets called once to get the number of seasons of a series
-                if(episodes==false) {
+                if(!episodes) {
                     try {
                         JSONArray result = seriesSearchResult.getJSONArray(API_RESULTS);
                         seasonCounter=result.length();
@@ -232,8 +224,8 @@ public class SeriesSeasonActivity extends AppCompatActivity {
                         }
                         totalResultsInt.add(Integer.parseInt(totalResults));
                         JSONArray result = seriesSearchResult.getJSONArray(API_RESULTS);
-                        ArrayList<String> titles = new ArrayList<String>();
-                        ArrayList<String> epis = new ArrayList<String>();
+                        ArrayList<String> titles = new ArrayList<>();
+                        ArrayList<String> epis = new ArrayList<>();
                         for(int i=0;i<totalResultsInt.get(seasonId-1);i++) {
                             Object title = result.get(totalResultsInt.get(seasonId-1)-1-i);
                             JSONObject o = new JSONObject();

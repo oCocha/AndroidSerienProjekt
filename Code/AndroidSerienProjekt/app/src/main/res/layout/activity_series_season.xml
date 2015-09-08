@@ -2,20 +2,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SeriesSeasonActivity" >
+    tools:context=".SeriesSeasonActivity">
 
     <TextView
-        android:id="@+id/nameTextView"
-        android:text="@string/seriesName"
+        android:id="@+id/season_series_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:textSize="24dp"
-        />
+        android:padding="15dp"
+        android:textSize="30sp"
+        android:textColor="@color/black"/>
 
     <ExpandableListView
         android:id="@+id/series_expandableList"
-        android:layout_below="@+id/nameTextView"
+        android:layout_below="@+id/season_series_name"
         android:layout_width="match_parent"
         android:layout_height="fill_parent" >
     </ExpandableListView>

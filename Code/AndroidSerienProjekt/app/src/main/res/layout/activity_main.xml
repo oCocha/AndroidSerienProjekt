@@ -5,7 +5,7 @@
         tools:cotext=".MainActivity1">
 
         <GridView
-        android:id="@+id/startGridView"
+        android:id="@+id/start_gridView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:numColumns="2"

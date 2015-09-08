@@ -1,40 +1,143 @@
 package com.serien.android.androidserienprojekt.activities;
 
-import android.support.v7.app.ActionBarActivity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.TabHost;
 
 import com.serien.android.androidserienprojekt.R;
+import com.serien.android.androidserienprojekt.adapter.MyFragmentPagerAdapter;
+import com.serien.android.androidserienprojekt.domain.SeriesItem;
+import com.serien.android.androidserienprojekt.persistence.SeriesRepository;
 
-//Automatisch erstellte Activity (Xml-Datei benötigt)
-public class SeriesOverviewActivity extends ActionBarActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+//Activity which contains Tabs, Fragments and the necessary Data
+public class SeriesOverviewActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, TabHost.OnTabChangeListener{
+
+    private SeriesRepository db;
+    ViewPager viewPager;
+    TabHost tabHost;
+    Intent intent;
+    SeriesItem specificSeries;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_series_overview);
+        initDB();
+        getData();
+
+
+        initViewPager();
+        initTabHost();
+    }
+
+
+    private void initDB() {
+        db = new SeriesRepository(this);
+        db.open();
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_series_overview, menu);
-        return true;
+    protected void onDestroy() {
+        db.close();
+        super.onDestroy();
+    }
+
+
+
+    private void initTabHost() {
+        tabHost = (TabHost) findViewById(android.R.id.tabhost);
+        tabHost.setup();
+
+        String[] tabName = {"Overview", "Seasons"};
+
+        for (String aTabName : tabName) {
+            TabHost.TabSpec tabSpec;
+            tabSpec = tabHost.newTabSpec(aTabName);
+            tabSpec.setIndicator(aTabName);
+            tabSpec.setContent(new FakeContent(getApplicationContext()));
+            tabHost.addTab(tabSpec);
+        }
+        tabHost.setOnTabChangedListener(this);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    }
+
+    @Override
+    public void onPageSelected(int selectedItem) {
+        tabHost.setCurrentTab(selectedItem);
+
+    }
+
+    //viewPager Listener
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    //tabHost Listener
+    @Override
+    public void onTabChanged(String tabId) {
+        int selectedItem = tabHost.getCurrentTab();
+        viewPager.setCurrentItem(selectedItem);
+
+    }
+
+    public String getSeriesID() {
+        return specificSeries.getImdbID();
+    }
+
+    public void getData() {
+        intent = getIntent();
+        specificSeries = (SeriesItem) intent.getSerializableExtra("seriesItem");
+
+    }
+
+    public void deleteSeries(String name) {
+        db.deleteSeries(name);
+    }
+
+
+    public class FakeContent implements TabHost.TabContentFactory {
+
+        Context context;
+        public FakeContent(Context context){
+            this.context = context;
         }
 
-        return super.onOptionsItemSelected(item);
+        @Override
+        public View createTabContent(String tag) {
+            View fakeView = new View(context);
+            fakeView.setMinimumHeight(0);
+            fakeView.setMinimumWidth(0);
+            return fakeView;
+        }
+    }
+
+    private void initViewPager() {
+
+        getIntent().putExtra("itemForFrag", specificSeries);
+
+        viewPager = (ViewPager) findViewById(R.id.overview_view_pager);
+        SeriesDetailFragment seriesDetailsFragment = new SeriesDetailFragment();
+        SeriesSeasonActivity seriesSeasonsFragment = new SeriesSeasonActivity();
+
+        List<Fragment> listFrag = new ArrayList<>();
+        listFrag.add(seriesDetailsFragment);
+        listFrag.add(seriesSeasonsFragment);
+
+        MyFragmentPagerAdapter myFragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), listFrag);
+        viewPager.setAdapter(myFragmentPagerAdapter);
+        viewPager.setOnPageChangeListener(this);
     }
 }

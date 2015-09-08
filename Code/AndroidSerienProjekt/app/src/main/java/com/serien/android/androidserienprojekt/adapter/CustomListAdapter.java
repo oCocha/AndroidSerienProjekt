@@ -35,20 +35,24 @@ public class CustomListAdapter extends BaseAdapter {
         public TextView seriesYear;
     }
 
+
     @Override
     public int getCount() {
         return seriesItems.size();
     }
+
 
     @Override
     public Object getItem(int position) {
         return seriesItems.get(position);
     }
 
+
     @Override
     public long getItemId(int position) {
         return position;
     }
+
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -59,11 +63,11 @@ public class CustomListAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.activity_list_row, null);
 
             viewHolder = new ViewHolder();
-            viewHolder.seriesImage = (ImageView) convertView.findViewById(R.id.series_thumbnail);
-            viewHolder.seriesName = (TextView) convertView.findViewById(R.id.series_title);
-            viewHolder.seriesActors = (TextView) convertView.findViewById(R.id.series_actors);
-            viewHolder.seriesRating = (TextView) convertView.findViewById(R.id.series_rating);
-            viewHolder.seriesYear = (TextView) convertView.findViewById(R.id.series_releaseYear);
+            viewHolder.seriesImage = (ImageView) convertView.findViewById(R.id.series_thumbnail_row);
+            viewHolder.seriesName = (TextView) convertView.findViewById(R.id.series_title_row);
+            viewHolder.seriesActors = (TextView) convertView.findViewById(R.id.series_actors_row);
+            viewHolder.seriesRating = (TextView) convertView.findViewById(R.id.series_rating_row);
+            viewHolder.seriesYear = (TextView) convertView.findViewById(R.id.series_releaseYear_row);
 
             convertView.setTag(viewHolder);
         }else{
@@ -81,7 +85,6 @@ public class CustomListAdapter extends BaseAdapter {
         if(viewHolder.seriesImage != null){
             new ImageDownloader(viewHolder.seriesImage).execute(item.getImgPath());
         }
-
         return convertView;
     }
 }

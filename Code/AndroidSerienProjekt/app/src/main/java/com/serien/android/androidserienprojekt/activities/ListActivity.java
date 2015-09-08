@@ -30,7 +30,7 @@ public class ListActivity extends AppCompatActivity {
         initAdapter();
     }
 
-    //
+
     private void initDB() {
         db = new SeriesRepository(this);
         db.open();
@@ -52,22 +52,32 @@ public class ListActivity extends AppCompatActivity {
 
     //Die UI Elemente werden initialisiert und mit Listenern belegt
     private void initUI() {
-        listView = (ListView) findViewById(R.id.list);
+        listView = (ListView) findViewById(R.id.list_general);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TextView tempTextView = (TextView) view.findViewById(R.id.series_title);
+                TextView tempTextView = (TextView) view.findViewById(R.id.series_title_row);
                 String seriesName = tempTextView.getText().toString();
-                SeriesItem tempItem = db.getSeriesItems(seriesName);
-                startIntent(tempItem.getImdbID());
+                SeriesItem tempItem = db.getSeriesItem(seriesName);
+                startIntent(tempItem);
             }
         });
     }
 
-    //ein Intent mit StringExtra wird gestartet
-    private void startIntent(String seriesName) {
-        Intent startSeriesSeasonActivity = new Intent(this, SeriesSeasonActivity.class);
-        startSeriesSeasonActivity.putExtra("SeriesName", seriesName);
-        startActivity(startSeriesSeasonActivity);
+    //passes a Object to the called Activity
+    private void startIntent(SeriesItem series) {
+        Intent startSeriesOverviewActivity = new Intent(this, SeriesOverviewActivity.class);
+        Bundle mBundle = new Bundle();
+        mBundle.putSerializable("seriesItem", series);
+        startSeriesOverviewActivity.putExtras(mBundle);
+        startActivity(startSeriesOverviewActivity);
     }
+
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
+    }
+
 }

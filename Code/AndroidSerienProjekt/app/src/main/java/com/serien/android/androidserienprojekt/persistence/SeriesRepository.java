@@ -72,7 +72,7 @@ public class SeriesRepository {
         return db.delete(DATABASE_TABLE, KEY_NAME + " =?", new String[]{name});
     }
 
-    public SeriesItem getSeriesItems(String name) {
+    public SeriesItem getSeriesItem(String name) {
         Cursor cursor = db.query(DATABASE_TABLE, new String[]{KEY_NAME, KEY_YEAR, KEY_ACTORS,
                 KEY_RATING, KEY_PLOT, KEY_IMGPATH, KEY_IMDBID}, KEY_NAME + "=?", new String[]{name}, null, null, null, null);
         if (cursor.moveToFirst()) {

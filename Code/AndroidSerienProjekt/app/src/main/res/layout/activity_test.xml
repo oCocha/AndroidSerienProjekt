@@ -8,55 +8,55 @@
     tools:context="com.serien.android.androidserienprojekt.activities.TestActivity">
 
     <TextView
-        android:id="@+id/nameTextView"
+        android:id="@+id/season_series_name"
         android:text="@string/seriesName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="24dp"
-        android:layout_below="@+id/seriesImageView"
+        android:layout_below="@+id/search_series_image"
         android:layout_centerHorizontal="true" />
 
     <TextView
-        android:id="@+id/yearTextView"
+        android:id="@+id/search_series_year"
         android:text="@string/seriesYear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="24dp"
-        android:layout_below="@+id/nameTextView"
+        android:layout_below="@+id/season_series_name"
         android:layout_centerHorizontal="true"
          />
 
     <TextView
-        android:id="@+id/actorsTextView"
+        android:id="@+id/search_series_actors"
         android:text="@string/seriesActors"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="24dp"
-        android:layout_below="@+id/yearTextView"
+        android:layout_below="@+id/search_series_year"
         android:layout_centerHorizontal="true" />
 
     <TextView
-        android:id="@+id/ratingTextView"
+        android:id="@+id/search_series_rating"
         android:text="@string/seriesRating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="24dp"
-        android:layout_below="@+id/actorsTextView"
+        android:layout_below="@+id/search_series_actors"
         android:layout_centerHorizontal="true" />
 
     <TextView
-        android:id="@+id/plotTextView"
+        android:id="@+id/search_series_plot"
         android:text="@string/seriesPlot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="24dp"
-        android:layout_below="@+id/ratingTextView"
+        android:layout_below="@+id/search_series_rating"
         android:layout_centerHorizontal="true" />
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:id="@+id/seriesImageView"
+        android:id="@+id/search_series_image"
         android:layout_centerHorizontal="true"
         android:gravity="center"
          />

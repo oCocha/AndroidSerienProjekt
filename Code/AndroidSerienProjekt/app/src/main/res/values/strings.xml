@@ -27,4 +27,10 @@
     <string name="title_activity_series_overview">SeriesOverviewActivity</string>
     <string name="title_activity_series_detail">SeriesDetailActivity</string>
     <string name="title_activity_series_season">Serieninformation</string>
+    <string name="image_description">Series Image</string>
+    <string name="image_description_start">Startbildschirm Icons </string>
+    <string name="fragmentRating">Rating: </string>
+    <string name="fragmentYear">Ausstrahlungsjahr: </string>
+    <string name="fragmentActor">Schauspieler: </string>
+    <string name="fragmentDescription">Serienbeschreibung: </string>
 </resources>

@@ -32,7 +32,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        GridView gridview = (GridView) findViewById(R.id.startGridView);
+        GridView gridview = (GridView) findViewById(R.id.start_gridView);
         gridview.setAdapter(new startActivityImageAdapter(MainActivity.this, textForIcons, imageIds));
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 

@@ -1,11 +1,13 @@
 package com.serien.android.androidserienprojekt.domain;
 
+import java.io.Serializable;
+
 /**
  * Created by oCocha on 29.07.2015.
  */
 
 //Dateiformat zum Abspeichern von Serien
-public class SeriesItem {
+public class SeriesItem implements Serializable {
 
     private String name;
     private String year;

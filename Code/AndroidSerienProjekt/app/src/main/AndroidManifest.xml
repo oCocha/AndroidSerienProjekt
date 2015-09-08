@@ -44,15 +44,7 @@
         </activity>
         <activity
             android:name=".activities.SeriesOverviewActivity"
-            android:label="@string/title_activity_series_overview" >
-        </activity>
-        <activity
-            android:name=".activities.SeriesDetailActivity"
-            android:label="@string/title_activity_series_detail" >
-        </activity>
-        <activity
-            android:name=".activities.SeriesSeasonActivity"
-            android:label="@string/title_activity_series_season"
+            android:label="@string/title_activity_series_overview"
             android:parentActivityName=".activities.ListActivity">
         </activity>
     </application>
