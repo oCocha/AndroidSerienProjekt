@@ -58,6 +58,7 @@ public class SeriesDataProvider {
     String tempPlot;
     String tempImdbID;
     String responseCheck;
+    String tempWatched = null;
 
     //wandelt den �bergebenen String in eine brauchbare SearchQuery um und �bergibt sie weiter
     public void startSeriesFetching(OnSeriesDataProvidedListener onSeriesDataProvidedListener, String searchQuery) {
@@ -141,7 +142,7 @@ public class SeriesDataProvider {
             if(responseCheck.equals("False")) {
                 onSeriesDataProvidedListener.onSeriesNotFound(searchQuery);
             }else {
-                seriesData = new SeriesItem(tempName, tempYear, tempRating, tempActors, tempPlot, tempImageURL, tempImdbID);
+                seriesData = new SeriesItem(tempName, tempYear, tempRating, tempActors, tempPlot, tempImageURL, tempImdbID, tempWatched);
                 onSeriesDataProvidedListener.onSeriesDataReceived(seriesData);
             }
             }

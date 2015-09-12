@@ -1,5 +1,6 @@
 package com.serien.android.androidserienprojekt.activities;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,9 @@ import android.widget.TextView;
 
 import com.serien.android.androidserienprojekt.R;
 import com.serien.android.androidserienprojekt.adapter.CustomSeriesExpandableListAdapter;
+import com.serien.android.androidserienprojekt.domain.SeriesItem;
+import com.serien.android.androidserienprojekt.persistence.SeriesRepository;
+import com.thoughtworks.xstream.XStream;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -42,7 +46,12 @@ import java.util.Map;
 public class SeriesSeasonActivity extends Fragment {
     List<String> seasonList;
     List<String> episodeList;
+    List<Integer> episodeListWatched;
+    ArrayList<ArrayList<Integer>> seasonsWatched;
+    ArrayList<ArrayList<Integer>> seasonsWatchedTemp;
     Map<String, List<String>> seriesCollection;
+    Map<String, List<Integer>> seriesCollectionWatched;
+    private SeriesRepository db;
     ExpandableListView expListView;
     boolean findId=true;
     TextView seriesNameTextView;
@@ -57,6 +66,7 @@ public class SeriesSeasonActivity extends Fragment {
     int testSession = 1;
     String guideBoxEnd ="/0/1/all/all";
     String totalResults="";
+    String guideboxName;
     public final String API_TOTAL_RESULTS ="total_results";
     public final String API_ID="id";
     public final String API_FIRST_AIRED="first_aired";
@@ -66,6 +76,7 @@ public class SeriesSeasonActivity extends Fragment {
     public final String API_RESULTS ="results";
     ArrayList<Integer> totalResultsInt = new ArrayList<>();
     ArrayList<ArrayList<String>> titleList = new ArrayList<>();
+    SeriesOverviewActivity overView;
 
 
     @Override
@@ -79,7 +90,21 @@ public class SeriesSeasonActivity extends Fragment {
         setupSeriesName();
         convertId(seriesID);
         initUI();
+        initDB();
     }
+
+    private void initDB() {
+        db = new SeriesRepository(overView);
+        db.open();
+    }
+
+    /*
+    @Override
+    protected void onDestroy() {
+        db.close();
+        super.onDestroy();
+    }
+    */
 
     private void convertId(String imdb) {
         try {
@@ -91,7 +116,7 @@ public class SeriesSeasonActivity extends Fragment {
 
     //erstellt einen ExpandableListViewAdapter und verknüpft diesen mit der erstellten ExpandableList
     private void initAdapter() {
-        CustomSeriesExpandableListAdapter expListAdapter = new CustomSeriesExpandableListAdapter(getActivity(), seasonList, seriesCollection);
+        CustomSeriesExpandableListAdapter expListAdapter = new CustomSeriesExpandableListAdapter(getActivity(), seasonList, seriesCollection, seasonsWatchedTemp, db.getSeriesItem(guideboxName));
         expListView.setAdapter(expListAdapter);
     }
     //erstellt die UI Elemente
@@ -102,7 +127,7 @@ public class SeriesSeasonActivity extends Fragment {
     }
     //erstellt einen Testseriendatensatz
     private void setupSeriesName() {
-        SeriesOverviewActivity overView = (SeriesOverviewActivity) getActivity();
+        overView = (SeriesOverviewActivity) getActivity();
         seriesID = overView.getSeriesID();
         setupSeasonList();
     }
@@ -110,6 +135,30 @@ public class SeriesSeasonActivity extends Fragment {
     private void setupCollection(ArrayList <ArrayList<String>> title, ArrayList<Integer> totalResultsInt) {
         ArrayList<ArrayList<String>> seasons = new ArrayList<>();
         ArrayList<String> season = new ArrayList<>();
+        XStream xStream = new XStream();
+
+         if(db.getSeriesItem(guideboxName).getWatched() == null) {
+            System.out.println("SERIESIDDDDDDDDDDDDDDDDDDDDDDD:"+guideboxName);
+            seasonsWatchedTemp = new ArrayList<>();
+            ArrayList<Integer> seasonEpisodesWatched = new ArrayList<>();
+            Integer tempInt = 0;
+            for(int i = 0; i < totalResultsInt.size(); i++) {
+                seasonEpisodesWatched = new ArrayList<>();
+                for(int j = 0; j < totalResultsInt.get(i); j++) {
+                    seasonEpisodesWatched.add(tempInt);
+                }
+                seasonsWatchedTemp.add(seasonEpisodesWatched);
+            }
+         }else{
+            seasonsWatchedTemp = new ArrayList<>();
+            seasonsWatchedTemp = (ArrayList<ArrayList<Integer>>) xStream.fromXML(db.getSeriesItem(guideboxName).getWatched());
+             System.out.println("WATCHEDVORHANDENNNNNNNNNNNNNNNNNN:"+seasonsWatchedTemp);
+         }
+
+//        db.updateWatchedData(xmlSeasonsWatched);
+
+
+
         for(int j=0;j<seasonCounter;j++) {
             for (int i = 0; i < totalResultsInt.get(j); i++) {
                 season.add("Episode " +(i+1)+ ":  " + title.get(j).get(i));
@@ -118,13 +167,16 @@ public class SeriesSeasonActivity extends Fragment {
             season= new ArrayList<>();
         }
         seriesCollection = new LinkedHashMap<>();
+        seriesCollectionWatched = new LinkedHashMap<>();
         int c=0;
         for (String compareString : seasonList) {
             c++;
             if (compareString.equals("Staffel "+ c)) {
                 loadChild(seasons.get(c - 1));
+                loadChildWatched(seasonsWatchedTemp.get(c - 1));
             }
             seriesCollection.put(compareString, episodeList);
+            seriesCollectionWatched.put(compareString, episodeListWatched);
             initAdapter();
         }
     }
@@ -133,6 +185,11 @@ public class SeriesSeasonActivity extends Fragment {
         episodeList = new ArrayList<>();
         for (String model : s)
             episodeList.add(model);
+    }
+    private void loadChildWatched(ArrayList<Integer> s) {
+        episodeListWatched = new ArrayList<>();
+        for (Integer model : s)
+            episodeListWatched.add(model);
     }
     private void setupSeasonList() {
         seasonList = new ArrayList<>();
@@ -194,7 +251,7 @@ public class SeriesSeasonActivity extends Fragment {
                 if (seriesSearchResult.has("id")) {
                     try {
                         String guideboxId = seriesSearchResult.getString("id");
-                        String guideboxName = seriesSearchResult.getString("title");
+                        guideboxName = seriesSearchResult.getString("title");
                         //seriesNameTextView = (TextView) getView().findViewById(R.id.nameTextView);
                         seriesNameTextView.setText(guideboxName);
                         findId = false;

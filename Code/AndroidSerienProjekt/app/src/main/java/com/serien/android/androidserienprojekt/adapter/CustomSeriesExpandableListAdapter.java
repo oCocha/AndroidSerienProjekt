@@ -11,7 +11,12 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.serien.android.androidserienprojekt.R;
+import com.serien.android.androidserienprojekt.activities.SeriesSeasonActivity;
+import com.serien.android.androidserienprojekt.domain.SeriesItem;
+import com.serien.android.androidserienprojekt.persistence.SeriesRepository;
+import com.thoughtworks.xstream.XStream;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,17 +29,36 @@ public class CustomSeriesExpandableListAdapter extends BaseExpandableListAdapter
 
     private Activity context;
     private Map<String, List<String>> seriesCollections;
+    ArrayList<ArrayList<Integer>> seasonsWatchedTemp;
     private List<String> seasons;
+    private SeriesItem seriesItem;
+    private SeriesRepository db;
+    private XStream xStream;
+    private String xmlSeasonsWatched;
 
     public CustomSeriesExpandableListAdapter(Activity context, List<String> seasons,
-                                 Map<String, List<String>> seriesCollections) {
+                                 Map<String, List<String>> seriesCollections, ArrayList<ArrayList<Integer>> seasonsWatchedTemp, SeriesItem seriesItem) {
         this.context = context;
         this.seriesCollections = seriesCollections;
         this.seasons = seasons;
+        this.seasonsWatchedTemp = seasonsWatchedTemp;
+        this.seriesItem = seriesItem;
+        initDB();
+        xStream = new XStream();
+//                System.out.println("List<String> seasons : " + seasons + "; Map<String, List<String>> seriesCollections : " + seriesCollections + "; Map<String, List<Integer>> seriesCollections : " + seasonsWatchedTemp);
+    }
+
+    private void initDB() {
+        db = new SeriesRepository(context);
+        db.open();
     }
 
     public Object getChild(int groupPosition, int childPosition) {
         return seriesCollections.get(seasons.get(groupPosition)).get(childPosition);
+    }
+
+    public Object getChildWatched(int groupPosition, int childPosition) {
+        return seasonsWatchedTemp.get(groupPosition).get(childPosition);
     }
 
     public long getChildId(int groupPosition, int childPosition) {
@@ -45,6 +69,7 @@ public class CustomSeriesExpandableListAdapter extends BaseExpandableListAdapter
     public View getChildView(final int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
         final String laptop = (String) getChild(groupPosition, childPosition);
+        final Integer episodesWatched = (Integer) getChildWatched(groupPosition, childPosition);
         LayoutInflater inflater = context.getLayoutInflater();
 
         if (convertView == null) {
@@ -54,6 +79,27 @@ public class CustomSeriesExpandableListAdapter extends BaseExpandableListAdapter
         TextView episodeTextView = (TextView) convertView.findViewById(R.id.episode_series_name);
 
         CheckBox episodeCheckBox = (CheckBox) convertView.findViewById(R.id.episode_series_checkBox);
+        episodeCheckBox.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ArrayList<Integer> tempArrayList = seasonsWatchedTemp.get(groupPosition);
+                System.out.println("TempArraayListDavor:"+tempArrayList);
+                if(tempArrayList.get(childPosition) == 1){
+                    tempArrayList.set(childPosition, 0);
+                }else{
+                    tempArrayList.set(childPosition, 1);
+                }
+                seasonsWatchedTemp.set(groupPosition, tempArrayList);
+                xmlSeasonsWatched = xStream.toXML(seasonsWatchedTemp);
+                db.updateWatchedEpisodes(seriesItem.getName(), xmlSeasonsWatched);
+                System.out.println("TempArraayListDanach:"+tempArrayList);
+                System.out.println("Staffel "+groupPosition+" aktiv!");
+                System.out.println("Button "+childPosition+" geklickt!");
+            }
+        });
+
         /*
         delete.setOnClickListener(new OnClickListener() {
 
@@ -81,7 +127,11 @@ public class CustomSeriesExpandableListAdapter extends BaseExpandableListAdapter
             }
         });
         */
-
+        if(episodesWatched == 1) {
+            episodeCheckBox.setChecked(true);
+        }else{
+            episodeCheckBox.setChecked(false);
+        }
         episodeTextView.setText(laptop);
         return convertView;
     }
