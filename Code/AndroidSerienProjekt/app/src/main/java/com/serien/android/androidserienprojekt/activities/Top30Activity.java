@@ -1,19 +1,23 @@
 package com.serien.android.androidserienprojekt.activities;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Base64;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.serien.android.androidserienprojekt.R;
 import com.serien.android.androidserienprojekt.adapter.CustomListAdapter;
 import com.serien.android.androidserienprojekt.domain.SeriesItem;
+import com.serien.android.androidserienprojekt.persistence.ImageDownloader;
 import com.serien.android.androidserienprojekt.persistence.SeriesDataProvider;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 //Dies ist die Top30Activity, in welcher beliebte/gut bewertete Serien per AsynTask geladen und angezeigt werden
-public class Top30Activity extends ActionBarActivity implements SeriesDataProvider.OnSeriesDataProvidedListener{
+public class Top30Activity extends ActionBarActivity implements SeriesDataProvider.OnSeriesDataProvidedListener,ImageDownloader.OnImageProvidedListener{
     public static final String NO_SERIES_DATA = "Gesuchte Serie wurde leider nicht gefunden";
     ArrayList<SeriesItem> top30SeriesItemList = new ArrayList<SeriesItem>();
     ArrayList<String> top30SeriesStringList = new ArrayList<String>();
@@ -30,9 +34,10 @@ public class Top30Activity extends ActionBarActivity implements SeriesDataProvid
     }
 
     //Sobald ein SeriesDataProvider SeriesItems liefert werden sie in eine ArraList gespeichert und per Adapter angezeigt
-    public void onSeriesDataReceived(SeriesItem seriesItem) {
+    public void onSeriesDataReceived(SeriesItem seriesItem, Integer topListNumber) {
         top30SeriesItemList.add(seriesItem);
         initAdapter();
+        new ImageDownloader(this, topListNumber).execute(top30SeriesItemList.get(topListNumber).getImgPath());
     }
 
     public void onSeriesNotFound(String searchQuery) {
@@ -47,10 +52,14 @@ public class Top30Activity extends ActionBarActivity implements SeriesDataProvid
 
     //Hier wird die Top30 Liste per AsyncTask aus der OMDBAPI geladen
     private void fetchTop30ListData() {
-        top30SeriesItemList.clear();
-        for(int i = 0; i < top30SeriesStringList.size(); i++) {
-            sdp = new SeriesDataProvider();
-            sdp.startSeriesFetching(this, top30SeriesStringList.get(i));
+//        top30SeriesItemList.clear();
+        if(top30SeriesItemList.size() < 1){
+            for(int i = 0; i < top30SeriesStringList.size(); i++) {
+                sdp = new SeriesDataProvider();
+                sdp.startSeriesFetching(this, top30SeriesStringList.get(i), i);
+            }
+        }else{
+            initAdapter();
         }
     }
 
@@ -77,6 +86,19 @@ public class Top30Activity extends ActionBarActivity implements SeriesDataProvid
     //Hier werden die UI Elemente erstellt
     private void initUI() {
         gridView = (ListView) findViewById(R.id.series_top);
+    }
+
+    @Override
+    public void onImageReceived(Bitmap Image, Integer topListNumber) {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        System.out.println("IMAGEEEEEEEEEEEEEEE:"+Image+" TOPLISTNUMBERRRRRRRRRRR:"+topListNumber);
+        Image.compress(Bitmap.CompressFormat.PNG, 100, bos);
+        byte[] bArray = bos.toByteArray();
+        String encoded = Base64.encodeToString(bArray, Base64.DEFAULT);
+        SeriesItem tempSeriesItem = top30SeriesItemList.get(topListNumber);
+        tempSeriesItem.updateimgString(encoded);
+        top30SeriesItemList.set(topListNumber, tempSeriesItem);
+        initAdapter();
     }
 
 

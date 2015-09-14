@@ -1,9 +1,12 @@
 package com.serien.android.androidserienprojekt.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +23,7 @@ public class SeriesDetailFragment extends Fragment {
 
     public static Button deleteButton;
     SeriesItem serItem;
+    ImageDownloader.OnImageProvidedListener onImageProvidedListener;
 
 
     @Override
@@ -81,10 +85,13 @@ public class SeriesDetailFragment extends Fragment {
 
 
         viewHolder.serName.setText(serItem.getName());
-        new ImageDownloader(viewHolder.serImage).execute(serItem.getImgPath());
         viewHolder.serRating.setText(serItem.getActors());
         viewHolder.serYear.setText(serItem.getYear());
         viewHolder.serActor.setText(serItem.getRating());
         viewHolder.serPlot.setText(serItem.getPlot());
+        String testBitString = serItem.getImgString();
+        byte[] decodedByte = Base64.decode(testBitString, 0);
+        Bitmap seriesBitmap = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
+        viewHolder.serImage.setImageBitmap(seriesBitmap);
     }
 }

@@ -1,6 +1,9 @@
 package com.serien.android.androidserienprojekt.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +22,13 @@ import java.util.ArrayList;
  */
 
 //Adapter um ein Gridview mit Seriesitems aus einer Arraylist zu bef�llen
-public class CustomTop30Adapter extends BaseAdapter{
+public class CustomTop30Adapter extends BaseAdapter implements ImageDownloader.OnImageProvidedListener{
 
     private Context mContext;
     private ArrayList<SeriesItem> gridItems;
+    TextView nameTextView;
+    TextView plotTextView;
+    ImageView seriesImageView;
 
     public CustomTop30Adapter(Context c, ArrayList<SeriesItem> gridItems) {
         mContext = c;
@@ -49,19 +55,28 @@ public class CustomTop30Adapter extends BaseAdapter{
 
         if (convertView == null) {
             grid = inflater.inflate(R.layout.activity_series_overview, null);
-            TextView nameTextView = (TextView) grid.findViewById(R.id.season_series_name);
+            nameTextView = (TextView) grid.findViewById(R.id.season_series_name);
 //            TextView yearTextView = (TextView) grid.findViewById(R.id.yearTextView);
 //            TextView actorsTextView = (TextView) grid.findViewById(R.id.actorsTextView);
 //            TextView ratingTextView = (TextView) grid.findViewById(R.id.ratingTextView);
-            TextView plotTextView = (TextView) grid.findViewById(R.id.search_series_plot);
-            ImageView seriesImageView = (ImageView) grid.findViewById(R.id.search_series_image);
+            plotTextView = (TextView) grid.findViewById(R.id.search_series_plot);
+            seriesImageView = (ImageView) grid.findViewById(R.id.search_series_image);
 
             nameTextView.setText(gridItems.get(position).getName());
 //            yearTextView.setText(gridItems.get(position).getYear());
 //            actorsTextView.setText(gridItems.get(position).getActors());
 //            ratingTextView.setText(gridItems.get(position).getRating());
             plotTextView.setText(gridItems.get(position).getPlot());
-            new ImageDownloader(seriesImageView).execute(gridItems.get(position).getImgPath());
+
+            if(gridItems.get(position).getImgString() != null) {
+                String testBitString = gridItems.get(position).getImgString();
+                System.out.println("BITTTTTTTTTTTTTTTTTTTTTTTTTTBILDDDDDDDDDDDDDDDDDDDDDDDD");
+                byte[] decodedByte = Base64.decode(testBitString, 0);
+                Bitmap testBitmap = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
+                seriesImageView.setImageBitmap(testBitmap);
+            }
+            new ImageDownloader(/*seriesImageView, */this, null
+            ).execute(gridItems.get(position).getImgPath());
         } else {
             grid = convertView;
         }
@@ -69,4 +84,8 @@ public class CustomTop30Adapter extends BaseAdapter{
         return grid;
     }
 
+    @Override
+    public void onImageReceived(Bitmap Image, Integer integer) {
+//        seriesImageView.setImageBitmap(Image);
+    }
 }

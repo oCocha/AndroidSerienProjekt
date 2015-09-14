@@ -59,11 +59,13 @@ public class SeriesDataProvider {
     String tempImdbID;
     String responseCheck;
     String tempWatched = null;
+    Integer topListNumber;
 
     //wandelt den �bergebenen String in eine brauchbare SearchQuery um und �bergibt sie weiter
-    public void startSeriesFetching(OnSeriesDataProvidedListener onSeriesDataProvidedListener, String searchQuery) {
+    public void startSeriesFetching(OnSeriesDataProvidedListener onSeriesDataProvidedListener, String searchQuery, Integer topListNumber) {
         this.onSeriesDataProvidedListener = onSeriesDataProvidedListener;
         this.searchQuery = searchQuery;
+        this.topListNumber = topListNumber;
         searchURL = searchQuery.replace(" ", "+");;
         getSeriesData(searchURL);
     }
@@ -142,8 +144,8 @@ public class SeriesDataProvider {
             if(responseCheck.equals("False")) {
                 onSeriesDataProvidedListener.onSeriesNotFound(searchQuery);
             }else {
-                seriesData = new SeriesItem(tempName, tempYear, tempRating, tempActors, tempPlot, tempImageURL, tempImdbID, tempWatched);
-                onSeriesDataProvidedListener.onSeriesDataReceived(seriesData);
+                seriesData = new SeriesItem(tempName, tempYear, tempRating, tempActors, tempPlot, tempImageURL, tempImdbID, tempWatched, null);
+                onSeriesDataProvidedListener.onSeriesDataReceived(seriesData, topListNumber);
             }
             }
         }
@@ -175,7 +177,7 @@ public class SeriesDataProvider {
 
     //Interface f�r das Bereitstellen der Seriesitems
     public interface OnSeriesDataProvidedListener {
-        void onSeriesDataReceived(SeriesItem seriesData);
+        void onSeriesDataReceived(SeriesItem seriesData, Integer topListNumber);
         void onSeriesNotFound(String searchQuery);
     }
 

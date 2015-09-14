@@ -2,6 +2,9 @@ package com.serien.android.androidserienprojekt.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +24,7 @@ import java.util.ArrayList;
 public class CustomListAdapter extends BaseAdapter {
     private Activity activity;
     private ArrayList<SeriesItem> seriesItems;
+    ImageDownloader.OnImageProvidedListener onImageProvidedListener;
 
     public CustomListAdapter(Activity activity, ArrayList<SeriesItem> series) {
         this.activity = activity;
@@ -83,7 +87,13 @@ public class CustomListAdapter extends BaseAdapter {
         viewHolder.seriesYear.setText(item.getYear());
 
         if(viewHolder.seriesImage != null){
-            new ImageDownloader(viewHolder.seriesImage).execute(item.getImgPath());
+//            new ImageDownloader(viewHolder.seriesImage, onImageProvidedListener).execute(item.getImgPath());
+            if(item.getImgString() != null) {
+                String testBitString = item.getImgString();
+                byte[] decodedByte = Base64.decode(testBitString, 0);
+                Bitmap testBitmap = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
+                viewHolder.seriesImage.setImageBitmap(testBitmap);
+            }
         }
         return convertView;
     }

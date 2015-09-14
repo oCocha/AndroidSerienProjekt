@@ -17,10 +17,12 @@ public class SeriesItem implements Serializable {
     private String imgPath;
     private String imdbID;
     private String watched;
+    private String imgString;
+
 
 
     //erstellt ein neues SeriesItem
-    public SeriesItem(String name, String year, String actors, String rating, String plot, String imgPath, String imdbID, String watched) {
+    public SeriesItem(String name, String year, String actors, String rating, String plot, String imgPath, String imdbID, String watched, String imgString) {
         this.name = name;
         this.year = year;
         this.actors = actors;
@@ -29,12 +31,20 @@ public class SeriesItem implements Serializable {
         this.imgPath = imgPath;
         this.imdbID = imdbID;
         this.watched = watched;
+        this.imgString = imgString;
+    }
+
+    public void updateimgString(String imageString) {
+        imgString = imageString;
+    }
+
+    public String getImgString() {
+        return imgString;
     }
 
     public String getWatched() {
         return watched;
     }
-
 
     public String getImdbID() {
         return imdbID;

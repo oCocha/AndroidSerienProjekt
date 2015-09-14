@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 public class SeriesRepository {
 
-    private static final String DATABASE_NAME = "serieslist1.db";
+    private static final String DATABASE_NAME = "serieslist4.db";
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_TABLE = "seriesItems";
     public static final String KEY_NAME = "name";
@@ -27,6 +27,8 @@ public class SeriesRepository {
     public static final String KEY_IMGPATH = "path";
     public static final String KEY_IMDBID = "id";
     public static final String KEY_WATCHED = "watched";
+    public static final String KEY_IMAGE = "image";
+
 
     private SeriesDBOpenHelper dbHelper;
     private SQLiteDatabase db;
@@ -54,6 +56,17 @@ public class SeriesRepository {
         return db.insert(DATABASE_TABLE, null, values);
     }
 
+    public boolean updateImage(String name, String seriesImage) {
+        String sql="update "+DATABASE_TABLE+" set image='"+seriesImage+"' where "+KEY_NAME+" like ?";
+        Object[] bindArgs={name};
+        try{
+            db.execSQL(sql, bindArgs);
+            return true;
+        }catch(SQLException ex){
+            return false;
+        }
+    }
+
     public boolean updateWatchedEpisodes(String name, String watchedEpisodes) {
         String sql="update "+DATABASE_TABLE+" set watched='"+watchedEpisodes+"' where "+KEY_NAME+" like ?";
         Object[] bindArgs={name};
@@ -68,18 +81,28 @@ public class SeriesRepository {
     public ArrayList<SeriesItem> getAllSeriesItems() {
         ArrayList<SeriesItem> allSeriesItems = new ArrayList<>();
         Cursor dBCursor = db.query(DATABASE_TABLE, new String[]{KEY_NAME, KEY_YEAR, KEY_ACTORS,
-                KEY_RATING, KEY_PLOT, KEY_IMGPATH, KEY_IMDBID, KEY_WATCHED}, null, null, null, null, null);
+                KEY_RATING, KEY_PLOT, KEY_IMGPATH, KEY_IMDBID, KEY_WATCHED, KEY_IMAGE}, null, null, null, null, null);
 
         if(dBCursor.moveToFirst()){
             do{
                 SeriesItem series = new SeriesItem(dBCursor.getString(0), dBCursor.getString(1), dBCursor.getString(2),
-                        dBCursor.getString(3), dBCursor.getString(4), dBCursor.getString(5), dBCursor.getString(6), dBCursor.getString(7));
+                        dBCursor.getString(3), dBCursor.getString(4), dBCursor.getString(5), dBCursor.getString(6), dBCursor.getString(7), dBCursor.getString(8));
                 allSeriesItems.add(series);
             }while(dBCursor.moveToNext());
         }
         return allSeriesItems;
     }
 
+    public String getImage(String seriesName) {
+        String imageString = null;
+        Cursor dBCursor = db.query(DATABASE_TABLE, new String[]{KEY_IMAGE}, KEY_NAME+"='"+seriesName+"'", null, null, null, null);
+        if(dBCursor.moveToFirst()){
+            do{
+                imageString = dBCursor.getString(0);
+            }while(dBCursor.moveToNext());
+        }
+        return imageString;
+    }
 
     public long deleteSeries(String name) {
         return db.delete(DATABASE_TABLE, KEY_NAME + " =?", new String[]{name});
@@ -87,10 +110,10 @@ public class SeriesRepository {
 
     public SeriesItem getSeriesItem(String name) {
         Cursor cursor = db.query(DATABASE_TABLE, new String[]{KEY_NAME, KEY_YEAR, KEY_ACTORS,
-                KEY_RATING, KEY_PLOT, KEY_IMGPATH, KEY_IMDBID, KEY_WATCHED}, KEY_NAME + "=?", new String[]{name}, null, null, null, null);
+                KEY_RATING, KEY_PLOT, KEY_IMGPATH, KEY_IMDBID, KEY_WATCHED, KEY_IMAGE}, KEY_NAME + "=?", new String[]{name}, null, null, null, null);
         if (cursor.moveToFirst()) {
             return new SeriesItem(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3),
-                    cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7));
+                    cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8));
         } else {
             return null;
         }
@@ -106,7 +129,8 @@ public class SeriesRepository {
                 + KEY_PLOT + " TEXT,"
                 + KEY_IMGPATH + " TEXT,"
                 + KEY_IMDBID + " TEXT,"
-                + KEY_WATCHED + " TEXT" + ")";
+                + KEY_WATCHED + " TEXT,"
+                + KEY_IMAGE + " TEXT" + ")";
 
         public SeriesDBOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
             super(context, name, factory, version);

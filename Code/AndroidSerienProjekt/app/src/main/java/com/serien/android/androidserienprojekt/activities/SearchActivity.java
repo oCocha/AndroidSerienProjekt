@@ -1,8 +1,11 @@
 package com.serien.android.androidserienprojekt.activities;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Base64;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -17,8 +20,10 @@ import com.serien.android.androidserienprojekt.persistence.ImageDownloader;
 import com.serien.android.androidserienprojekt.persistence.SeriesDataProvider;
 import com.serien.android.androidserienprojekt.persistence.SeriesRepository;
 
+import java.io.ByteArrayOutputStream;
+
 //Dies ist die SearchActivity, in welcher Serien per AsyncTask gesucht und falls vorhanden angezeigt werden
-public class SearchActivity extends ActionBarActivity implements SeriesDataProvider.OnSeriesDataProvidedListener{
+public class SearchActivity extends ActionBarActivity implements SeriesDataProvider.OnSeriesDataProvidedListener, ImageDownloader.OnImageProvidedListener{
 
     public static final String SERIES_NAME = "Serienname";
     public static final String SERIES_ACTORS = "Serienschauspieler";
@@ -41,6 +46,7 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
     public static Button deleteButton;
     public static final String NO_SERIES_DATA = "Gesuchte Serie leider nicht gefunden.";
     SeriesDataProvider sdp = new SeriesDataProvider();
+    private Bitmap seriesImage;
 
 
 
@@ -91,6 +97,23 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
         addButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 db.addSeriesItem(foundItem);
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                seriesImage.compress(Bitmap.CompressFormat.PNG, 100, bos);
+                byte[] bArray = bos.toByteArray();
+                String encoded = Base64.encodeToString(bArray, Base64.DEFAULT);
+     //           System.out.println("BITTTTTTTTTTTTTTTTTTTTTTTTTT:"+encoded);
+                db.updateImage(foundItem.getName(), encoded);
+
+                //testBitmapen/decoding
+                /*
+                String testBitString = db.getImage("Dexter");
+                System.out.println("BITTTTTTTTTTTTTTTTTTTTTTTTTT:"+testBitString);
+                byte[] decodedByte = Base64.decode(testBitString, 0);
+                Bitmap testBitmap = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
+                seriesImageView.setImageBitmap(testBitmap);
+                */
+//                System.out.println("SERIEEEEEEEEEEEEEEEEEEE:" + db.getSeriesItem(foundItem.getName()).getName() + "BILDDDDDDDDDDDDDDDDDDD:" + db.getImage(db.getSeriesItem(foundItem.getName()).getName()));
+
                 String addMessage = "'" + foundItem.getName() + "'" + " wurde der Liste hinzugefügt!";
                 Toast.makeText(getApplicationContext(), addMessage, Toast.LENGTH_SHORT).show();
                 deleteButton.setVisibility(View.VISIBLE);
@@ -106,7 +129,7 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
 
 
     private void startDataFetching(String tempString) {
-        sdp.startSeriesFetching(this, tempString);
+        sdp.startSeriesFetching(this, tempString, null);
     }
 
     //Initialisiert die UI-Elemente
@@ -137,14 +160,14 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
 
 
     //zeigt die Serieninformationen an, sobald ein Serienitem erhalten wurde
-    public void onSeriesDataReceived(SeriesItem series) {
-        System.out.println("CALLLLLLLLLLLLLBACKKKKKKKKKKK");
+    public void onSeriesDataReceived(SeriesItem series, Integer topListInt) {
+//        System.out.println("CALLLLLLLLLLLLLBACKKKKKKKKKKK");
         nameTextView.setText(series.getName());
         actorsTextView.setText(series.getActors());
         ratingTextView.setText(series.getRating());
         yearTextView.setText(series.getYear());
         plotTextView.setText(series.getPlot());
-        new ImageDownloader(SearchActivity.seriesImageView).execute(series.getImgPath());
+        new ImageDownloader(/*SearchActivity.seriesImageView,*/ this, null).execute(series.getImgPath(), series.getName());
 
         seriesEditText.setText("");
 
@@ -158,6 +181,11 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
             addButton.setVisibility(View.VISIBLE);
             deleteButton.setVisibility(View.GONE);
         }
-
     }
+
+    @Override
+    public void onImageReceived(Bitmap image, Integer integer) {
+        seriesImageView.setImageBitmap(image);
+        seriesImage = image;
+       }
 }
