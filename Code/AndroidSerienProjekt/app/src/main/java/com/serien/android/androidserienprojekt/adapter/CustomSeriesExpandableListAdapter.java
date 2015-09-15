@@ -35,23 +35,28 @@ public class CustomSeriesExpandableListAdapter extends BaseExpandableListAdapter
     private SeriesRepository db;
     private XStream xStream;
     private String xmlSeasonsWatched;
+    OnWatchedEpisodesChangedListener onWatchedEpisodesChangedListener;
+
 
     public CustomSeriesExpandableListAdapter(Activity context, List<String> seasons,
-                                 Map<String, List<String>> seriesCollections, ArrayList<ArrayList<Integer>> seasonsWatchedTemp, SeriesItem seriesItem) {
+                                 Map<String, List<String>> seriesCollections, ArrayList<ArrayList<Integer>> seasonsWatchedTemp, SeriesItem seriesItem, OnWatchedEpisodesChangedListener onWatchedEpisodesChangedListener) {
         this.context = context;
         this.seriesCollections = seriesCollections;
         this.seasons = seasons;
         this.seasonsWatchedTemp = seasonsWatchedTemp;
         this.seriesItem = seriesItem;
-        initDB();
+        this.onWatchedEpisodesChangedListener = onWatchedEpisodesChangedListener;
+//        initDB();
         xStream = new XStream();
 //                System.out.println("List<String> seasons : " + seasons + "; Map<String, List<String>> seriesCollections : " + seriesCollections + "; Map<String, List<Integer>> seriesCollections : " + seasonsWatchedTemp);
     }
 
+    /*
     private void initDB() {
         db = new SeriesRepository(context);
         db.open();
     }
+    */
 
     public Object getChild(int groupPosition, int childPosition) {
         return seriesCollections.get(seasons.get(groupPosition)).get(childPosition);
@@ -85,7 +90,7 @@ public class CustomSeriesExpandableListAdapter extends BaseExpandableListAdapter
             public void onClick(View v)
             {
                 ArrayList<Integer> tempArrayList = seasonsWatchedTemp.get(groupPosition);
-                System.out.println("TempArraayListDavor:"+tempArrayList);
+                System.out.println("TempArraayListDavor:" + tempArrayList);
                 if(tempArrayList.get(childPosition) == 1){
                     tempArrayList.set(childPosition, 0);
                 }else{
@@ -93,7 +98,8 @@ public class CustomSeriesExpandableListAdapter extends BaseExpandableListAdapter
                 }
                 seasonsWatchedTemp.set(groupPosition, tempArrayList);
                 xmlSeasonsWatched = xStream.toXML(seasonsWatchedTemp);
-                db.updateWatchedEpisodes(seriesItem.getName(), xmlSeasonsWatched);
+                onWatchedEpisodesChangedListener.onWatchedEpisodesChanged(seriesItem.getName(), xmlSeasonsWatched);
+//                db.updateWatchedEpisodes(seriesItem.getName(), xmlSeasonsWatched);
                 System.out.println("TempArraayListDanach:"+tempArrayList);
                 System.out.println("Staffel "+groupPosition+" aktiv!");
                 System.out.println("Button "+childPosition+" geklickt!");
@@ -174,4 +180,9 @@ public class CustomSeriesExpandableListAdapter extends BaseExpandableListAdapter
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
     }
+
+    public interface OnWatchedEpisodesChangedListener {
+        void onWatchedEpisodesChanged(String seriesName, String seasonsWatched);
+    }
+
 }

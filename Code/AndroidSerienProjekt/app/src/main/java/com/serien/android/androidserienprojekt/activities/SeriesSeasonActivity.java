@@ -43,7 +43,7 @@ import java.util.Map;
 
 
 //Dies ist die SeriesSeasonActivity, in welcher Serien mitsamt aller Staffeln und Episoden angezeigt werden und mithilfe einer Checkbox markiert werden können
-public class SeriesSeasonActivity extends Fragment {
+public class SeriesSeasonActivity extends Fragment implements CustomSeriesExpandableListAdapter.OnWatchedEpisodesChangedListener{
     List<String> seasonList;
     List<String> episodeList;
     List<Integer> episodeListWatched;
@@ -77,6 +77,7 @@ public class SeriesSeasonActivity extends Fragment {
     ArrayList<Integer> totalResultsInt = new ArrayList<>();
     ArrayList<ArrayList<String>> titleList = new ArrayList<>();
     SeriesOverviewActivity overView;
+
 
 
     @Override
@@ -116,7 +117,7 @@ public class SeriesSeasonActivity extends Fragment {
 
     //erstellt einen ExpandableListViewAdapter und verknüpft diesen mit der erstellten ExpandableList
     private void initAdapter() {
-        CustomSeriesExpandableListAdapter expListAdapter = new CustomSeriesExpandableListAdapter(getActivity(), seasonList, seriesCollection, seasonsWatchedTemp, db.getSeriesItem(guideboxName));
+        CustomSeriesExpandableListAdapter expListAdapter = new CustomSeriesExpandableListAdapter(getActivity(), seasonList, seriesCollection, seasonsWatchedTemp, db.getSeriesItem(guideboxName), this);
         expListView.setAdapter(expListAdapter);
     }
     //erstellt die UI Elemente
@@ -193,6 +194,11 @@ public class SeriesSeasonActivity extends Fragment {
     }
     private void setupSeasonList() {
         seasonList = new ArrayList<>();
+    }
+
+    @Override
+    public void onWatchedEpisodesChanged(String seriesName, String seasonsWatched) {
+        db.updateWatchedEpisodes(seriesName, seasonsWatched);
     }
 
 
