@@ -25,6 +25,7 @@ public class SeriesOverviewActivity extends AppCompatActivity implements ViewPag
     TabHost tabHost;
     Intent intent;
     SeriesItem specificSeries;
+    static boolean active = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,8 @@ public class SeriesOverviewActivity extends AppCompatActivity implements ViewPag
         setContentView(R.layout.activity_series_overview);
         initDB();
         getData();
+        active = true;
+        System.out.println("Overview aktiv???????????????????????? "+active);
 
 
         initViewPager();
@@ -46,11 +49,15 @@ public class SeriesOverviewActivity extends AppCompatActivity implements ViewPag
 
     @Override
     protected void onDestroy() {
+        active = false;
+        System.out.println("Overview aktiv???????????????????????? "+active);
         db.close();
         super.onDestroy();
     }
 
-
+    public boolean getActivityStatus(){
+        return active;
+    }
 
     private void initTabHost() {
         tabHost = (TabHost) findViewById(android.R.id.tabhost);

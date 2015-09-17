@@ -208,7 +208,10 @@ public class SeriesSeasonActivity extends Fragment implements CustomSeriesExpand
             try {
                 response = httpclient.execute(new HttpGet(url));
                 StatusLine statusLine = response.getStatusLine();
-                if(statusLine.getStatusCode() == HttpStatus.SC_OK){
+                //überprüft ob die SeriesOverViewActivity überhaupt noch aktiv ist
+                if(!overView.getActivityStatus()){
+                    response.getEntity().getContent().close();
+                } else if(statusLine.getStatusCode() == HttpStatus.SC_OK){
                     ByteArrayOutputStream out = new ByteArrayOutputStream();
                     response.getEntity().writeTo(out);
                     out.close();
@@ -250,58 +253,60 @@ public class SeriesSeasonActivity extends Fragment implements CustomSeriesExpand
         //after having loaded the JSONObject it is used to get the info in it
         protected void onPostExecute(JSONObject seriesSearchResult) {
             super.onPostExecute(seriesSearchResult);
-            //gets called once at the beginning to get the guideboxId from the imdbId
-            if(findId) {
-                if (seriesSearchResult.has("id")) {
-                    try {
-                        String guideboxId = seriesSearchResult.getString("id");
-                        guideboxName = seriesSearchResult.getString("title");
-                        //seriesNameTextView = (TextView) getView().findViewById(R.id.nameTextView);
-                        seriesNameTextView.setText(guideboxName);
-                        findId = false;
-                        testId = guideboxId;
-                        getSeriesData(guideboxId);
-                    } catch (JSONException e) {
-                        System.out.println("Spackt " + e);
-                        e.printStackTrace();
+            if(seriesSearchResult != null) {
+                //gets called once at the beginning to get the guideboxId from the imdbId
+                if (findId) {
+                    if (seriesSearchResult.has("id")) {
+                        try {
+                            String guideboxId = seriesSearchResult.getString("id");
+                            guideboxName = seriesSearchResult.getString("title");
+                            //seriesNameTextView = (TextView) getView().findViewById(R.id.nameTextView);
+                            seriesNameTextView.setText(guideboxName);
+                            findId = false;
+                            testId = guideboxId;
+                            getSeriesData(guideboxId);
+                        } catch (JSONException e) {
+                            System.out.println("Spackt " + e);
+                            e.printStackTrace();
+                        }
                     }
-                }
 
-            }else {
-                //gets called once to get the number of seasons of a series
-                if(!episodes) {
-                    try {
-                        JSONArray result = seriesSearchResult.getJSONArray(API_RESULTS);
-                        seasonCounter=result.length();
-                        setupSeasons(result.length());
-                    } catch (JSONException e) {
-                        System.out.println("Spackt " + e);
-                    }
                 } else {
-                    //gets called once for each season in a series
-                    try {
-                        if (seriesSearchResult.has(API_TOTAL_RESULTS)) {
-                            totalResults = seriesSearchResult.getString(API_TOTAL_RESULTS);
+                    //gets called once to get the number of seasons of a series
+                    if (!episodes) {
+                        try {
+                            JSONArray result = seriesSearchResult.getJSONArray(API_RESULTS);
+                            seasonCounter = result.length();
+                            setupSeasons(result.length());
+                        } catch (JSONException e) {
+                            System.out.println("Spackt " + e);
                         }
-                        totalResultsInt.add(Integer.parseInt(totalResults));
-                        JSONArray result = seriesSearchResult.getJSONArray(API_RESULTS);
-                        ArrayList<String> titles = new ArrayList<>();
-                        ArrayList<String> epis = new ArrayList<>();
-                        for(int i=0;i<totalResultsInt.get(seasonId-1);i++) {
-                            Object title = result.get(totalResultsInt.get(seasonId-1)-1-i);
-                            JSONObject o = new JSONObject();
-                            o.put("a", title);
-                            JSONObject o2 = o.getJSONObject("a");
-                            titles.add(o2.getString(API_TITLE));
-                            epis.add(o2.getString("episode_number"));
+                    } else {
+                        //gets called once for each season in a series
+                        try {
+                            if (seriesSearchResult.has(API_TOTAL_RESULTS)) {
+                                totalResults = seriesSearchResult.getString(API_TOTAL_RESULTS);
+                            }
+                            totalResultsInt.add(Integer.parseInt(totalResults));
+                            JSONArray result = seriesSearchResult.getJSONArray(API_RESULTS);
+                            ArrayList<String> titles = new ArrayList<>();
+                            ArrayList<String> epis = new ArrayList<>();
+                            for (int i = 0; i < totalResultsInt.get(seasonId - 1); i++) {
+                                Object title = result.get(totalResultsInt.get(seasonId - 1) - 1 - i);
+                                JSONObject o = new JSONObject();
+                                o.put("a", title);
+                                JSONObject o2 = o.getJSONObject("a");
+                                titles.add(o2.getString(API_TITLE));
+                                epis.add(o2.getString("episode_number"));
+                            }
+                            titleList.add(seasonId - 1, titles);
+                            seasonId++;
+                            if (seasonId == seasonCounter + 1) {
+                                setupCollection(titleList, totalResultsInt);
+                            }
+                        } catch (JSONException e) {
+                            System.out.println("Spackt " + e);
                         }
-                        titleList.add(seasonId-1,titles);
-                        seasonId++;
-                        if(seasonId==seasonCounter+1) {
-                            setupCollection(titleList, totalResultsInt);
-                        }
-                    } catch (JSONException e) {
-                        System.out.println("Spackt " + e);
                     }
                 }
             }
