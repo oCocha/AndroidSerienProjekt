@@ -1,57 +1,93 @@
 package com.serien.android.androidserienprojekt.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import com.serien.android.androidserienprojekt.R;
+import com.serien.android.androidserienprojekt.adapter.CustomUserAdapter;
+import com.serien.android.androidserienprojekt.persistence.SeriesRepository;
 
-public class FriendsActivity extends ActionBarActivity {
+import java.util.ArrayList;
+
+public class FriendsActivity extends AppCompatActivity {
+
+    ListView listV;
+    private SeriesRepository db;
+    ArrayList<String> userName = new ArrayList<>();
+    ArrayList<String> seriesNames = new ArrayList<>();
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
+        initDB();
+        getNames();
+        initUI();
+        initAdapter();
+
     }
 
-    /*
+    public void getNames() {
+        userName.add("Dante");
+        userName.add("Tidus");
+        userName.add("Cloud");
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_friends, menu);
-        return true;
+        seriesNames = db.getAllSeriesNames();
+    }
+
+    private void initDB() {
+        db = new SeriesRepository(this);
+        db.open();
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    protected void onDestroy() {
+        db.close();
+        super.onDestroy();
+    }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.series_Search) {
-            Intent startSearchActivity = new Intent(this, SearchActivity.class);
-            startActivity(startSearchActivity);
-//            FriendsActivity.this.finish();
-            return true;
-        }else if (id == R.id.series_Top_30) {
-            Intent startTop30Activity = new Intent(this, Top30Activity.class);
-            startActivity(startTop30Activity);
-//            FriendsActivity.this.finish();
-            return true;
-        }else if (id == R.id.series_Main) {
-            Intent startMainActivity = new Intent(this, ListActivity.class);
-            startActivity(startMainActivity);
-//            FriendsActivity.this.finish();
-            return true;
+
+    private void initUI() {
+        listV = (ListView) findViewById(R.id.friend_list);
+        listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                startIntent(position);
+            }
+        });
+    }
+
+    private void startIntent(int position) {
+        String friend = "";
+            switch(position){
+                case 0:
+                    friend = "friendOne";
+                    break;
+                case 1:
+                    friend = "friendTwo";
+                    break;
+                case 2:
+                    friend = "friendThree";
+                    break;
         }
 
+        Intent intentFriend = new Intent(getApplicationContext(), FriendsSeries.class);
+        intentFriend.putExtra("friend", friend);
+        intentFriend.putStringArrayListExtra("series", seriesNames);
+        startActivity(intentFriend);
 
-        return super.onOptionsItemSelected(item);
     }
 
+    private void initAdapter() {
+        CustomUserAdapter customUserAdapter = new CustomUserAdapter(this, userName);
+        listV.setAdapter(customUserAdapter);
+    }
 
-    */
 
 }

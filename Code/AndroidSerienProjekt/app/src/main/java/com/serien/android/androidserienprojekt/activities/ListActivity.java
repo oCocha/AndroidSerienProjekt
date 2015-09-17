@@ -46,7 +46,8 @@ public class ListActivity extends AppCompatActivity {
     //Das Gridview wird mit einem Adapter verkn�pft, welcher zu Testzwecken die oben bef�llte Arrayliste benutzt
     private void initAdapter() {
         ArrayList<SeriesItem> seriesList = db.getAllSeriesItems();
-        CustomListAdapter customListAdapter = new CustomListAdapter(this, seriesList);
+        ArrayList<String> seriesNames = db.getAllSeriesNames();
+        CustomListAdapter customListAdapter = new CustomListAdapter(this, seriesList, seriesNames);
         listView.setAdapter(customListAdapter);
     }
 

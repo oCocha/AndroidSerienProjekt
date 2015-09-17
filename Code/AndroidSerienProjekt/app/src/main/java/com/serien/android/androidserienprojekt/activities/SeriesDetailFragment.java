@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.serien.android.androidserienprojekt.R;
 import com.serien.android.androidserienprojekt.domain.SeriesItem;
@@ -21,7 +22,7 @@ import com.serien.android.androidserienprojekt.persistence.ImageDownloader;
 public class SeriesDetailFragment extends Fragment {
 
 
-    public static Button deleteButton;
+    private static Button deleteButton;
     SeriesItem serItem;
     ImageDownloader.OnImageProvidedListener onImageProvidedListener;
 
@@ -49,8 +50,14 @@ public class SeriesDetailFragment extends Fragment {
                 SeriesOverviewActivity seriesOverviewActivity = (SeriesOverviewActivity) getActivity();
                 seriesOverviewActivity.deleteSeries(serItem.getName());
                 seriesOverviewActivity.onBackPressed();
+                showText();
             }
         });
+    }
+
+    private void showText() {
+        String toastMessage = "'" + serItem.getName() + "' wurde aus der Liste entfernt!";
+        Toast.makeText(getActivity(), toastMessage,Toast.LENGTH_SHORT).show();
     }
 
 

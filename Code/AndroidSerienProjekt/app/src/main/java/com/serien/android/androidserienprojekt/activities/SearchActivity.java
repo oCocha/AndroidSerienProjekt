@@ -1,52 +1,45 @@
 package com.serien.android.androidserienprojekt.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Base64;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.serien.android.androidserienprojekt.R;
+import com.serien.android.androidserienprojekt.adapter.CustomListAdapter;
 import com.serien.android.androidserienprojekt.domain.SeriesItem;
 import com.serien.android.androidserienprojekt.persistence.ImageDownloader;
 import com.serien.android.androidserienprojekt.persistence.SeriesDataProvider;
 import com.serien.android.androidserienprojekt.persistence.SeriesRepository;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 
 //Dies ist die SearchActivity, in welcher Serien per AsyncTask gesucht und falls vorhanden angezeigt werden
-public class SearchActivity extends ActionBarActivity implements SeriesDataProvider.OnSeriesDataProvidedListener, ImageDownloader.OnImageProvidedListener{
+public class SearchActivity extends ActionBarActivity implements SeriesDataProvider.OnSeriesDataProvidedListener, ImageDownloader.OnImageProvidedListener {
 
-    public static final String SERIES_NAME = "Serienname";
-    public static final String SERIES_ACTORS = "Serienschauspieler";
-    public static final String SERIES_YEAR = "Serienjahr";
-    public static final String SERIES_RATING = "Serienwertung";
-    public static final String SERIES_PLOT = "Plot der Serie";
 
     private String tempString;
     private SeriesRepository db;
-    private SeriesItem foundItem;
-    public static ImageView seriesImageView;
-    public static TextView nameTextView;
-    public static TextView yearTextView;
-    public static TextView actorsTextView;
-    public static TextView ratingTextView;
-    public static TextView plotTextView;
+    private ArrayList<String> seriesInsideDB = new ArrayList<>();
+    ArrayList<SeriesItem> foundItem = new ArrayList<>();
     public static EditText seriesEditText;
     public static Button searchButton;
-    public static Button addButton;
-    public static Button deleteButton;
+    public static TextView searchSuccessText;
     public static final String NO_SERIES_DATA = "Gesuchte Serie leider nicht gefunden.";
     SeriesDataProvider sdp = new SeriesDataProvider();
-    private Bitmap seriesImage;
+
+    ListView list;
 
 
 
@@ -55,9 +48,11 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         initDB();
+        getDBData();
         initUI();
         initListener();
     }
+
 
     private void initDB() {
         db = new SeriesRepository(this);
@@ -70,6 +65,8 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
         super.onDestroy();
     }
 
+
+
     //Setzt einen Onclicklistener auf den SuchButton, welcher die Suche der Serie startet
     private void initListener() {
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -80,47 +77,8 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
 
             }
         });
-
-
-
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                db.deleteSeries(foundItem.getName());
-                String deleteMessage = "'" + foundItem.getName() + "'" + " wurde aus der Liste entfernt!";
-                Toast.makeText(getApplicationContext(), deleteMessage, Toast.LENGTH_SHORT).show();
-                deleteButton.setVisibility(View.GONE);
-                addButton.setVisibility(View.VISIBLE);
-            }
-        });
-
-
-        addButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                db.addSeriesItem(foundItem);
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                seriesImage.compress(Bitmap.CompressFormat.PNG, 100, bos);
-                byte[] bArray = bos.toByteArray();
-                String encoded = Base64.encodeToString(bArray, Base64.DEFAULT);
-     //           System.out.println("BITTTTTTTTTTTTTTTTTTTTTTTTTT:"+encoded);
-                db.updateImage(foundItem.getName(), encoded);
-
-                //testBitmapen/decoding
-                /*
-                String testBitString = db.getImage("Dexter");
-                System.out.println("BITTTTTTTTTTTTTTTTTTTTTTTTTT:"+testBitString);
-                byte[] decodedByte = Base64.decode(testBitString, 0);
-                Bitmap testBitmap = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
-                seriesImageView.setImageBitmap(testBitmap);
-                */
-//                System.out.println("SERIEEEEEEEEEEEEEEEEEEE:" + db.getSeriesItem(foundItem.getName()).getName() + "BILDDDDDDDDDDDDDDDDDDD:" + db.getImage(db.getSeriesItem(foundItem.getName()).getName()));
-
-                String addMessage = "'" + foundItem.getName() + "'" + " wurde der Liste hinzugefügt!";
-                Toast.makeText(getApplicationContext(), addMessage, Toast.LENGTH_SHORT).show();
-                deleteButton.setVisibility(View.VISIBLE);
-                addButton.setVisibility(View.GONE);
-            }
-        });
     }
+
 
     private void hideKeayboard() {
         InputMethodManager inputManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -129,63 +87,103 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
 
 
     private void startDataFetching(String tempString) {
-        sdp.startSeriesFetching(this, tempString, null);
+        sdp.startSeriesFetching(this, tempString, 0);
     }
+
 
     //Initialisiert die UI-Elemente
     private void initUI() {
-        seriesImageView = (ImageView) findViewById(R.id.search_series_image);
-        nameTextView = (TextView) findViewById(R.id.search_series_name);
-        yearTextView = (TextView) findViewById(R.id.search_series_year);
-        actorsTextView = (TextView) findViewById(R.id.search_series_actors);
-        plotTextView = (TextView) findViewById(R.id.search_series_plot);
-        ratingTextView = (TextView) findViewById(R.id.search_series_rating);
         seriesEditText = (EditText) findViewById(R.id.search_series_searchterm);
         searchButton = (Button) findViewById(R.id.search_searchButton);
-        deleteButton = (Button) findViewById(R.id.search_deleteButton);
-        addButton = (Button) findViewById(R.id.search_addButton);
+        searchSuccessText = (TextView) findViewById(R.id.search_successed_text);
+
+        list = (ListView) findViewById(R.id.search_found_series);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TextView tempText = (TextView) view.findViewById(R.id.series_title_row);
+                String seriesName = tempText.getText().toString();
+                if (seriesInsideDB.contains(seriesName)) {
+                    SeriesItem tempItem = db.getSeriesItem(seriesName);
+                    startIntentSeriesInDB(tempItem);
+                } else {
+                    SeriesItem ser = foundItem.get(position);
+                    startIntentSeriesDetailView(ser);
+                }
+            }
+        });
+    }
+
+
+    private void startIntentSeriesInDB(SeriesItem tempItem) {
+        Intent startSeriesOverviewActivity = new Intent(this, SeriesOverviewActivity.class);
+        Bundle mBundle = new Bundle();
+        mBundle.putSerializable("seriesItem", tempItem);
+        startSeriesOverviewActivity.putExtras(mBundle);
+        startActivity(startSeriesOverviewActivity);
+    }
+
+
+    private void startIntentSeriesDetailView(SeriesItem ser) {
+        Intent startSeriesDetailActivity = new Intent(this, SeriesDetailActivity.class);
+        Bundle mBundle = new Bundle();
+        mBundle.putSerializable("seriesItem", ser);
+        startSeriesDetailActivity.putExtras(mBundle);
+        startActivity(startSeriesDetailActivity);
     }
 
 
     public void onSeriesNotFound(String searchQuery) {
         String toastMessage = NO_SERIES_DATA + " '" + searchQuery + "'";
         Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
-        nameTextView.setText(SERIES_NAME);
-        actorsTextView.setText(SERIES_ACTORS);
-        ratingTextView.setText(SERIES_RATING);
-        yearTextView.setText(SERIES_YEAR);
-        plotTextView.setText(SERIES_PLOT);
-        System.out.println(SERIES_NAME+SERIES_ACTORS);
+        if(!foundItem.isEmpty()){
+            searchSuccessText.setVisibility(View.GONE);
+            foundItem.clear();
+        }
     }
 
 
     //zeigt die Serieninformationen an, sobald ein Serienitem erhalten wurde
     public void onSeriesDataReceived(SeriesItem series, Integer topListInt) {
-//        System.out.println("CALLLLLLLLLLLLLBACKKKKKKKKKKK");
-        nameTextView.setText(series.getName());
-        actorsTextView.setText(series.getActors());
-        ratingTextView.setText(series.getRating());
-        yearTextView.setText(series.getYear());
-        plotTextView.setText(series.getPlot());
-        new ImageDownloader(/*SearchActivity.seriesImageView,*/ this, null).execute(series.getImgPath(), series.getName());
-
         seriesEditText.setText("");
+        searchSuccessText.setVisibility(View.VISIBLE);
+        foundItem.clear();
+        foundItem.add(series);
+        new ImageDownloader(this, topListInt).execute(foundItem.get(topListInt).getImgPath());
+    }
 
-        foundItem = series;
+    private void initAdapter() {
+        CustomListAdapter cLA = new CustomListAdapter(this, foundItem, seriesInsideDB);
+        list.setAdapter((cLA));
+    }
 
 
-        if (db.getSeriesItem(series.getName()) != null) {
-            deleteButton.setVisibility(View.VISIBLE);
-            addButton.setVisibility(View.GONE);
-        }else{
-            addButton.setVisibility(View.VISIBLE);
-            deleteButton.setVisibility(View.GONE);
-        }
+    public void getDBData() {
+        seriesInsideDB = db.getAllSeriesNames();
+
     }
 
     @Override
-    public void onImageReceived(Bitmap image, Integer integer) {
-        seriesImageView.setImageBitmap(image);
-        seriesImage = image;
-       }
+    public void onImageReceived(Bitmap Image, Integer topListNumber) {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        System.out.println("IMAGEEEEEEEEEEEEEEE:" + Image + " TOPLISTNUMBERRRRRRRRRRR:" + topListNumber);
+        if(Image != null){
+            Image.compress(Bitmap.CompressFormat.PNG, 100, bos);
+        }
+        byte[] bArray = bos.toByteArray();
+        String encoded = Base64.encodeToString(bArray, Base64.DEFAULT);
+        SeriesItem tempSeriesItem = foundItem.get(topListNumber);
+        tempSeriesItem.updateimgString(encoded);
+        foundItem.set(topListNumber, tempSeriesItem);
+        initAdapter();
+    }
+
+
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
+    }
+
 }

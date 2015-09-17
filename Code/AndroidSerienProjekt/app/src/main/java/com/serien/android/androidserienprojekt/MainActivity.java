@@ -23,12 +23,14 @@ public class MainActivity extends Activity {
     };
 
      String[] textForIcons = {
-            "Suche Serien", "Liste",
+            "Suche Serien", "liste",
             "Top 30 Serien", "Freunde"
     };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

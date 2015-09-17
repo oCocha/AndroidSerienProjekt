@@ -1,13 +1,8 @@
 package com.serien.android.androidserienprojekt.persistence;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.ImageView;
 
-import com.serien.android.androidserienprojekt.activities.SearchActivity;
-import com.serien.android.androidserienprojekt.activities.TestActivity;
 import com.serien.android.androidserienprojekt.domain.SeriesItem;
 
 import org.apache.http.HttpResponse;
@@ -27,7 +22,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 
 /**
  * Created by oCocha on 27.07.2015.

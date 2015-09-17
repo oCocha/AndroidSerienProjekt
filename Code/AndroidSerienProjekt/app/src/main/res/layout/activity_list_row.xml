@@ -2,12 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp">
+    android:padding="4dp">
 
     <ImageView
         android:id="@+id/series_thumbnail_row"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
         android:layout_alignParentLeft="true"
         android:layout_marginRight="8dp"
         android:background="@drawable/placeholder"
@@ -22,6 +22,15 @@
         android:textSize="22dp"
         android:textStyle="bold" />
 
+
+    <ImageView
+        android:id="@+id/series_in_list"
+        android:layout_width="30dp"
+        android:layout_height="24dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:visibility="gone"/>
+
     <TextView
         android:id="@+id/series_actors_row"
         android:layout_width="wrap_content"
@@ -35,7 +44,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/series_thumbnail_row"
-        android:layout_below="@id/series_actors_row"
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="1dip"/>
 
     <TextView
@@ -44,5 +53,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true" />
+
 
 </RelativeLayout>

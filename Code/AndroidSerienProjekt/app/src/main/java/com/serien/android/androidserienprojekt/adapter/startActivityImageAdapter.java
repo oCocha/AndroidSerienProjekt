@@ -43,8 +43,7 @@ public class startActivityImageAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View grid;
-        LayoutInflater inflater = (LayoutInflater) nContext
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) nContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if(convertView == null){
 

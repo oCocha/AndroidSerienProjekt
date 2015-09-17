@@ -1,10 +1,14 @@
 package com.serien.android.androidserienprojekt.activities;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Base64;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.serien.android.androidserienprojekt.R;
@@ -12,6 +16,7 @@ import com.serien.android.androidserienprojekt.adapter.CustomListAdapter;
 import com.serien.android.androidserienprojekt.domain.SeriesItem;
 import com.serien.android.androidserienprojekt.persistence.ImageDownloader;
 import com.serien.android.androidserienprojekt.persistence.SeriesDataProvider;
+import com.serien.android.androidserienprojekt.persistence.SeriesRepository;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -19,19 +24,35 @@ import java.util.ArrayList;
 //Dies ist die Top30Activity, in welcher beliebte/gut bewertete Serien per AsynTask geladen und angezeigt werden
 public class Top30Activity extends ActionBarActivity implements SeriesDataProvider.OnSeriesDataProvidedListener,ImageDownloader.OnImageProvidedListener{
     public static final String NO_SERIES_DATA = "Gesuchte Serie wurde leider nicht gefunden";
-    ArrayList<SeriesItem> top30SeriesItemList = new ArrayList<SeriesItem>();
-    ArrayList<String> top30SeriesStringList = new ArrayList<String>();
+    private SeriesRepository db;
+    ArrayList<SeriesItem> top30SeriesItemList = new ArrayList<>();
+    ArrayList<String> top30SeriesStringList = new ArrayList<>();
+    ArrayList<String> seriesNames = new ArrayList<>();
     SeriesDataProvider sdp;
     ListView gridView;
-    Toast seriesNotFoundToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_top30);
+        initDB();
+        getDBData();
         initUI();
         setupTop30List();
     }
+
+    private void initDB() {
+        db = new SeriesRepository(this);
+        db.open();
+    }
+
+    @Override
+    protected void onDestroy() {
+        db.close();
+        super.onDestroy();
+    }
+
+
 
     //Sobald ein SeriesDataProvider SeriesItems liefert werden sie in eine ArraList gespeichert und per Adapter angezeigt
     public void onSeriesDataReceived(SeriesItem seriesItem, Integer topListNumber) {
@@ -40,17 +61,19 @@ public class Top30Activity extends ActionBarActivity implements SeriesDataProvid
         new ImageDownloader(this, topListNumber).execute(top30SeriesItemList.get(topListNumber).getImgPath());
     }
 
+
     public void onSeriesNotFound(String searchQuery) {
         String toastMessage = NO_SERIES_DATA + " '" + searchQuery + "'";
-        seriesNotFoundToast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
     }
+
 
     private void setupTop30List() {
         initTop30List();
         fetchTop30ListData();
     }
 
-    //Hier wird die Top30 Liste per AsyncTask aus der OMDBAPI geladen
+    //Hier wird die Top30 liste per AsyncTask aus der OMDBAPI geladen
     private void fetchTop30ListData() {
 //        top30SeriesItemList.clear();
         if(top30SeriesItemList.size() < 1){
@@ -63,7 +86,7 @@ public class Top30Activity extends ActionBarActivity implements SeriesDataProvid
         }
     }
 
-    //Hier wird die Top30 Liste probeweise manuell erstellt
+    //Hier wird die Top30 liste probeweise manuell erstellt
     private void initTop30List() {
         top30SeriesStringList.add("Gotham");
         top30SeriesStringList.add("American Horror Story");
@@ -79,14 +102,49 @@ public class Top30Activity extends ActionBarActivity implements SeriesDataProvid
 
     //Hier wird ein Gridviewadapter erstellt und mit dem Gridview verkn�pft
     private void initAdapter() {
-        CustomListAdapter customListAdapter = new CustomListAdapter(this, top30SeriesItemList);
+
+        CustomListAdapter customListAdapter = new CustomListAdapter(this, top30SeriesItemList, seriesNames);
         gridView.setAdapter(customListAdapter);
     }
 
     //Hier werden die UI Elemente erstellt
     private void initUI() {
         gridView = (ListView) findViewById(R.id.series_top);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TextView tempText = (TextView) view.findViewById(R.id.series_title_row);
+                String seriesName = tempText.getText().toString();
+                if (seriesNames.contains(seriesName)) {
+                    SeriesItem tempItem = db.getSeriesItem(seriesName);
+                    startIntentSeriesInDB(tempItem);
+                } else {
+                    SeriesItem tempItem = top30SeriesItemList.get(position);
+                    startIntentSeriesNotInDB(tempItem);
+                }
+            }
+        });
     }
+
+
+    private void startIntentSeriesInDB(SeriesItem tempItem) {
+        Intent startSeriesOverviewActivity = new Intent(this, SeriesOverviewActivity.class);
+        Bundle mBundle = new Bundle();
+        mBundle.putSerializable("seriesItem", tempItem);
+        startSeriesOverviewActivity.putExtras(mBundle);
+        startActivity(startSeriesOverviewActivity);
+    }
+
+
+    private void startIntentSeriesNotInDB(SeriesItem tempItem) {
+        Intent startSeriesDetailActivity = new Intent(this, SeriesDetailActivity.class);
+        Bundle mBundle = new Bundle();
+        mBundle.putSerializable("seriesItem", tempItem);
+        startSeriesDetailActivity.putExtras(mBundle);
+        startActivity(startSeriesDetailActivity);
+
+    }
+
 
     @Override
     public void onImageReceived(Bitmap Image, Integer topListNumber) {
@@ -101,45 +159,14 @@ public class Top30Activity extends ActionBarActivity implements SeriesDataProvid
         initAdapter();
     }
 
-
-
-    /*
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_top30, menu);
-        return true;
+    public void getDBData() {
+        seriesNames = db.getAllSeriesNames();
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.series_Search) {
-            Intent startSearchActivity = new Intent(this, SearchActivity.class);
-            startActivity(startSearchActivity);
-//            Top30Activity.this.finish();
-            return true;
-        }else if (id == R.id.series_Main) {
-            Intent startMainActivity = new Intent(this, ListActivity.class);
-            startActivity(startMainActivity);
-//            Top30Activity.this.finish();
-            return true;
-        }else if (id == R.id.series_Friend) {
-            Intent startFriendsActivity = new Intent(this, FriendsActivity.class);
-            startActivity(startFriendsActivity);
-//            Top30Activity.this.finish();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    protected void onRestart(){
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
     }
-
-    */
-
 }

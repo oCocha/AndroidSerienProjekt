@@ -24,12 +24,16 @@ import java.util.ArrayList;
 public class CustomListAdapter extends BaseAdapter {
     private Activity activity;
     private ArrayList<SeriesItem> seriesItems;
+    private ArrayList<String> serNames;
     ImageDownloader.OnImageProvidedListener onImageProvidedListener;
 
-    public CustomListAdapter(Activity activity, ArrayList<SeriesItem> series) {
+    public CustomListAdapter(Activity activity, ArrayList<SeriesItem> series, ArrayList<String> seriesNames) {
         this.activity = activity;
         seriesItems = series;
+        serNames = seriesNames;
     }
+
+
 
     static class ViewHolder {
         public ImageView seriesImage;
@@ -37,6 +41,7 @@ public class CustomListAdapter extends BaseAdapter {
         public TextView seriesActors;
         public TextView seriesRating;
         public TextView seriesYear;
+        public ImageView inList;
     }
 
 
@@ -72,6 +77,7 @@ public class CustomListAdapter extends BaseAdapter {
             viewHolder.seriesActors = (TextView) convertView.findViewById(R.id.series_actors_row);
             viewHolder.seriesRating = (TextView) convertView.findViewById(R.id.series_rating_row);
             viewHolder.seriesYear = (TextView) convertView.findViewById(R.id.series_releaseYear_row);
+            viewHolder.inList = (ImageView) convertView.findViewById(R.id.series_in_list);
 
             convertView.setTag(viewHolder);
         }else{
@@ -85,6 +91,13 @@ public class CustomListAdapter extends BaseAdapter {
         viewHolder.seriesActors.setText(item.getRating());
         viewHolder.seriesRating.setText(item.getActors());
         viewHolder.seriesYear.setText(item.getYear());
+
+        if(serNames.contains(item.getName())){
+            viewHolder.inList.setImageResource(R.mipmap.liste);
+            viewHolder.inList.setVisibility(View.VISIBLE);
+        }else{
+            viewHolder.inList.setVisibility(View.GONE);
+        }
 
         if(viewHolder.seriesImage != null){
 //            new ImageDownloader(viewHolder.seriesImage, onImageProvidedListener).execute(item.getImgPath());

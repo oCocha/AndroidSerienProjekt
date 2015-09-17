@@ -119,6 +119,17 @@ public class SeriesRepository {
         }
     }
 
+    public ArrayList<String> getAllSeriesNames() {
+        ArrayList<String> allSeriesName = new ArrayList<>();
+        Cursor dBCursor = db.query(DATABASE_TABLE, new String[]{KEY_NAME}, null, null, null, null, null);
+        if(dBCursor.moveToFirst()){
+            do{
+                allSeriesName.add((dBCursor.getString(0)));
+            }while(dBCursor.moveToNext());
+        }
+        return allSeriesName;
+    }
+
 
     private class SeriesDBOpenHelper extends SQLiteOpenHelper{
         private static final String DATABASE_CREATE = "CREATE TABLE "

@@ -1,6 +1,5 @@
 package com.serien.android.androidserienprojekt.activities;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 
 import com.serien.android.androidserienprojekt.R;
 import com.serien.android.androidserienprojekt.adapter.CustomSeriesExpandableListAdapter;
-import com.serien.android.androidserienprojekt.domain.SeriesItem;
 import com.serien.android.androidserienprojekt.persistence.SeriesRepository;
 import com.thoughtworks.xstream.XStream;
 
@@ -89,9 +87,9 @@ public class SeriesSeasonActivity extends Fragment implements CustomSeriesExpand
     public void onStart() {
         super.onStart();
         setupSeriesName();
+        initDB();
         convertId(seriesID);
         initUI();
-        initDB();
     }
 
     private void initDB() {
