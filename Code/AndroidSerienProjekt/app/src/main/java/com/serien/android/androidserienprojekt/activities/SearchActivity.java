@@ -74,7 +74,6 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
                 tempString = seriesEditText.getText().toString();
                 startDataFetching(tempString);
                 hideKeayboard();
-
             }
         });
     }

@@ -5,6 +5,7 @@
     <string name="seriesName">Serienname</string>
     <string name="seriesYear">Serienjahr</string>
     <string name="seriesEdit">Serieneingabe</string>
+    <string name="userEdit">Namen eingeben</string>
     <string name="seriesFoundMessage">Gefundene Serie(n)</string>
     <string name="seriesRating">Serienwertung</string>
     <string name="seriesActors">Serienschauspieler</string>
@@ -13,6 +14,7 @@
     <string name="searchButton">Suche</string>
     <string name="addButton">Hinzufügen</string>
     <string name="deleteButton">Entfernen</string>
+    <string name="acceptButton">OK</string>
 
     <string name="action_settings">Noch nicht gesetzt</string>
     <string name="series_Search">Suche</string>
@@ -35,4 +37,5 @@
     <string name="fragmentYear">Ausstrahlungsjahr: </string>
     <string name="fragmentActor">Schauspieler: </string>
     <string name="fragmentDescription">Serienbeschreibung: </string>
+    <string name="title_activity_user">UserActivity</string>
 </resources>

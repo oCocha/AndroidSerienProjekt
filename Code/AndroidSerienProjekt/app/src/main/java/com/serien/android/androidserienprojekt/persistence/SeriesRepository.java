@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 public class SeriesRepository {
 
-    private static final String DATABASE_NAME = "serieslist4.db";
+    private static final String DATABASE_NAME = "serieslist5.db";
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_TABLE = "seriesItems";
     public static final String KEY_NAME = "name";

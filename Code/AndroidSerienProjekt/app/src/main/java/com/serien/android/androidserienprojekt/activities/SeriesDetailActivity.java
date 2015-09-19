@@ -11,12 +11,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.serien.android.androidserienprojekt.MainActivity;
 import com.serien.android.androidserienprojekt.R;
 import com.serien.android.androidserienprojekt.domain.SeriesItem;
 import com.serien.android.androidserienprojekt.persistence.ImageDownloader;
 import com.serien.android.androidserienprojekt.persistence.SeriesRepository;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by King Igor on 17.09.2015.
@@ -29,6 +37,9 @@ public class SeriesDetailActivity extends AppCompatActivity implements ImageDown
     SeriesItem specificSeries;
     private Bitmap seriesImage;
     private static Button addButton;
+    private String parseClassName = "SerienApp";
+    private final static String USERNAME = UserActivity.getUserName();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -97,7 +108,7 @@ public class SeriesDetailActivity extends AppCompatActivity implements ImageDown
             @Override
             public void onClick(View v) {
                 db.addSeriesItem(specificSeries);
-
+                updateParseData();
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 seriesImage.compress(Bitmap.CompressFormat.PNG, 100, bos);
                 byte[] bArray = bos.toByteArray();
@@ -106,6 +117,24 @@ public class SeriesDetailActivity extends AppCompatActivity implements ImageDown
 
                 SeriesDetailActivity.super.onBackPressed();
                 showText();
+            }
+        });
+    }
+
+    private void updateParseData() {
+        ParseQuery<ParseObject> query = new ParseQuery<>(parseClassName);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> list, ParseException e) {
+                if (e != null) {
+                    Toast.makeText(SeriesDetailActivity.this, "Error " + e, Toast.LENGTH_SHORT).show();
+                } else {
+                    for (int i = 0; i < list.size(); i++) {
+                        if(list.get(i).getString("userName").equals(USERNAME))
+                            list.get(i).addAllUnique("series", Arrays.asList(specificSeries.getName()));
+                            list.get(i).saveInBackground();
+                    }
+                }
             }
         });
     }
