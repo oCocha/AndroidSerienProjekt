@@ -18,14 +18,14 @@ import com.serien.android.androidserienprojekt.activities.SearchActivity;
 import com.serien.android.androidserienprojekt.activities.Top30Activity;
 import com.serien.android.androidserienprojekt.activities.UserActivity;
 import com.serien.android.androidserienprojekt.adapter.startActivityImageAdapter;
-import com.serien.android.androidserienprojekt.domain.SeriesItem;
+import com.serien.android.androidserienprojekt.persistence.SeriesRepository;
 
-import java.util.Arrays;
 import java.util.List;
 
 //Here ist whre the start icons are created
-public class MainActivity extends Activity {
-    private String parseClassName = "SerienApp";
+public class MainActivity extends Activity{
+
+    private SeriesRepository db;
     private boolean isNewUser = true;
 
     int[] imageIds = {
@@ -44,7 +44,10 @@ public class MainActivity extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initDB();
         setupParse();
+
+
         GridView gridview = (GridView) findViewById(R.id.start_gridView);
         gridview.setAdapter(new startActivityImageAdapter(MainActivity.this, textForIcons, imageIds));
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -73,7 +76,22 @@ public class MainActivity extends Activity {
         });
     }
 
+
+    private void initDB() {
+        db = new SeriesRepository(this);
+        db.open();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        db.close();
+        super.onDestroy();
+    }
+
+
     private void setupParse() {
+        String parseClassName = "SerienApp";
         ParseQuery<ParseObject> query = new ParseQuery<>(parseClassName);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
@@ -82,17 +100,21 @@ public class MainActivity extends Activity {
                     Toast.makeText(MainActivity.this, "Error " + e, Toast.LENGTH_SHORT).show();
                 } else {
                     for (int i = 0; i < list.size(); i++) {
-                        if(list.get(i).getString("userName").equals(UserActivity.getUserName())){
+                        if (list.get(i).getString("userName").equals(UserActivity.getUserName())) {
                             isNewUser = false;
                         }
                     }
-                    if(isNewUser == true) {
-                        System.out.println("NEUERUSERRRRRRRRRRRRRRRRRR."+UserActivity.getUserName()+list);
+                    if (isNewUser) {
+                        System.out.println("NEUERUSERRRRRRRRRRRRRRRRRR." + UserActivity.getUserName() + list);
                         //    Eintrag einfügen
                         ParseObject tempParseObject = new ParseObject("SerienApp");
                         tempParseObject.put("userName", UserActivity.getUserName());
+                        db.initDBNew();
                         //    tempParseObject.addAllUnique("series", Arrays.asList("Dexter", "The Mentalist"));
                         tempParseObject.saveInBackground();
+                    } else {
+                        //HIER SOLLEN DIE SERIEN DES USERS IN DIE LOKALE DATENBANK EINGEFÜGT WERDEN!!!!!
+
                     }
                 }
             }

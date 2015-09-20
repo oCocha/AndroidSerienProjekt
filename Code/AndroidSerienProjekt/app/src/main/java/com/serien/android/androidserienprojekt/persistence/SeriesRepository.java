@@ -28,6 +28,7 @@ public class SeriesRepository {
     public static final String KEY_IMDBID = "id";
     public static final String KEY_WATCHED = "watched";
     public static final String KEY_IMAGE = "image";
+    Context context;
 
 
     private SeriesDBOpenHelper dbHelper;
@@ -36,6 +37,7 @@ public class SeriesRepository {
 
 
     public SeriesRepository(Context context){
+        this.context = context;
         dbHelper = new SeriesDBOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -128,6 +130,10 @@ public class SeriesRepository {
             }while(dBCursor.moveToNext());
         }
         return allSeriesName;
+    }
+
+    public void initDBNew() {
+        context.deleteDatabase(DATABASE_NAME);
     }
 
 
