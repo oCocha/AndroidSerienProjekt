@@ -26,7 +26,7 @@ public class FriendsActivity extends AppCompatActivity {
     private SeriesRepository db;
     ArrayList<String> userName = new ArrayList<>();
     ArrayList<String> seriesNames = new ArrayList<>();
-    ArrayList<ArrayList<String>> seriesList = new ArrayList<ArrayList<String>>();
+    ArrayList<ArrayList<String>> seriesList = new ArrayList<>();
     private String parseClassName = "SerienApp";
     private Handler handler = new Handler();
 
@@ -57,7 +57,7 @@ public class FriendsActivity extends AppCompatActivity {
                     Toast.makeText(FriendsActivity.this, "Error " + e, Toast.LENGTH_SHORT).show();
                 } else {
                     for (int i = 0; i < list.size(); i++) {
-                        if(!(list.get(i).getString("userName").equals(UserActivity.getUserName()))) {
+                        if (!(list.get(i).getString("userName").equals(UserActivity.getUserName()))) {
                             userName.add(list.get(i).getString("userName"));
                             seriesList.add((ArrayList) list.get(i).get("series"));
                         }
@@ -101,7 +101,7 @@ public class FriendsActivity extends AppCompatActivity {
             System.out.println("LISTENLÄNGEEEEEEEEEEEEEE:"+seriesList.get(position).size());
             Intent intentFriend = new Intent(getApplicationContext(), FriendsSeries.class);
             intentFriend.putExtra("username", userName.get(position));
-            intentFriend.putStringArrayListExtra("seriesList", seriesList.get(position));
+            intentFriend.putStringArrayListExtra("allSeriesList", seriesList.get(position));
             intentFriend.putStringArrayListExtra("series", seriesNames);
             startActivity(intentFriend);
         }

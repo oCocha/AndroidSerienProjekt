@@ -158,7 +158,7 @@ public class FriendsSeries extends AppCompatActivity implements SeriesDataProvid
     public void getData() {
         Intent intent = getIntent();
         selectedFriend = intent.getStringExtra("username");
-        friendSeriesItems = intent.getStringArrayListExtra("seriesList");
+        friendSeriesItems = intent.getStringArrayListExtra("allSeriesList");
         seriesNames = intent.getStringArrayListExtra("series");
     }
 }
