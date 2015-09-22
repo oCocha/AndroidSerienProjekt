@@ -27,22 +27,30 @@ public class UserActivity extends AppCompatActivity {
 
     private EditText seriesEditText;
     private Button searchForUserButton;
-    final Context context = this;
-    ArrayList<String> allUser = new ArrayList<>();
-    ArrayList<ArrayList<String>> allSeriesList = new ArrayList<>();
     static String username;
     private Dialog dialog;
     private EditText name;
     private EditText nameConfirm;
+
+    private String parseClassName = "SerienApp";
+
+    final Context context = this;
+
+    ArrayList<String> allUser = new ArrayList<>();
+    ArrayList<ArrayList<String>> allSeriesList = new ArrayList<>();
+
+
     private SeriesRepository db;
 
     private boolean rightUser = false;
     private boolean rightUserSeries = true;
+    private boolean newUser = true;
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
 
@@ -53,12 +61,14 @@ public class UserActivity extends AppCompatActivity {
         initListener();
     }
 
+
+
     private void initUsername() {
         username = "";
     }
 
 
-    //Initialises the SQLite database
+    //Initializes the SQLite database
     private void initDB() {
         db = new SeriesRepository(this);
         db.open();
@@ -74,7 +84,6 @@ public class UserActivity extends AppCompatActivity {
 
     //Gets all Usernames and the Serieslists of each User in the Parse.com Database
     private void getParseData() {
-        String parseClassName = "SerienApp";
         ParseQuery<ParseObject> query = new ParseQuery<>(parseClassName);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
@@ -92,14 +101,14 @@ public class UserActivity extends AppCompatActivity {
     }
 
 
-    //Initialises the UI
+    //Initializes the UI
     private void initUI() {
         seriesEditText = (EditText) findViewById(R.id.user_editText);
         searchForUserButton = (Button) findViewById(R.id.accept_Button);
     }
 
 
-    //Initialises the listener in this activity
+    //Initializes the listener in this activity
     private void initListener() {
 
         //Sets a onClickListener on the search button for user in the Parse.com database
@@ -107,15 +116,18 @@ public class UserActivity extends AppCompatActivity {
             public void onClick(View v) {
                 username = seriesEditText.getText().toString();
 
+                System.out.println("USERRRRRRRRRRRRRRRRRRR:" + username);
+
                 if (allUser.contains(username)) {
                     rightUser = true;
                     checkInsertsOfUser();
+
 
                     if (rightUser && rightUserSeries) {
                         showSuccessMessage();
                         startApplication();
 
-                    } else if (rightUser && !rightUserSeries) {
+                    }else if (rightUser && !rightUserSeries) {
                         showWrongUserMessage();
                     }
                 } else {
@@ -128,6 +140,7 @@ public class UserActivity extends AppCompatActivity {
 
     //Checks if the name that the User inserted into the EditText field is inside the Parse.com database
     private void checkInsertsOfUser() {
+        rightUserSeries = true;
         ArrayList<String> tempSeriesList = db.getAllSeriesNames();
         ArrayList<String> parseSeriesList = allSeriesList.get(allUser.indexOf(username));
 
@@ -136,6 +149,7 @@ public class UserActivity extends AppCompatActivity {
                 rightUserSeries = false;
             }
         }
+
 
         for(int i = 0; i < tempSeriesList.size(); i++){
             if (parseSeriesList != null) {
@@ -176,7 +190,7 @@ public class UserActivity extends AppCompatActivity {
     }
 
 
-    //Initialises the registration Screen
+    //Initializes the registration Screen
     private void initScreen() {
         dialog = new Dialog(context);
         dialog.setContentView(R.layout.login_fragment);
@@ -188,7 +202,7 @@ public class UserActivity extends AppCompatActivity {
     }
 
 
-    //Initialises the Buttons in the registration screen
+    //Initializes the Buttons in the registration screen
     private void initListenerInLogInScreen() {
 
         Button cancel = (Button) dialog.findViewById(R.id.decline_button);
@@ -223,15 +237,16 @@ public class UserActivity extends AppCompatActivity {
     private void showScreen() {
         dialog.show();
         Window window = dialog.getWindow();
-        window.setLayout(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
 
-    //Initialises new SQLite Database and starts a Intent
+    //Initializes new SQLite Database and starts a Intent
     private void newUserIntent(String nameOneEntered) {
         username = nameOneEntered;
         dialog.dismiss();
         db.initDBNew();
+        updateParseDatabase();
         Intent intentMain = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intentMain);
     }
@@ -244,8 +259,34 @@ public class UserActivity extends AppCompatActivity {
     }
 
 
+    //If a new User is created this new User will be saved in the Parse.com Database
+    private void updateParseDatabase() {
+        ParseQuery<ParseObject> query = new ParseQuery<>(parseClassName);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> list, ParseException e) {
+                if(e != null){
+                    Toast.makeText(UserActivity.this, "Error " + e, Toast.LENGTH_SHORT).show();
+                }else{
+                    for (int i = 0; i < list.size(); i++){
+                        if(list.get(i).getString("userName").equals(username)){
+                            newUser = false;
+                        }
+                    }
+                    if(newUser){
+                        ParseObject tempParseObject = new ParseObject("SerienApp");
+                        tempParseObject.put("userName", username);
+                        tempParseObject.saveInBackground();
+                    }
+                }
+            }
+        });
+    }
+
+
     //Returns the current Username
     public static String getUserName(){
         return username;
     }
+
 }

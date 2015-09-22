@@ -9,10 +9,10 @@ import com.parse.Parse;
  */
 public class InitializeParse extends Application {
 
+    //Parse.com Database gets initialized (connection to particular Database) t the start of the Application
     @Override
     public void onCreate(){
         super.onCreate();
-
 
         Parse.initialize(this, "3g5Fu5xOa2I4hZQGOWnveDJmvJZfd66mMXzmdSe6", "A5YKm8qcMfG6nSFQ9BKgMy0wjx5T8kMENADfurgd");
     }

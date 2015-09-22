@@ -28,6 +28,12 @@ public class CustomUserAdapter extends BaseAdapter {
     }
 
 
+    static class ViewHolder{
+        public ImageView userPic;
+        public TextView userName;
+    }
+
+
     @Override
     public int getCount() {
         return users.size();
@@ -45,20 +51,24 @@ public class CustomUserAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View userView;
+        ViewHolder viewHolder;
 
         if(convertView == null){
             LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            userView = inflater.inflate(R.layout.user_and_search_series_layout, null);
+            convertView = inflater.inflate(R.layout.user_and_search_series_layout, null);
 
-            ImageView userPic = (ImageView) userView.findViewById(R.id.user_series_pic);
-            TextView userName = (TextView) userView.findViewById(R.id.user_series_name);
+            viewHolder = new ViewHolder();
+            viewHolder.userPic = (ImageView) convertView.findViewById(R.id.user_series_pic);
+            viewHolder.userName = (TextView) convertView.findViewById(R.id.user_series_name);
 
-            userPic.setImageResource(R.mipmap.unknown_user);
-            userName.setText(users.get(position));
+            convertView.setTag(viewHolder);
         }else{
-            userView = convertView;
+            viewHolder = (ViewHolder) convertView.getTag();
         }
-        return userView;
+
+        viewHolder.userPic.setImageResource(R.mipmap.unknown_user);
+        viewHolder.userName.setText(users.get(position));
+
+        return convertView;
     }
 }

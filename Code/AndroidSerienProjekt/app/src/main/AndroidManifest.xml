@@ -31,7 +31,7 @@
             android:parentActivityName=".MainActivity" >
         </activity>
         <activity
-            android:name=".activities.Top30Activity"
+            android:name=".activities.Top10Activity"
             android:label="@string/title_activity_top30"
             android:parentActivityName=".MainActivity" >
         </activity>

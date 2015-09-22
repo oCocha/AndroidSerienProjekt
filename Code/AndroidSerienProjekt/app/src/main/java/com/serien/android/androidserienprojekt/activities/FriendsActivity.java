@@ -22,13 +22,13 @@ import java.util.List;
 
 public class FriendsActivity extends AppCompatActivity {
 
-    ListView listV;
-    private SeriesRepository db;
+    private ListView listV;
     ArrayList<String> userName = new ArrayList<>();
-    ArrayList<String> seriesNames = new ArrayList<>();
+    ArrayList<String> seriesNamesInLocalDB = new ArrayList<>();
     ArrayList<ArrayList<String>> seriesList = new ArrayList<>();
-    private String parseClassName = "SerienApp";
     private Handler handler = new Handler();
+
+    private SeriesRepository db;
 
 
     @Override
@@ -36,19 +36,36 @@ public class FriendsActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
+
         initDB();
-        //getNames();
-        parseData();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 initUI();
+                initListener();
                 initAdapter();
             }
-        }, 1500);
+        }, parseData());
     }
 
-    private void parseData() {
+
+    //Initializes the SQLite database
+    private void initDB() {
+        db = new SeriesRepository(this);
+        db.open();
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        db.close();
+        super.onDestroy();
+    }
+
+
+    //Gets the User which are saved in the Parse.com Database
+    private long parseData() {
+        String parseClassName = "SerienApp";
         ParseQuery<ParseObject> query = new ParseQuery<>(parseClassName);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
@@ -65,29 +82,18 @@ public class FriendsActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    public void getNames() {
-        userName.add("Dante");
-        userName.add("Tidus");
-        userName.add("Cloud");
-        seriesNames = db.getAllSeriesNames();
-    }
-
-    private void initDB() {
-        db = new SeriesRepository(this);
-        db.open();
-    }
-
-    @Override
-    protected void onDestroy() {
-        db.close();
-        super.onDestroy();
+        return 1000;
     }
 
 
+    //Initializes the UI where all users are shown
     private void initUI() {
         listV = (ListView) findViewById(R.id.friend_list);
+    }
+
+
+    //Initializes the listener for each user in the listView
+    private void initListener() {
         listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -96,21 +102,35 @@ public class FriendsActivity extends AppCompatActivity {
         });
     }
 
+
+    //If a user is Clicked, his Serieslist will be shown, else the User gets a message that this User has no Series in his list
     private void startIntent(int position) {
         if((seriesList.get(position) != null) && (seriesList.get(position).size() != 0)) {
-            System.out.println("LISTENLÄNGEEEEEEEEEEEEEE:"+seriesList.get(position).size());
-            Intent intentFriend = new Intent(getApplicationContext(), FriendsSeries.class);
-            intentFriend.putExtra("username", userName.get(position));
-            intentFriend.putStringArrayListExtra("allSeriesList", seriesList.get(position));
-            intentFriend.putStringArrayListExtra("series", seriesNames);
-            startActivity(intentFriend);
+            showSelectedUsersList(position);
+        }else{
+            showErrorMessage(position);
         }
     }
 
+
+    //Shows the list of the selected User and get all Names from the local database
+    private void showSelectedUsersList(int position) {
+        Intent intentFriend = new Intent(getApplicationContext(), FriendsSeries.class);
+        intentFriend.putStringArrayListExtra("allSeriesList", seriesList.get(position));
+        startActivity(intentFriend);
+    }
+
+
+    //Shows a message that the particular User has no Series in his list
+    private void showErrorMessage(int position) {
+        Toast.makeText(FriendsActivity.this, "Der Benutzer '" + userName.get(position) + "' hat keine Serien in seiner Liste!", Toast.LENGTH_SHORT).show();
+    }
+
+
+    //Initializes the adapter to show the User picture and his name
     private void initAdapter() {
         CustomUserAdapter customUserAdapter = new CustomUserAdapter(this, userName);
         listV.setAdapter(customUserAdapter);
     }
-
 
 }

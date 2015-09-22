@@ -3,7 +3,7 @@ package com.serien.android.androidserienprojekt.activities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,8 +21,8 @@ import com.serien.android.androidserienprojekt.persistence.SeriesRepository;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
-//Dies ist die Top30Activity, in welcher beliebte/gut bewertete Serien per AsynTask geladen und angezeigt werden
-public class Top30Activity extends ActionBarActivity implements SeriesDataProvider.OnSeriesDataProvidedListener,ImageDownloader.OnImageProvidedListener{
+//Dies ist die Top10Activity, in welcher beliebte/gut bewertete Serien per AsynTask geladen und angezeigt werden
+public class Top10Activity extends AppCompatActivity implements SeriesDataProvider.OnSeriesDataProvidedListener,ImageDownloader.OnImageProvidedListener{
     public static final String NO_SERIES_DATA = "Gesuchte Serie wurde leider nicht gefunden";
     private SeriesRepository db;
     ArrayList<SeriesItem> top30SeriesItemList = new ArrayList<>();
@@ -73,7 +73,7 @@ public class Top30Activity extends ActionBarActivity implements SeriesDataProvid
         fetchTop30ListData();
     }
 
-    //Hier wird die Top30 liste per AsyncTask aus der OMDBAPI geladen
+    //Hier wird die Top10 liste per AsyncTask aus der OMDBAPI geladen
     private void fetchTop30ListData() {
 //        top30SeriesItemList.clear();
         if(top30SeriesItemList.size() < 1){

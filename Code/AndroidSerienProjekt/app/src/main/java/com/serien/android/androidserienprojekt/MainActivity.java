@@ -6,23 +6,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.serien.android.androidserienprojekt.activities.FriendsActivity;
 import com.serien.android.androidserienprojekt.activities.ListActivity;
 import com.serien.android.androidserienprojekt.activities.SearchActivity;
-import com.serien.android.androidserienprojekt.activities.Top30Activity;
-import com.serien.android.androidserienprojekt.activities.UserActivity;
+import com.serien.android.androidserienprojekt.activities.Top10Activity;
 import com.serien.android.androidserienprojekt.adapter.startActivityImageAdapter;
-
-import java.util.List;
 
 //Here ist whre the start icons are created
 public class MainActivity extends Activity{
+
+    private GridView gridview;
 
 
     int[] imageIds = {
@@ -30,22 +24,41 @@ public class MainActivity extends Activity{
             R.mipmap.top, R.mipmap.friend
     };
 
+
      String[] textForIcons = {
-            "Suche Serien", "liste",
-            "Top 30 Serien", "Freunde"
+            "Seriensuche", "Serienliste",
+            "Top 10 Serien", "Freunde"
     };
 
+
+    //Initializes the MainActivity.class
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setupParse();
+
+        setupUI();
+        setupAdapter();
+        setupListener();
+
+    }
 
 
-        GridView gridview = (GridView) findViewById(R.id.start_gridView);
+    //Initializes the GridView of this Activity
+    private void setupUI() {
+        gridview = (GridView) findViewById(R.id.start_gridView);
+    }
+
+
+    //Sets a adapter on the GridView to show the Icons
+    private void setupAdapter() {
         gridview.setAdapter(new startActivityImageAdapter(MainActivity.this, textForIcons, imageIds));
+    }
+
+
+    //Initializes the listener in this Activity
+    private void setupListener() {
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -60,7 +73,7 @@ public class MainActivity extends Activity{
                         startActivity(intentList);
                         break;
                     case 2:
-                        Intent intentTop = new Intent(getApplicationContext(), Top30Activity.class);
+                        Intent intentTop = new Intent(getApplicationContext(), Top10Activity.class);
                         startActivity(intentTop);
                         break;
                     case 3:
@@ -72,25 +85,4 @@ public class MainActivity extends Activity{
         });
     }
 
-
-
-
-
-    private void setupParse() {
-        String parseClassName = "SerienApp";
-        ParseQuery<ParseObject> query = new ParseQuery<>(parseClassName);
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> list, ParseException e) {
-                if (e != null) {
-                    Toast.makeText(MainActivity.this, "Error " + e, Toast.LENGTH_SHORT).show();
-                } else {
-                        System.out.println("NEUERUSERRRRRRRRRRRRRRRRRR." + UserActivity.getUserName() + list);
-                        ParseObject tempParseObject = new ParseObject("SerienApp");
-                        tempParseObject.put("userName", UserActivity.getUserName());
-                        tempParseObject.saveInBackground();
-                    }
-            }
-        });
-    }
 }
