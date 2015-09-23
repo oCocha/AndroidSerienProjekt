@@ -27,7 +27,6 @@ import java.net.URL;
  * Created by oCocha on 27.07.2015.
  */
 
-//L�dt die Daten zu einer gesuchten Serie und zeigt sie in der Searchactivity an(SCHLECHT -> CALLBACK einbauen)
 public class SeriesDataProvider {
 
     public final String OMDB_API_URL_BEGIN = "http://www.omdbapi.com/?t=";
@@ -55,7 +54,7 @@ public class SeriesDataProvider {
     String tempWatched = null;
     Integer topListNumber;
 
-    //wandelt den �bergebenen String in eine brauchbare SearchQuery um und �bergibt sie weiter
+    //Sets up a listener which calls when the asked seriesdata is received and creates the searchquery
     public void startSeriesFetching(OnSeriesDataProvidedListener onSeriesDataProvidedListener, String searchQuery, Integer topListNumber) {
         this.onSeriesDataProvidedListener = onSeriesDataProvidedListener;
         this.searchQuery = searchQuery;
@@ -64,7 +63,7 @@ public class SeriesDataProvider {
         getSeriesData(searchURL);
     }
 
-    //Klasse um ein JSONObject von einer �bergebenen URL zu laden
+    //The class that loads a JSONObject from a given URL
     private class FetchSeries extends AsyncTask<URL, Integer, JSONObject> {
         public String processHttpRequest(String url) {
             HttpClient httpclient = new DefaultHttpClient();
@@ -87,7 +86,7 @@ public class SeriesDataProvider {
             return responseString;
         }
 
-        //l�dt im Hintergrund die Daten
+        //Loads the JSONObject in the background
         protected JSONObject doInBackground(URL... urls) {
             HttpURLConnection urlConnection = null;
             JSONObject searchResultItems = null;
@@ -115,7 +114,7 @@ public class SeriesDataProvider {
             return searchResultItems;
         }
 
-        //nach dem Laden des JSONObjects werden die Daten weiterverarbeitet
+        //Processes the received JSONObject, creates a new seriesItem and fires off the callback
         protected void onPostExecute(JSONObject seriesSearchResult) {
             super.onPostExecute(seriesSearchResult);
             try {
@@ -128,12 +127,12 @@ public class SeriesDataProvider {
                 tempImdbID = seriesSearchResult.getString(OMDB_URL_KEY_IMDBID);
                 responseCheck = seriesSearchResult.getString(OMDB_URL_KEY_RESPONSE);
             } catch (Throwable t) {
-                System.out.println("Spackt"+t);
+                System.out.println("Error"+t);
             }
             try {
                 responseCheck = seriesSearchResult.getString(OMDB_URL_KEY_RESPONSE);
             } catch (Throwable t) {
-                System.out.println("Spackt 2");
+                System.out.println("Error"+t);
             }
             if(responseCheck.equals("False")) {
                 onSeriesDataProvidedListener.onSeriesNotFound(searchQuery);
@@ -144,7 +143,7 @@ public class SeriesDataProvider {
             }
         }
 
-        //returns the response
+        //Creates a BufferedReader and returns the responsestring
         private String readSearchResultInputStream(InputStream in) {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
             String response = "";
@@ -160,7 +159,7 @@ public class SeriesDataProvider {
         }
 
 
-    //starts the FetchSeries class with the given name of the series
+    //Starts the FetchSeries class with the given name of the series
     public void getSeriesData(String seriesName) {
         try {
             new FetchSeries().execute(new URL(OMDB_API_URL_BEGIN + seriesName + OMDB_API_URL_END));
@@ -169,7 +168,7 @@ public class SeriesDataProvider {
         }
     }
 
-    //Interface f�r das Bereitstellen der Seriesitems
+    //Listener which fires when seriesdata is received or not found
     public interface OnSeriesDataProvidedListener {
         void onSeriesDataReceived(SeriesItem seriesData, Integer topListNumber);
         void onSeriesNotFound(String searchQuery);

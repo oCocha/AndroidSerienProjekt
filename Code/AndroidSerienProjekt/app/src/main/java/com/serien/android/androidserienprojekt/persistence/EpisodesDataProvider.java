@@ -29,14 +29,8 @@ import java.net.URL;
 public class EpisodesDataProvider {
 
     public final String GB_API_URL_BASE = "https://api-public.guidebox.com/v1.43/DE/JMKNCpoHXzDVb0gLyl1y1fir7Jerw0/";
-    public final String GB_API_URL_ID = "search/id/imdb/";
     public final String GB_API_URL_EPISODES_BEGIN = "show/";
     public final String GB_API_URL_EPISODES_END = "episodes/all/0/100/all/all/?reverse_ordering=true";
-    public final String GB_URL_KEY_ID = "id";
-    public final String GB_URL_KEY_ARRAY = "results";
-    public final String GB_URL_KEY_SEASON_NR = "season_number";
-    public final String GB_URL_KEY_EPISODE_NR = "episode_number";
-    public final String GB_URL_KEY_TITLE = "title";
     OnSeasonDataProvidedListener onSeasonDataProvidedListener;
     Integer searchID;
     String searchURL;

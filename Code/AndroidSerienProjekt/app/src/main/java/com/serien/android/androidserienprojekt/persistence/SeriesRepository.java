@@ -30,21 +30,21 @@ public class SeriesRepository {
     public static final String KEY_IMAGE = "image";
     Context context;
 
-
     private SeriesDBOpenHelper dbHelper;
     private SQLiteDatabase db;
-    private ArrayList allSeriesItemsName;
 
-
+    //The constructor
     public SeriesRepository(Context context){
         this.context = context;
         dbHelper = new SeriesDBOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    //Creates a new database
     public void open() {
         db = dbHelper.getWritableDatabase();
     }
 
+    //Adds a new seriesItem to the database
     public long addSeriesItem(SeriesItem seriesItem) {
         ContentValues values = new ContentValues();
         values.put(KEY_NAME, seriesItem.getName());
@@ -58,6 +58,7 @@ public class SeriesRepository {
         return db.insert(DATABASE_TABLE, null, values);
     }
 
+    //Updates the image of an specific series in the database
     public boolean updateImage(String name, String seriesImage) {
         String sql="update "+DATABASE_TABLE+" set image='"+seriesImage+"' where "+KEY_NAME+" like ?";
         Object[] bindArgs={name};
@@ -69,6 +70,7 @@ public class SeriesRepository {
         }
     }
 
+    //Updates the list of watched episodes of an series in the database
     public boolean updateWatchedEpisodes(String name, String watchedEpisodes) {
         String sql="update "+DATABASE_TABLE+" set watched='"+watchedEpisodes+"' where "+KEY_NAME+" like ?";
         Object[] bindArgs={name};
@@ -80,6 +82,7 @@ public class SeriesRepository {
         }
     }
 
+    //Returns all seriesItems which are savedin the database
     public ArrayList<SeriesItem> getAllSeriesItems() {
         ArrayList<SeriesItem> allSeriesItems = new ArrayList<>();
         Cursor dBCursor = db.query(DATABASE_TABLE, new String[]{KEY_NAME, KEY_YEAR, KEY_ACTORS,
@@ -95,21 +98,12 @@ public class SeriesRepository {
         return allSeriesItems;
     }
 
-    public String getImage(String seriesName) {
-        String imageString = null;
-        Cursor dBCursor = db.query(DATABASE_TABLE, new String[]{KEY_IMAGE}, KEY_NAME+"='"+seriesName+"'", null, null, null, null);
-        if(dBCursor.moveToFirst()){
-            do{
-                imageString = dBCursor.getString(0);
-            }while(dBCursor.moveToNext());
-        }
-        return imageString;
-    }
-
+    //Delets a specific series from the database
     public long deleteSeries(String name) {
         return db.delete(DATABASE_TABLE, KEY_NAME + " =?", new String[]{name});
     }
 
+    //Returns a specific series from the database
     public SeriesItem getSeriesItem(String name) {
         Cursor cursor = db.query(DATABASE_TABLE, new String[]{KEY_NAME, KEY_YEAR, KEY_ACTORS,
                 KEY_RATING, KEY_PLOT, KEY_IMGPATH, KEY_IMDBID, KEY_WATCHED, KEY_IMAGE}, KEY_NAME + "=?", new String[]{name}, null, null, null, null);
@@ -121,6 +115,7 @@ public class SeriesRepository {
         }
     }
 
+    //Returns the names of all series which are saved in the database
     public ArrayList<String> getAllSeriesNames() {
         ArrayList<String> allSeriesName = new ArrayList<>();
         Cursor dBCursor = db.query(DATABASE_TABLE, new String[]{KEY_NAME}, null, null, null, null, null);
@@ -153,20 +148,19 @@ public class SeriesRepository {
             super(context, name, factory, version);
         }
 
-        @Override
+        //Creates a new database
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(DATABASE_CREATE);
-
         }
 
-        @Override
+        //Upgrades the database to a newer version
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             db.execSQL("DROP TABLE IF EXIST " + DATABASE_TABLE);
             onCreate(db);
-
         }
     }
 
+    //Closes the database
     public void close() {
         db.close();
         dbHelper.close();

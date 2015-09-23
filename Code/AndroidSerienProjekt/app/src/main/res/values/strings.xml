@@ -17,16 +17,16 @@
 
     <string name="action_settings">Noch nicht gesetzt</string>
     <string name="series_Search">Suche</string>
-    <string name="series_Top_30">Top 30</string>
+    <string name="series_Top_30">Top 10</string>
     <string name="series_Main">Start</string>
     <string name="series_Friend">Freunde</string>
 
     <string name="title_activity_test">TestActivity</string>
     <string name="title_activity_search">Suche</string>
     <string name="title_activity_list">Liste</string>
-    <string name="title_activity_top30">Top 30</string>
+    <string name="title_activity_top30">Top 10</string>
     <string name="title_activity_friends">Social</string>
-    <string name="title_activity_friends_series">Freunde</string>
+    <string name="title_activity_friends_series">Dieser Nutzer sieht</string>
     <string name="title_activity_series_overview">SeriesOverviewActivity</string>
     <string name="title_activity_series_detail">SeriesDetailActivity</string>
     <string name="title_activity_series_season">Serieninformation</string>

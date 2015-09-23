@@ -21,7 +21,7 @@ public class SeriesItem implements Serializable {
 
 
 
-    //erstellt ein neues SeriesItem
+    //The constructor of the class
     public SeriesItem(String name, String year, String actors, String rating, String plot, String imgPath, String imdbID, String watched, String imgString) {
         this.name = name;
         this.year = year;
@@ -34,6 +34,7 @@ public class SeriesItem implements Serializable {
         this.imgString = imgString;
     }
 
+    //updates the image of the seriesItem with the given image
     public void updateimgString(String imageString) {
         imgString = imageString;
     }

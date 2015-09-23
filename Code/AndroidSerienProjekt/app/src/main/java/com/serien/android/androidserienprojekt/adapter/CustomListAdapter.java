@@ -25,8 +25,8 @@ public class CustomListAdapter extends BaseAdapter {
     private Activity activity;
     private ArrayList<SeriesItem> seriesItems;
     private ArrayList<String> serNames;
-    ImageDownloader.OnImageProvidedListener onImageProvidedListener;
 
+    //The constructor of the class which processes the given activity, the list of seriesitems and the list of seriesnames
     public CustomListAdapter(Activity activity, ArrayList<SeriesItem> series, ArrayList<String> seriesNames) {
         this.activity = activity;
         seriesItems = series;
@@ -45,13 +45,13 @@ public class CustomListAdapter extends BaseAdapter {
     }
 
 
-    @Override
+    //Returns the number of seriesItems
     public int getCount() {
         return seriesItems.size();
     }
 
 
-    @Override
+    //Returns the specific seriesItem at the given position
     public Object getItem(int position) {
         return seriesItems.get(position);
     }
@@ -87,7 +87,6 @@ public class CustomListAdapter extends BaseAdapter {
         SeriesItem item = seriesItems.get(position);
 
         viewHolder.seriesName.setText(item.getName());
-        //Actors und Ratings sind vertauscht, fehler beim fetching
         viewHolder.seriesActors.setText(item.getRating());
         viewHolder.seriesRating.setText(item.getActors());
         viewHolder.seriesYear.setText(item.getYear());
@@ -100,7 +99,6 @@ public class CustomListAdapter extends BaseAdapter {
         }
 
         if(viewHolder.seriesImage != null){
-//            new ImageDownloader(viewHolder.seriesImage, onImageProvidedListener).execute(item.getImgPath());
             if(item.getImgString() != null) {
                 String testBitString = item.getImgString();
                 byte[] decodedByte = Base64.decode(testBitString, 0);
