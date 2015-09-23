@@ -21,20 +21,26 @@ public class ListActivity extends AppCompatActivity {
     private SeriesRepository db;
     private ListView listView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+
         initDB();
         initUI();
+        initListener();
         initAdapter();
     }
 
 
+    //Initializes the local database
     private void initDB() {
         db = new SeriesRepository(this);
         db.open();
     }
+
 
     @Override
     protected void onDestroy() {
@@ -43,17 +49,14 @@ public class ListActivity extends AppCompatActivity {
     }
 
 
-    //Das Gridview wird mit einem Adapter verkn�pft, welcher zu Testzwecken die oben bef�llte Arrayliste benutzt
-    private void initAdapter() {
-        ArrayList<SeriesItem> seriesList = db.getAllSeriesItems();
-        ArrayList<String> seriesNames = db.getAllSeriesNames();
-        CustomListAdapter customListAdapter = new CustomListAdapter(this, seriesList, seriesNames);
-        listView.setAdapter(customListAdapter);
-    }
-
-    //Die UI Elemente werden initialisiert und mit Listenern belegt
+    //Initialises the UI of the activity to show the seriesitems
     private void initUI() {
         listView = (ListView) findViewById(R.id.list_general);
+    }
+
+
+    //Initializes listener for each shown seriesitem
+    private void initListener() {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -65,7 +68,17 @@ public class ListActivity extends AppCompatActivity {
         });
     }
 
-    //passes a Object to the called Activity
+
+    //Initializes the adapter for this activity. Gets the necessary data like Series and the names of the Series inside the local database
+    private void initAdapter() {
+        ArrayList<SeriesItem> seriesList = db.getAllSeriesItems();
+        ArrayList<String> seriesNames = db.getAllSeriesNames();
+        CustomListAdapter customListAdapter = new CustomListAdapter(this, seriesList, seriesNames);
+        listView.setAdapter(customListAdapter);
+    }
+
+
+    //Starts a intent and passes a Object to the SeriesOverviewActivity
     private void startIntent(SeriesItem series) {
         Intent startSeriesOverviewActivity = new Intent(this, SeriesOverviewActivity.class);
         Bundle mBundle = new Bundle();
@@ -74,6 +87,8 @@ public class ListActivity extends AppCompatActivity {
         startActivity(startSeriesOverviewActivity);
     }
 
+
+    //Restarts the activity if its called again
     @Override
     protected void onRestart(){
         super.onRestart();

@@ -26,15 +26,14 @@ import java.util.ArrayList;
  */
 public class FriendsSeries extends AppCompatActivity implements SeriesDataProvider.OnSeriesDataProvidedListener,ImageDownloader.OnImageProvidedListener{
 
-    SeriesDataProvider sdp;
+    private SeriesDataProvider sdp;
+    private ListView list;
+
     private SeriesRepository db;
-    ListView list;
     private ArrayList<String> seriesNamesInLocalDB = new ArrayList<>();
 
-
-    ArrayList<String> friendSeriesItems = new ArrayList<>();
-    ArrayList<SeriesItem> series = new ArrayList<>();
-
+    private ArrayList<String> friendSeriesItems = new ArrayList<>();
+    private ArrayList<SeriesItem> series = new ArrayList<>();
 
 
     @Override
@@ -42,11 +41,13 @@ public class FriendsSeries extends AppCompatActivity implements SeriesDataProvid
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
+
         initDB();
         getData();
         initUI();
+        initSeriesView();
         initListener();
-        initSeriesViewAndAdapter();
+        initAdapter();
     }
 
 
@@ -75,7 +76,6 @@ public class FriendsSeries extends AppCompatActivity implements SeriesDataProvid
     //Initializes the UI
     private void initUI() {
         list = (ListView) findViewById(R.id.friend_list);
-
     }
 
 
@@ -118,39 +118,36 @@ public class FriendsSeries extends AppCompatActivity implements SeriesDataProvid
     }
 
 
-    //Gets data for each series item and initializes the adapter
-    private void initSeriesViewAndAdapter() {
-        if(series.isEmpty()){
-            for(int i = 0; i < friendSeriesItems.size(); i++){
-                sdp = new SeriesDataProvider();
-                sdp.startSeriesFetching(this, friendSeriesItems.get(i), i);
-            }
-        }else{
-            initAdapter();
+    //Gets data for each series item which is inside the list of the specific friend
+    private void initSeriesView() {
+        for(int i = 0; i < friendSeriesItems.size(); i++){
+            sdp = new SeriesDataProvider();
+            sdp.startSeriesFetching(this, friendSeriesItems.get(i), i);
         }
     }
 
 
-    //coming soon...
+    //If the input of the user matches a seriesname, the series will be shown in the View
     public void onSeriesDataReceived(SeriesItem seriesItem, Integer topListNumber) {
         series.add(seriesItem);
-        initAdapter();
         new ImageDownloader(this, topListNumber).execute(series.get(topListNumber).getImgPath());
     }
 
 
-    //coming soon...
+    //If the specific series does not exist the error will be shown
     public void onSeriesNotFound(String searchQuery) {
         String toastMessage = "Error" + " '" + searchQuery + "'";
         Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
     }
 
 
-    //coming soon...
+    //If the Image of a specific series is received, the shown series gets updated
     @Override
     public void onImageReceived(Bitmap Image, Integer topListNumber) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        Image.compress(Bitmap.CompressFormat.PNG, 100, bos);
+        if(Image != null){
+            Image.compress(Bitmap.CompressFormat.PNG, 100, bos);
+        }
         byte[] bArray = bos.toByteArray();
         String encoded = Base64.encodeToString(bArray, Base64.DEFAULT);
         SeriesItem tempSeriesItem = series.get(topListNumber);

@@ -13,7 +13,7 @@ import com.serien.android.androidserienprojekt.activities.SearchActivity;
 import com.serien.android.androidserienprojekt.activities.Top10Activity;
 import com.serien.android.androidserienprojekt.adapter.startActivityImageAdapter;
 
-//Here ist whre the start icons are created
+
 public class MainActivity extends Activity{
 
     private GridView gridview;

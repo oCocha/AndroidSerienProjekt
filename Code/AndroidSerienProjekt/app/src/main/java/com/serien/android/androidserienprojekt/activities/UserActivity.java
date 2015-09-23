@@ -36,8 +36,8 @@ public class UserActivity extends AppCompatActivity {
 
     final Context context = this;
 
-    ArrayList<String> allUser = new ArrayList<>();
-    ArrayList<ArrayList<String>> allSeriesList = new ArrayList<>();
+    private ArrayList<String> allUser = new ArrayList<>();
+    private ArrayList<ArrayList<String>> allSeriesList = new ArrayList<>();
 
 
     private SeriesRepository db;
@@ -115,8 +115,6 @@ public class UserActivity extends AppCompatActivity {
         searchForUserButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 username = seriesEditText.getText().toString();
-
-                System.out.println("USERRRRRRRRRRRRRRRRRRR:" + username);
 
                 if (allUser.contains(username)) {
                     rightUser = true;

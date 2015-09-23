@@ -23,12 +23,12 @@ import java.util.List;
 public class FriendsActivity extends AppCompatActivity {
 
     private ListView listV;
-    ArrayList<String> userName = new ArrayList<>();
-    ArrayList<String> seriesNamesInLocalDB = new ArrayList<>();
-    ArrayList<ArrayList<String>> seriesList = new ArrayList<>();
+    private SeriesRepository db;
     private Handler handler = new Handler();
 
-    private SeriesRepository db;
+    private ArrayList<String> userName = new ArrayList<>();
+    private ArrayList<ArrayList<String>> seriesList = new ArrayList<>();
+
 
 
     @Override
@@ -82,7 +82,7 @@ public class FriendsActivity extends AppCompatActivity {
                 }
             }
         });
-        return 1000;
+        return 1500;
     }
 
 

@@ -31,30 +31,34 @@ public class SeriesDetailActivity extends AppCompatActivity implements ImageDown
 
     public static ImageView seriesImageView;
     private SeriesRepository db;
-    Intent intent;
-    SeriesItem specificSeries;
+    private Intent intent;
+
+    private SeriesItem specificSeries;
     private Bitmap seriesImage;
+
     private static Button addButton;
-    private String parseClassName = "SerienApp";
+
     private final static String USERNAME = UserActivity.getUserName();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_series_detail);
+
         initDB();
         getData();
         initUI();
         initListener();
     }
 
-
+    //Initializes the local database
     private void initDB() {
         db = new SeriesRepository(this);
         db.open();
-
     }
+
 
     @Override
     protected void onDestroy() {
@@ -62,46 +66,36 @@ public class SeriesDetailActivity extends AppCompatActivity implements ImageDown
         super.onDestroy();
     }
 
+
+    //Get the data from the previous Activity
     public void getData() {
         intent = getIntent();
         specificSeries = (SeriesItem) intent.getSerializableExtra("seriesItem");
     }
 
-    static class ViewHolder{
-        public ImageView serImage;
-        public TextView serName;
-        public TextView serRating;
-        public TextView serYear;
-        public TextView serActor;
-        public TextView serPlot;
-    }
 
-
+    //Initializes the UI of this activity
     private void initUI() {
         SeriesDetailActivity.super.setTitle("Series - " + specificSeries.getName());
 
-
-        //initialise the ViewHolder for the given Data
-        ViewHolder viewHolder;
-        viewHolder = new ViewHolder();
-
-        viewHolder.serName = (TextView) findViewById(R.id.detail_series_name);
+        TextView serName = (TextView) findViewById(R.id.detail_series_name);
         seriesImageView = (ImageView) findViewById(R.id.detail_series_image);
-        viewHolder.serRating = (TextView) findViewById(R.id.detail_series_rating);
-        viewHolder.serYear = (TextView) findViewById(R.id.detail_series_year);
-        viewHolder.serActor = (TextView) findViewById(R.id.detail_series_actors);
-        viewHolder.serPlot = (TextView) findViewById(R.id.detail_series_description);
+        TextView serRating = (TextView) findViewById(R.id.detail_series_rating);
+        TextView serYear = (TextView) findViewById(R.id.detail_series_year);
+        TextView serActor = (TextView) findViewById(R.id.detail_series_actors);
+        TextView serPlot = (TextView) findViewById(R.id.detail_series_description);
         addButton = (Button) findViewById(R.id.detail_add_button);
 
-        viewHolder.serName.setText(specificSeries.getName());
-        viewHolder.serRating.setText(specificSeries.getActors());
-        viewHolder.serYear.setText(specificSeries.getYear());
-        viewHolder.serActor.setText(specificSeries.getRating());
-        viewHolder.serPlot.setText(specificSeries.getPlot());
+        serName.setText(specificSeries.getName());
+        serRating.setText(specificSeries.getActors());
+        serYear.setText(specificSeries.getYear());
+        serActor.setText(specificSeries.getRating());
+        serPlot.setText(specificSeries.getPlot());
         new ImageDownloader(this, null).execute(specificSeries.getImgPath(), specificSeries.getName());
     }
 
 
+    //Initializes the listener for the add button. If the add button is clicked the specific series will be add to Parse.com and the local database
     private void initListener() {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,12 +109,15 @@ public class SeriesDetailActivity extends AppCompatActivity implements ImageDown
                 db.updateImage(specificSeries.getName(), encoded);
 
                 SeriesDetailActivity.super.onBackPressed();
-                showText();
+                showSuccessMessage();
             }
         });
     }
 
+
+    //Add the specific seriesname to the Parse.com database
     private void updateParseData() {
+        String parseClassName = "SerienApp";
         ParseQuery<ParseObject> query = new ParseQuery<>(parseClassName);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
@@ -138,11 +135,15 @@ public class SeriesDetailActivity extends AppCompatActivity implements ImageDown
         });
     }
 
-    private void showText() {
+
+    //If the series is added to the database the user gets a message that adding of the series was a success
+    private void showSuccessMessage() {
         String toastMessage = "'" + specificSeries.getName() + "' wurde der Liste hinzugefügt!";
         Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
     }
 
+
+    //If the image data is received it gets updated in the view
     @Override
     public void onImageReceived(Bitmap image, Integer integer) {
         seriesImageView.setImageBitmap(image);

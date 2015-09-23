@@ -31,22 +31,26 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
 
     private String tempString;
     private SeriesRepository db;
+    SeriesDataProvider sdp = new SeriesDataProvider();
+
     private ArrayList<String> seriesInsideDB = new ArrayList<>();
-    ArrayList<SeriesItem> foundItem = new ArrayList<>();
+    private ArrayList<SeriesItem> foundItem = new ArrayList<>();
+
     public static EditText seriesEditText;
     public static Button searchButton;
     public static TextView searchSuccessText;
     public static final String NO_SERIES_DATA = "Gesuchte Serie leider nicht gefunden.";
-    SeriesDataProvider sdp = new SeriesDataProvider();
 
-    ListView list;
+    private ListView listView;
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
         initDB();
         getDBData();
         initUI();
@@ -54,10 +58,12 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
     }
 
 
+    //Initializes the local database
     private void initDB() {
         db = new SeriesRepository(this);
         db.open();
     }
+
 
     @Override
     protected void onDestroy() {
@@ -66,8 +72,23 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
     }
 
 
+    //Gets series names of the series inside the local database
+    public void getDBData() {
+        seriesInsideDB = db.getAllSeriesNames();
+    }
 
-    //Setzt einen Onclicklistener auf den SuchButton, welcher die Suche der Serie startet
+
+    //Initializes the UI and the buttons of this activity
+    private void initUI() {
+        seriesEditText = (EditText) findViewById(R.id.search_series_searchterm);
+        searchButton = (Button) findViewById(R.id.search_searchButton);
+        searchSuccessText = (TextView) findViewById(R.id.search_successed_text);
+
+        listView = (ListView) findViewById(R.id.search_found_series);
+    }
+
+
+    //Sets a listener on the search button and on the view (specific series)
     private void initListener() {
         searchButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -76,28 +97,9 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
                 hideKeayboard();
             }
         });
-    }
 
 
-    private void hideKeayboard() {
-        InputMethodManager inputManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-    }
-
-
-    private void startDataFetching(String tempString) {
-        sdp.startSeriesFetching(this, tempString, 0);
-    }
-
-
-    //Initialisiert die UI-Elemente
-    private void initUI() {
-        seriesEditText = (EditText) findViewById(R.id.search_series_searchterm);
-        searchButton = (Button) findViewById(R.id.search_searchButton);
-        searchSuccessText = (TextView) findViewById(R.id.search_successed_text);
-
-        list = (ListView) findViewById(R.id.search_found_series);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 TextView tempText = (TextView) view.findViewById(R.id.series_title_row);
@@ -114,6 +116,20 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
     }
 
 
+    //Start searching for a series with the Input of the user
+    private void startDataFetching(String tempString) {
+        sdp.startSeriesFetching(this, tempString, 0);
+    }
+
+
+    //If the search button is clicked, the Keyboard gets hidden
+    private void hideKeayboard() {
+        InputMethodManager inputManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+
+    //if the found series is inside the local database, this intent starts the SeriesOverviewActivity
     private void startIntentSeriesInDB(SeriesItem tempItem) {
         Intent startSeriesOverviewActivity = new Intent(this, SeriesOverviewActivity.class);
         Bundle mBundle = new Bundle();
@@ -123,6 +139,7 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
     }
 
 
+    //If the found series is not inside the local database, this activity starts the detailView of the specific series
     private void startIntentSeriesDetailView(SeriesItem ser) {
         Intent startSeriesDetailActivity = new Intent(this, SeriesDetailActivity.class);
         Bundle mBundle = new Bundle();
@@ -132,6 +149,7 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
     }
 
 
+    //If the input of the user doesn't matches a series name then the user gets notified about it
     public void onSeriesNotFound(String searchQuery) {
         String toastMessage = NO_SERIES_DATA + " '" + searchQuery + "'";
         Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
@@ -142,7 +160,7 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
     }
 
 
-    //zeigt die Serieninformationen an, sobald ein Serienitem erhalten wurde
+    //If the input of the user matches a seriesname the series will be shown in the View
     public void onSeriesDataReceived(SeriesItem series, Integer topListInt) {
         seriesEditText.setText("");
         searchSuccessText.setVisibility(View.VISIBLE);
@@ -151,24 +169,20 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
         new ImageDownloader(this, topListInt).execute(foundItem.get(topListInt).getImgPath());
     }
 
+
+    //Initializes the adapter for the View
     private void initAdapter() {
         CustomListAdapter cLA = new CustomListAdapter(this, foundItem, seriesInsideDB);
-        list.setAdapter((cLA));
+        listView.setAdapter((cLA));
     }
 
 
-    public void getDBData() {
-        seriesInsideDB = db.getAllSeriesNames();
-
-    }
-
+    //Updates the Imagepath of the found series
     @Override
     public void onImageReceived(Bitmap Image, Integer topListNumber) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         System.out.println("IMAGEEEEEEEEEEEEEEE:" + Image + " TOPLISTNUMBERRRRRRRRRRR:" + topListNumber);
-        if(Image != null){
-            Image.compress(Bitmap.CompressFormat.PNG, 100, bos);
-        }
+        Image.compress(Bitmap.CompressFormat.PNG, 100, bos);
         byte[] bArray = bos.toByteArray();
         String encoded = Base64.encodeToString(bArray, Base64.DEFAULT);
         SeriesItem tempSeriesItem = foundItem.get(topListNumber);
@@ -178,6 +192,7 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
     }
 
 
+    //Restarts the activity
     @Override
     protected void onRestart(){
         super.onRestart();
