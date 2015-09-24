@@ -1,32 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:context="com.serien.android.androidserienprojekt.activities.UserActivity">
-
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@mipmap/bg_login">
 
     <EditText
-        android:id="@+id/user_editText"
-        android:hint="@string/userEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/user_editText"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="24dp"
         android:singleLine="true"
-        android:textSize="24sp"
-        android:paddingTop="20dp"
-        android:layout_marginLeft="15dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@+id/accept_Button"
-        android:layout_toStartOf="@+id/accept_Button" />
+        android:hint="@string/userEdit"
+        android:background="@drawable/style_for_imput_field"/>
 
     <Button
-        android:id="@+id/accept_Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/acceptButton"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="15dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true" />
+        android:id="@+id/accept_Button"
+        android:layout_below="@+id/user_editText"
+        android:layout_centerHorizontal="true"
+        android:textColor="#FFFFFF"
+        android:layout_margin="10dp"
+        android:background="@drawable/style_for_buttons"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/registerButton"
+        android:id="@+id/register_button"
+        android:layout_below="@+id/accept_Button"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/style_for_buttons"
+        android:textStyle="bold"
+        android:textColor="@color/red"
+        android:layout_margin="10dp"/>
+
+
 </RelativeLayout>
 

@@ -155,6 +155,7 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
         Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
         if(!foundItem.isEmpty()){
             searchSuccessText.setVisibility(View.GONE);
+            listView.setVisibility(View.GONE);
             foundItem.clear();
         }
     }
@@ -164,6 +165,7 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
     public void onSeriesDataReceived(SeriesItem series, Integer topListInt) {
         seriesEditText.setText("");
         searchSuccessText.setVisibility(View.VISIBLE);
+        listView.setVisibility(View.VISIBLE);
         foundItem.clear();
         foundItem.add(series);
         new ImageDownloader(this, topListInt).execute(foundItem.get(topListInt).getImgPath());

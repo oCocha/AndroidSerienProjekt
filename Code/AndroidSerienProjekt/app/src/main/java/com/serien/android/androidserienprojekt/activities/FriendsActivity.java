@@ -27,6 +27,7 @@ public class FriendsActivity extends AppCompatActivity {
     private Handler handler = new Handler();
 
     private ArrayList<String> userName = new ArrayList<>();
+    private ArrayList<Integer> numbOfSeries = new ArrayList<>();
     private ArrayList<ArrayList<String>> seriesList = new ArrayList<>();
 
 
@@ -79,6 +80,10 @@ public class FriendsActivity extends AppCompatActivity {
                             seriesList.add((ArrayList) list.get(i).get("series"));
                         }
                     }
+                    for(int i = 0; i <seriesList.size() ; i++){
+                        int serNumb = seriesList.get(i).size();
+                        numbOfSeries.add(serNumb);
+                    }
                 }
             }
         });
@@ -129,7 +134,7 @@ public class FriendsActivity extends AppCompatActivity {
 
     //Initializes the adapter to show the User picture and his name
     private void initAdapter() {
-        CustomUserAdapter customUserAdapter = new CustomUserAdapter(this, userName);
+        CustomUserAdapter customUserAdapter = new CustomUserAdapter(this, userName, numbOfSeries);
         listV.setAdapter(customUserAdapter);
     }
 

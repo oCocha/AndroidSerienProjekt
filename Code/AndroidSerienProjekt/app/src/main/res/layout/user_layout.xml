@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/rounded_corner_with_bg"
     android:padding="8dp">
 
     <ImageView
@@ -21,12 +22,11 @@
         android:textStyle="bold"
         android:textColor="@color/black"/>
 
-    <ImageView
-        android:id="@+id/search_series_in_list"
-        android:layout_width="30dp"
-        android:layout_height="24dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:visibility="gone"/>
+    <TextView
+        android:id="@+id/number_of_series"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/user_series_pic"
+        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

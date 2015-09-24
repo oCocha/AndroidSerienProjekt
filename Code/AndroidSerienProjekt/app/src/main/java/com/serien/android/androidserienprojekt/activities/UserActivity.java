@@ -1,10 +1,10 @@
 package com.serien.android.androidserienprojekt.activities;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -23,10 +23,11 @@ import com.serien.android.androidserienprojekt.persistence.SeriesRepository;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserActivity extends AppCompatActivity {
+public class UserActivity extends Activity {
 
     private EditText seriesEditText;
     private Button searchForUserButton;
+    private Button registerNewUser;
     static String username;
     private Dialog dialog;
     private EditText name;
@@ -105,6 +106,7 @@ public class UserActivity extends AppCompatActivity {
     private void initUI() {
         seriesEditText = (EditText) findViewById(R.id.user_editText);
         searchForUserButton = (Button) findViewById(R.id.accept_Button);
+        registerNewUser = (Button) findViewById(R.id.register_button);
     }
 
 
@@ -131,6 +133,13 @@ public class UserActivity extends AppCompatActivity {
                 } else {
                     showRegistrationScreen();
                 }
+            }
+        });
+
+        registerNewUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showRegistrationScreen();
             }
         });
     }

@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.serien.android.androidserienprojekt.R;
 import com.serien.android.androidserienprojekt.domain.SeriesItem;
-import com.serien.android.androidserienprojekt.persistence.ImageDownloader;
 
 import java.util.ArrayList;
 
@@ -34,7 +33,7 @@ public class CustomListAdapter extends BaseAdapter {
     }
 
 
-
+    //The view holder suppresses the recycling process of the converted view
     static class ViewHolder {
         public ImageView seriesImage;
         public TextView seriesName;

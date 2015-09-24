@@ -20,8 +20,8 @@ public class MainActivity extends Activity{
 
 
     int[] imageIds = {
-            R.mipmap.search, R.mipmap.eigeneliste,
-            R.mipmap.top, R.mipmap.friend
+            R.mipmap.search_icon, R.mipmap.list_icon,
+            R.mipmap.top_10_icon, R.mipmap.friends_icon
     };
 
 

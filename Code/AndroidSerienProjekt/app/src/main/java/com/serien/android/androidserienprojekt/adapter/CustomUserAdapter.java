@@ -20,17 +20,19 @@ import java.util.ArrayList;
 public class CustomUserAdapter extends BaseAdapter {
     private Activity activity;
     private ArrayList<String> users;
+    private ArrayList<Integer> numbOfSeries;
 
-    public CustomUserAdapter(FriendsActivity friendsActivity, ArrayList<String> userNames) {
+    public CustomUserAdapter(FriendsActivity friendsActivity, ArrayList<String> userNames, ArrayList<Integer> numbOfSeries) {
         activity = friendsActivity;
         users = userNames;
-
+        this.numbOfSeries = numbOfSeries;
     }
 
 
     static class ViewHolder{
         public ImageView userPic;
         public TextView userName;
+        public TextView usersSeries;
     }
 
 
@@ -55,11 +57,12 @@ public class CustomUserAdapter extends BaseAdapter {
 
         if(convertView == null){
             LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.user_and_search_series_layout, null);
+            convertView = inflater.inflate(R.layout.user_layout, null);
 
             viewHolder = new ViewHolder();
             viewHolder.userPic = (ImageView) convertView.findViewById(R.id.user_series_pic);
             viewHolder.userName = (TextView) convertView.findViewById(R.id.user_series_name);
+            viewHolder.usersSeries = (TextView) convertView.findViewById(R.id.number_of_series);
 
             convertView.setTag(viewHolder);
         }else{
@@ -68,6 +71,7 @@ public class CustomUserAdapter extends BaseAdapter {
 
         viewHolder.userPic.setImageResource(R.mipmap.unknown_user);
         viewHolder.userName.setText(users.get(position));
+        viewHolder.usersSeries.setText("Anzahl der Serien: " + numbOfSeries.get(position));
 
         return convertView;
     }
