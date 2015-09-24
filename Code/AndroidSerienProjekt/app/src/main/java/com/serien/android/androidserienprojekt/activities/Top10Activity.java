@@ -96,7 +96,7 @@ public class Top10Activity extends AppCompatActivity implements SeriesDataProvid
     }
 
 
-    //If the specific series is inside the local database, this intent starts the SeriesOverviewActivity
+    //If the specific tv serial is inside the local database, this intent starts the SeriesOverviewActivity
     private void startIntentSeriesInDB(SeriesItem tempItem) {
         Intent startSeriesOverviewActivity = new Intent(this, SeriesOverviewActivity.class);
         Bundle mBundle = new Bundle();
@@ -106,7 +106,7 @@ public class Top10Activity extends AppCompatActivity implements SeriesDataProvid
     }
 
 
-    //If the specific series is not inside the local database, this activity starts the detailView of the specific series
+    //If the specific tv serial is not inside the local database, this activity starts the detailView of the specific series
     private void startIntentSeriesNotInDB(SeriesItem tempItem) {
         Intent startSeriesDetailActivity = new Intent(this, SeriesDetailActivity.class);
         Bundle mBundle = new Bundle();
@@ -123,7 +123,7 @@ public class Top10Activity extends AppCompatActivity implements SeriesDataProvid
     }
 
 
-    //Inserting manually 10 series names inside a arraylist
+    //Inserting manually 10 series names inside an arraylist
     private void initTop10List() {
         top30SeriesStringList.add("Gotham");
         top30SeriesStringList.add("American Horror Story");
@@ -154,7 +154,7 @@ public class Top10Activity extends AppCompatActivity implements SeriesDataProvid
     }
 
 
-    //If the input of the user matches a seriesname the series will be shown in the View
+    //If the input of the user matches a seriesname the tv serial will be shown in the View
     public void onSeriesDataReceived(SeriesItem seriesItem, Integer topListNumber) {
         top30SeriesItemList.add(seriesItem);
         new ImageDownloader(this, topListNumber).execute(top30SeriesItemList.get(topListNumber).getImgPath());

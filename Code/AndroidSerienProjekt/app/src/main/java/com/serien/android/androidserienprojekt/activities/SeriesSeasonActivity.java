@@ -45,7 +45,6 @@ public class SeriesSeasonActivity extends Fragment implements CustomSeriesExpand
     List<String> seasonList;
     List<String> episodeList;
     List<Integer> episodeListWatched;
-    ArrayList<ArrayList<Integer>> seasonsWatched;
     ArrayList<ArrayList<Integer>> seasonsWatchedTemp;
     Map<String, List<String>> seriesCollection;
     Map<String, List<Integer>> seriesCollectionWatched;
@@ -66,16 +65,11 @@ public class SeriesSeasonActivity extends Fragment implements CustomSeriesExpand
     String totalResults="";
     String guideboxName;
     public final String API_TOTAL_RESULTS ="total_results";
-    public final String API_ID="id";
-    public final String API_FIRST_AIRED="first_aired";
     public final String API_TITLE="title";
-    public final String API_ALTERNATE_TITLE="alternate_title";
-    public final String API_DURATION="duration";
     public final String API_RESULTS ="results";
     ArrayList<Integer> totalResultsInt = new ArrayList<>();
     ArrayList<ArrayList<String>> titleList = new ArrayList<>();
     SeriesOverviewActivity overView;
-
 
 
     @Override
@@ -92,19 +86,20 @@ public class SeriesSeasonActivity extends Fragment implements CustomSeriesExpand
         initUI();
     }
 
+    //Gets the ImdbID of the clicked tv serial
+    private void setupSeriesName() {
+        overView = (SeriesOverviewActivity) getActivity();
+        seriesID = overView.getSeriesID();
+        seasonList = new ArrayList<>();
+    }
+
+    //Initializes the database
     private void initDB() {
         db = new SeriesRepository(overView);
         db.open();
     }
 
-    /*
-    @Override
-    protected void onDestroy() {
-        db.close();
-        super.onDestroy();
-    }
-    */
-
+    //Creates the URL for a specific tv serial and fetches the data
     private void convertId(String imdb) {
         try {
             new FetchSeries().execute(new URL("https://api-public.guidebox.com/v1.43/US/rKLFGBQmcGcVIW3lgmk2KpXr1tbEq7b7/search/id/imdb/"+imdb));
@@ -113,102 +108,27 @@ public class SeriesSeasonActivity extends Fragment implements CustomSeriesExpand
         }
     }
 
-    //erstellt einen ExpandableListViewAdapter und verknüpft diesen mit der erstellten ExpandableList
-    private void initAdapter() {
-        CustomSeriesExpandableListAdapter expListAdapter = new CustomSeriesExpandableListAdapter(getActivity(), seasonList, seriesCollection, seasonsWatchedTemp, db.getSeriesItem(guideboxName), this);
-        expListView.setAdapter(expListAdapter);
-    }
-    //erstellt die UI Elemente
+    //Initializes the UI elements
     private void initUI() {
         expListView = (ExpandableListView) getView().findViewById(R.id.series_expandableList);
         seriesNameTextView = (TextView) getView().findViewById(R.id.season_series_name);
         seriesNameTextView.setText(seriesID);
     }
-    //erstellt einen Testseriendatensatz
-    private void setupSeriesName() {
-        overView = (SeriesOverviewActivity) getActivity();
-        seriesID = overView.getSeriesID();
-        setupSeasonList();
-    }
-    //sets up the list with all sessions and episodes of a series
-    private void setupCollection(ArrayList <ArrayList<String>> title, ArrayList<Integer> totalResultsInt) {
-        ArrayList<ArrayList<String>> seasons = new ArrayList<>();
-        ArrayList<String> season = new ArrayList<>();
-        XStream xStream = new XStream();
 
-         if(db.getSeriesItem(guideboxName).getWatched() == null) {
-            System.out.println("SERIESIDDDDDDDDDDDDDDDDDDDDDDD:"+guideboxName);
-            seasonsWatchedTemp = new ArrayList<>();
-            ArrayList<Integer> seasonEpisodesWatched = new ArrayList<>();
-            Integer tempInt = 0;
-            for(int i = 0; i < totalResultsInt.size(); i++) {
-                seasonEpisodesWatched = new ArrayList<>();
-                for(int j = 0; j < totalResultsInt.get(i); j++) {
-                    seasonEpisodesWatched.add(tempInt);
-                }
-                seasonsWatchedTemp.add(seasonEpisodesWatched);
-            }
-         }else{
-            seasonsWatchedTemp = new ArrayList<>();
-            seasonsWatchedTemp = (ArrayList<ArrayList<Integer>>) xStream.fromXML(db.getSeriesItem(guideboxName).getWatched());
-             System.out.println("WATCHEDVORHANDENNNNNNNNNNNNNNNNNN:"+seasonsWatchedTemp);
-         }
-
-//        db.updateWatchedData(xmlSeasonsWatched);
-
-
-
-        for(int j=0;j<seasonCounter;j++) {
-            for (int i = 0; i < totalResultsInt.get(j); i++) {
-                season.add("Episode " +(i+1)+ ":  " + title.get(j).get(i));
-            }
-            seasons.add(j, season);
-            season= new ArrayList<>();
-        }
-        seriesCollection = new LinkedHashMap<>();
-        seriesCollectionWatched = new LinkedHashMap<>();
-        int c=0;
-        for (String compareString : seasonList) {
-            c++;
-            if (compareString.equals("Staffel "+ c)) {
-                loadChild(seasons.get(c - 1));
-                loadChildWatched(seasonsWatchedTemp.get(c - 1));
-            }
-            seriesCollection.put(compareString, episodeList);
-            seriesCollectionWatched.put(compareString, episodeListWatched);
-            initAdapter();
-        }
-    }
-    //loads all episodes of a season in the list
-    private void loadChild(ArrayList<String> s) {
-        episodeList = new ArrayList<>();
-        for (String model : s)
-            episodeList.add(model);
-    }
-    private void loadChildWatched(ArrayList<Integer> s) {
-        episodeListWatched = new ArrayList<>();
-        for (Integer model : s)
-            episodeListWatched.add(model);
-    }
-    private void setupSeasonList() {
-        seasonList = new ArrayList<>();
-    }
-
-    @Override
-    public void onWatchedEpisodesChanged(String seriesName, String seasonsWatched) {
-        db.updateWatchedEpisodes(seriesName, seasonsWatched);
-    }
-
-
+    //This class fetches all seasons and episodes of a tv serial
     private class FetchSeries extends AsyncTask<URL, Integer, JSONObject> {
+
         public String processHttpRequest(String url) {
+
             HttpClient httpclient = new DefaultHttpClient();
             HttpResponse response;
             String responseString = null;
+
             try {
                 response = httpclient.execute(new HttpGet(url));
                 StatusLine statusLine = response.getStatusLine();
-                //überprüft ob die SeriesOverViewActivity überhaupt noch aktiv ist
+
+                //Checks whether the parent activity is still active
                 if(!overView.getActivityStatus()){
                     response.getEntity().getContent().close();
                 } else if(statusLine.getStatusCode() == HttpStatus.SC_OK){
@@ -224,7 +144,8 @@ public class SeriesSeasonActivity extends Fragment implements CustomSeriesExpand
             }
             return responseString;
         }
-        //ldt im Hintergrund die Daten
+
+        //Loads the tv serial data from the GuideBox API
         protected JSONObject doInBackground(URL... urls) {
             HttpURLConnection urlConnection = null;
             JSONObject searchResultItems = null;
@@ -242,6 +163,8 @@ public class SeriesSeasonActivity extends Fragment implements CustomSeriesExpand
                     }
                 }
             }
+
+            //Creates a new JSONObject from the received responsestring
             try {
                 searchResultItems = new JSONObject(jSONResponse);
                 Log.d("My App", searchResultItems.toString());
@@ -250,17 +173,17 @@ public class SeriesSeasonActivity extends Fragment implements CustomSeriesExpand
             }
             return searchResultItems;
         }
-        //after having loaded the JSONObject it is used to get the info in it
+
+        //Saves the data from the new JSONObject
         protected void onPostExecute(JSONObject seriesSearchResult) {
             super.onPostExecute(seriesSearchResult);
             if(seriesSearchResult != null) {
-                //gets called once at the beginning to get the guideboxId from the imdbId
+                //Gets called once at the beginning to get the guideboxId from the imdbId
                 if (findId) {
                     if (seriesSearchResult.has("id")) {
                         try {
                             String guideboxId = seriesSearchResult.getString("id");
                             guideboxName = seriesSearchResult.getString("title");
-                            //seriesNameTextView = (TextView) getView().findViewById(R.id.nameTextView);
                             seriesNameTextView.setText(guideboxName);
                             findId = false;
                             testId = guideboxId;
@@ -272,7 +195,7 @@ public class SeriesSeasonActivity extends Fragment implements CustomSeriesExpand
                     }
 
                 } else {
-                    //gets called once to get the number of seasons of a series
+                    //Gets called once to get the number of seasons of a tv serial
                     if (!episodes) {
                         try {
                             JSONArray result = seriesSearchResult.getJSONArray(API_RESULTS);
@@ -282,7 +205,7 @@ public class SeriesSeasonActivity extends Fragment implements CustomSeriesExpand
                             System.out.println("Spackt " + e);
                         }
                     } else {
-                        //gets called once for each season in a series
+                        //Gets called once for each season in a tv serial
                         try {
                             if (seriesSearchResult.has(API_TOTAL_RESULTS)) {
                                 totalResults = seriesSearchResult.getString(API_TOTAL_RESULTS);
@@ -313,6 +236,7 @@ public class SeriesSeasonActivity extends Fragment implements CustomSeriesExpand
         }
     }
 
+    //Saves the seasons in a list and fetches the episodes data
     private void setupSeasons(int length) {
         for(int i=1;i<=length;i++){
             seasonList.add("Staffel " + i);
@@ -341,7 +265,8 @@ public class SeriesSeasonActivity extends Fragment implements CustomSeriesExpand
         }
         return response;
     }
-    //starts the FetchSeries class with the given name of the series
+
+    //Starts the FetchSeries class with the given name of the series
     public void getSeriesData(String seriesName) {
         try {
             new FetchSeries().execute(new URL("https://api-public.guidebox.com/v1.43/US/rKLFGBQmcGcVIW3lgmk2KpXr1tbEq7b7/show/"+ testId+"/seasons"));
@@ -349,4 +274,82 @@ public class SeriesSeasonActivity extends Fragment implements CustomSeriesExpand
             System.out.println("Unable to create URL: " + e.toString());
         }
     }
+
+
+    //Sets up the list with all sessions and episodes of a tv seial and marks the watched episodes
+    private void setupCollection(ArrayList <ArrayList<String>> title, ArrayList<Integer> totalResultsInt) {
+
+        ArrayList<ArrayList<String>> seasons = new ArrayList<>();
+        ArrayList<String> season = new ArrayList<>();
+        XStream xStream = new XStream();
+
+        //Creates a list of watched episodes if nothing is saved in the database already
+        if(db.getSeriesItem(guideboxName).getWatched() == null) {
+
+            seasonsWatchedTemp = new ArrayList<>();
+            ArrayList<Integer> seasonEpisodesWatched = new ArrayList<>();
+            Integer tempInt = 0;
+
+            for(int i = 0; i < totalResultsInt.size(); i++) {
+                seasonEpisodesWatched = new ArrayList<>();
+                for(int j = 0; j < totalResultsInt.get(i); j++) {
+                    seasonEpisodesWatched.add(tempInt);
+                }
+                seasonsWatchedTemp.add(seasonEpisodesWatched);
+            }
+
+        //Loads a list of watched episodes if this list is saved in the database already
+        }else{
+            seasonsWatchedTemp = new ArrayList<>();
+            seasonsWatchedTemp = (ArrayList<ArrayList<Integer>>) xStream.fromXML(db.getSeriesItem(guideboxName).getWatched());
+        }
+
+        //Creates a list of epiosdes and a list of watched/nonwatched episodes and creates a new adapter with those lists
+        for(int j=0;j<seasonCounter;j++) {
+            for (int i = 0; i < totalResultsInt.get(j); i++) {
+                season.add("Episode " +(i+1)+ ":  " + title.get(j).get(i));
+            }
+            seasons.add(j, season);
+            season= new ArrayList<>();
+        }
+        seriesCollection = new LinkedHashMap<>();
+        seriesCollectionWatched = new LinkedHashMap<>();
+        int c=0;
+        for (String compareString : seasonList) {
+            c++;
+            if (compareString.equals("Staffel "+ c)) {
+                loadChild(seasons.get(c - 1));
+                loadChildWatched(seasonsWatchedTemp.get(c - 1));
+            }
+            seriesCollection.put(compareString, episodeList);
+            seriesCollectionWatched.put(compareString, episodeListWatched);
+            initAdapter();
+        }
+    }
+
+    //loads all episodes of a season in the list
+    private void loadChild(ArrayList<String> s) {
+        episodeList = new ArrayList<>();
+        for (String model : s)
+            episodeList.add(model);
+    }
+
+    //loads all watched episodes of a season in the list
+    private void loadChildWatched(ArrayList<Integer> s) {
+        episodeListWatched = new ArrayList<>();
+        for (Integer model : s)
+            episodeListWatched.add(model);
+    }
+
+    //Creates a new expandableListAdapter and links it with the expandableList
+    private void initAdapter() {
+        CustomSeriesExpandableListAdapter expListAdapter = new CustomSeriesExpandableListAdapter(getActivity(), seasonList, seriesCollection, seasonsWatchedTemp, db.getSeriesItem(guideboxName), this);
+        expListView.setAdapter(expListAdapter);
+    }
+
+    //Updates the list of watched episodes in the database if the user marks an episode as watched/nonwatched
+    public void onWatchedEpisodesChanged(String seriesName, String seasonsWatched) {
+        db.updateWatchedEpisodes(seriesName, seasonsWatched);
+    }
+
 }
