@@ -167,7 +167,6 @@ public class SeriesSeasonActivity extends Fragment implements CustomSeriesExpand
             //Creates a new JSONObject from the received responsestring
             try {
                 searchResultItems = new JSONObject(jSONResponse);
-                Log.d("My App", searchResultItems.toString());
             } catch (Throwable t) {
                 Log.e("My App", "Could not parse malformed JSON/No JSON Response" + t);
             }
@@ -189,7 +188,7 @@ public class SeriesSeasonActivity extends Fragment implements CustomSeriesExpand
                             testId = guideboxId;
                             getSeriesData(guideboxId);
                         } catch (JSONException e) {
-                            System.out.println("Spackt " + e);
+                            System.out.println("Error " + e);
                             e.printStackTrace();
                         }
                     }
@@ -202,7 +201,7 @@ public class SeriesSeasonActivity extends Fragment implements CustomSeriesExpand
                             seasonCounter = result.length();
                             setupSeasons(result.length());
                         } catch (JSONException e) {
-                            System.out.println("Spackt " + e);
+                            System.out.println("Error " + e);
                         }
                     } else {
                         //Gets called once for each season in a tv serial
@@ -228,7 +227,7 @@ public class SeriesSeasonActivity extends Fragment implements CustomSeriesExpand
                                 setupCollection(titleList, totalResultsInt);
                             }
                         } catch (JSONException e) {
-                            System.out.println("Spackt " + e);
+                            System.out.println("Error " + e);
                         }
                     }
                 }

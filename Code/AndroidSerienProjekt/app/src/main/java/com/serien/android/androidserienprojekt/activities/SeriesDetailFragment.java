@@ -71,18 +71,15 @@ public class SeriesDetailFragment extends Fragment {
             @Override
             public void done(List<ParseObject> list, ParseException e) {
                 if (e != null) {
-                    //    Toast.makeText(SeriesDetailFragment.this, "Error " + e, Toast.LENGTH_SHORT).show();
                 } else {
                     for (int i = 0; i < list.size(); i++) {
                         if (list.get(i).getString("userName").equals(USERNAME)) {
-                            System.out.println("ARAYYYYYYYYYYYYYYYYYYYYYY:" + list.get(i).getJSONArray("series"));
                             for (int j = 0; j < list.get(i).getJSONArray("series").length(); j++) {
                                 try {
                                     tempString = list.get(i).getJSONArray("series").getString(j);
                                 } catch (Exception g) {
                                 }
                                 if (tempString.equals(serItem.getName())) {
-                                    System.out.println("ZULÖSCHENDESERIEEEEEEEEEE:" + tempString);
                                     list.get(i).removeAll("series", Arrays.asList(serItem.getName()));
                                     list.get(i).saveInBackground();
                                 }

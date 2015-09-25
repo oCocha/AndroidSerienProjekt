@@ -28,7 +28,7 @@ public class FriendsActivity extends AppCompatActivity {
 
     private ArrayList<String> userName = new ArrayList<>();
     private ArrayList<Integer> numbOfSeries = new ArrayList<>();
-    private ArrayList<ArrayList<String>> seriesList = new ArrayList<>();
+    ArrayList<ArrayList<String>> seriesList = new ArrayList<>();
 
 
 
@@ -64,7 +64,7 @@ public class FriendsActivity extends AppCompatActivity {
     }
 
 
-    //Gets the User which are saved in the Parse.com Database
+    //Gets the Users which are saved in the Parse.com Database
     private long parseData() {
         String parseClassName = "SerienApp";
         ParseQuery<ParseObject> query = new ParseQuery<>(parseClassName);
@@ -81,8 +81,12 @@ public class FriendsActivity extends AppCompatActivity {
                         }
                     }
                     for(int i = 0; i <seriesList.size() ; i++){
-                        int serNumb = seriesList.get(i).size();
-                        numbOfSeries.add(serNumb);
+                        if(seriesList.get(i) != null) {
+                            int serNumb = seriesList.get(i).size();
+                            numbOfSeries.add(serNumb);
+                        }else{
+                            numbOfSeries.add(0);
+                        }
                     }
                 }
             }

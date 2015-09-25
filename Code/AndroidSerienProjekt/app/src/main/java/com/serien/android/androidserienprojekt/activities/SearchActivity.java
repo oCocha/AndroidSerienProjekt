@@ -183,7 +183,6 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
     @Override
     public void onImageReceived(Bitmap Image, Integer topListNumber) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        System.out.println("IMAGEEEEEEEEEEEEEEE:" + Image + " TOPLISTNUMBERRRRRRRRRRR:" + topListNumber);
         Image.compress(Bitmap.CompressFormat.PNG, 100, bos);
         byte[] bArray = bos.toByteArray();
         String encoded = Base64.encodeToString(bArray, Base64.DEFAULT);

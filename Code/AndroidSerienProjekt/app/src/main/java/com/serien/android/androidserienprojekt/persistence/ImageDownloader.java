@@ -19,16 +19,13 @@ import java.net.URLConnection;
  * Created by oCocha on 29.07.2015.
  */
 
-//L�dt ein Bild mithilfe einer �bergebenen URL und setzt es in ein �bergebenes Imageview
+//Loads an image from an URL and returns it as a bitmap
 public class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
-//    private final WeakReference<ImageView> imageViewReference;
     private String imageUrl;
-    SeriesRepository db;
     OnImageProvidedListener onImageProvidedListener;
     Integer topListNumber;
 
-    public ImageDownloader(/*ImageView imageView,*/ OnImageProvidedListener onImageProvidedListener, Integer topListNumber) {
-//        imageViewReference = new WeakReference<>(imageView);
+    public ImageDownloader(OnImageProvidedListener onImageProvidedListener, Integer topListNumber) {
         this.onImageProvidedListener = onImageProvidedListener;
         this.topListNumber = topListNumber;
     }
@@ -41,13 +38,6 @@ public class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
-    /*    if (imageViewReference != null && bitmap != null){
-            final ImageView imageView = imageViewReference.get();
-            if(imageView != null){
-                //imageView.setImageBitmap(bitmap);
-            }
-        }
-        */
         onImageProvidedListener.onImageReceived(bitmap, topListNumber);
     }
 
@@ -80,7 +70,7 @@ public class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
         return inputStream;
     }
 
-    //Interface f�r das Bereitstellen der Images
+    //Callback for when the image is received
     public interface OnImageProvidedListener {
         void onImageReceived(Bitmap Image, Integer topListNumber);
     }
