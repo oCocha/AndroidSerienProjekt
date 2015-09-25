@@ -63,7 +63,6 @@ public class UserActivity extends Activity {
     }
 
 
-
     private void initUsername() {
         username = "";
     }
@@ -130,8 +129,10 @@ public class UserActivity extends Activity {
                     }else if (rightUser && !rightUserSeries) {
                         showWrongUserMessage();
                     }
+                } else if(username.isEmpty()){
+                    Toast.makeText(UserActivity.this, "Sie haben keinen validen Benutzernamen eingegeben!", Toast.LENGTH_SHORT).show();
                 } else {
-                    showRegistrationScreen();
+                    Toast.makeText(UserActivity.this, "Benutzername nicht gefunden. Bitte geben Sie einen validen Usernamen ein oder registrieren Sie sich ", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -170,7 +171,7 @@ public class UserActivity extends Activity {
 
     //Shows a success Message to the User
     private void showSuccessMessage() {
-        Toast.makeText(UserActivity.this, "Hallo '" + username + "'!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(UserActivity.this, "Willkommen zurück '" + username + "'!", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -178,6 +179,7 @@ public class UserActivity extends Activity {
     private void startApplication() {
         Intent intentMain = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intentMain);
+        finish();
     }
 
 
@@ -256,6 +258,8 @@ public class UserActivity extends Activity {
         updateParseDatabase();
         Intent intentMain = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intentMain);
+        Toast.makeText(UserActivity.this, "Sie haben sich mit dem Namen '" + username + "' Angemeldet" , Toast.LENGTH_SHORT).show();
+        finish();
     }
 
 
@@ -272,15 +276,15 @@ public class UserActivity extends Activity {
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> list, ParseException e) {
-                if(e != null){
+                if (e != null) {
                     Toast.makeText(UserActivity.this, "Error " + e, Toast.LENGTH_SHORT).show();
-                }else{
-                    for (int i = 0; i < list.size(); i++){
-                        if(list.get(i).getString("userName").equals(username)){
+                } else {
+                    for (int i = 0; i < list.size(); i++) {
+                        if (list.get(i).getString("userName").equals(username)) {
                             newUser = false;
                         }
                     }
-                    if(newUser){
+                    if (newUser) {
                         ParseObject tempParseObject = new ParseObject("SerienApp");
                         tempParseObject.put("userName", username);
                         tempParseObject.saveInBackground();

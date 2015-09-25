@@ -3,20 +3,27 @@ package com.serien.android.androidserienprojekt;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.serien.android.androidserienprojekt.activities.FriendsActivity;
 import com.serien.android.androidserienprojekt.activities.ListActivity;
 import com.serien.android.androidserienprojekt.activities.SearchActivity;
 import com.serien.android.androidserienprojekt.activities.Top10Activity;
+import com.serien.android.androidserienprojekt.activities.UserActivity;
 import com.serien.android.androidserienprojekt.adapter.startActivityImageAdapter;
 
 
 public class MainActivity extends Activity{
 
     private GridView gridview;
+    private TextView userName;
+
+    private boolean doubleBackClickedOnce = false;
 
 
     int[] imageIds = {
@@ -27,7 +34,7 @@ public class MainActivity extends Activity{
 
      String[] textForIcons = {
             "Seriensuche", "Serienliste",
-            "Top 10 Serien", "Freunde"
+            "Top 10 Serien", "Serien anderer User"
     };
 
 
@@ -47,7 +54,9 @@ public class MainActivity extends Activity{
 
     //Initializes the GridView of this Activity
     private void setupUI() {
+        userName = (TextView) findViewById(R.id.display_user_name);
         gridview = (GridView) findViewById(R.id.start_gridView);
+        userName.append("'" + UserActivity.getUserName() + "'");
     }
 
 
@@ -83,6 +92,26 @@ public class MainActivity extends Activity{
                 }
             }
         });
+    }
+
+
+    //Checks if the user pressed the hardware back-button twice
+    @Override
+    public void onBackPressed(){
+        if(doubleBackClickedOnce){
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackClickedOnce = true;
+        Toast.makeText(this, "Klicken sie noch einmal zurück um die App zu schließen", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                doubleBackClickedOnce = false;
+            }
+        }, 2000);
     }
 
 }

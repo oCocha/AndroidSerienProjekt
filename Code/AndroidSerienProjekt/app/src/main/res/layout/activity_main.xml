@@ -1,20 +1,33 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@mipmap/bg_standart"
         tools:cotext=".MainActivity1">
+
+        <TextView
+            android:id="@+id/display_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end|top"
+            android:textSize="26sp"
+            android:text="Angemeldet als "
+            android:background="#90333333"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingRight="20dp"
+            android:textColor="@color/white"/>
 
         <GridView
         android:id="@+id/start_gridView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:numColumns="2"
-        android:verticalSpacing="50dp"
+        android:verticalSpacing="40dp"
         android:horizontalSpacing="10dp"
         android:stretchMode="columnWidth"
-        android:gravity="center"
-        android:paddingTop="50dp"
+        android:paddingTop="20dp"
         android:listSelector="#00000000"
         />
 
