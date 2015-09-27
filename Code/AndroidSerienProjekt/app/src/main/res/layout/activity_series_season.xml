@@ -20,4 +20,16 @@
         android:layout_height="fill_parent" >
     </ExpandableListView>
 
+    <TextView
+        android:id="@+id/seasons_not_available"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/no_seasons"
+        android:textSize="25sp"
+        android:layout_centerInParent="true"
+        android:padding="40dp"
+        android:gravity="center_horizontal"
+        android:textColor="@color/red"
+        android:visibility="gone" />
+
 </RelativeLayout>

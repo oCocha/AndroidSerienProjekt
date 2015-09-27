@@ -42,7 +42,7 @@ import java.util.Map;
 
 //Dies ist die SeriesSeasonActivity, in welcher Serien mitsamt aller Staffeln und Episoden angezeigt werden und mithilfe einer Checkbox markiert werden können
 public class SeriesSeasonActivity extends Fragment implements CustomSeriesExpandableListAdapter.OnWatchedEpisodesChangedListener{
-    List<String> seasonList;
+    List<String> seasonList = new ArrayList<>();
     List<String> episodeList;
     List<Integer> episodeListWatched;
     ArrayList<ArrayList<Integer>> seasonsWatchedTemp;
@@ -52,6 +52,7 @@ public class SeriesSeasonActivity extends Fragment implements CustomSeriesExpand
     ExpandableListView expListView;
     boolean findId=true;
     TextView seriesNameTextView;
+    private TextView noListPresent;
     String seriesID;
     int seasonCounter=0;
     int seasonId=1;
@@ -72,14 +73,17 @@ public class SeriesSeasonActivity extends Fragment implements CustomSeriesExpand
     SeriesOverviewActivity overView;
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstancesState){
         return inflater.inflate(R.layout.activity_series_season, container, false);
     }
 
+
     @Override
     public void onStart() {
         super.onStart();
+
         setupSeriesName();
         initDB();
         convertId(seriesID);
@@ -90,7 +94,6 @@ public class SeriesSeasonActivity extends Fragment implements CustomSeriesExpand
     private void setupSeriesName() {
         overView = (SeriesOverviewActivity) getActivity();
         seriesID = overView.getSeriesID();
-        seasonList = new ArrayList<>();
     }
 
     //Initializes the database
@@ -112,7 +115,8 @@ public class SeriesSeasonActivity extends Fragment implements CustomSeriesExpand
     private void initUI() {
         expListView = (ExpandableListView) getView().findViewById(R.id.series_expandableList);
         seriesNameTextView = (TextView) getView().findViewById(R.id.season_series_name);
-        seriesNameTextView.setText(seriesID);
+        seriesNameTextView.setText("Wird geladen...");
+        noListPresent = (TextView) getView().findViewById(R.id.seasons_not_available);
     }
 
     //This class fetches all seasons and episodes of a tv serial
@@ -283,46 +287,51 @@ public class SeriesSeasonActivity extends Fragment implements CustomSeriesExpand
         XStream xStream = new XStream();
 
         //Creates a list of watched episodes if nothing is saved in the database already
-        if(db.getSeriesItem(guideboxName).getWatched() == null) {
+        if (!(db.getSeriesItem(guideboxName) == null)) {
+            if (db.getSeriesItem(guideboxName).getWatched() == null) {
 
-            seasonsWatchedTemp = new ArrayList<>();
-            ArrayList<Integer> seasonEpisodesWatched = new ArrayList<>();
-            Integer tempInt = 0;
+                seasonsWatchedTemp = new ArrayList<>();
+                ArrayList<Integer> seasonEpisodesWatched;
+                int tempInt = 0;
 
-            for(int i = 0; i < totalResultsInt.size(); i++) {
-                seasonEpisodesWatched = new ArrayList<>();
-                for(int j = 0; j < totalResultsInt.get(i); j++) {
-                    seasonEpisodesWatched.add(tempInt);
+                for (int i = 0; i < totalResultsInt.size(); i++) {
+                    seasonEpisodesWatched = new ArrayList<>();
+                    for (int j = 0; j < totalResultsInt.get(i); j++) {
+                        seasonEpisodesWatched.add(tempInt);
+                    }
+                    seasonsWatchedTemp.add(seasonEpisodesWatched);
                 }
-                seasonsWatchedTemp.add(seasonEpisodesWatched);
+
+                //Loads a list of watched episodes if this list is saved in the database already
+            } else {
+                seasonsWatchedTemp = new ArrayList<>();
+                seasonsWatchedTemp = (ArrayList<ArrayList<Integer>>) xStream.fromXML(db.getSeriesItem(guideboxName).getWatched());
             }
 
-        //Loads a list of watched episodes if this list is saved in the database already
+
+            //Creates a list of epiosdes and a list of watched/nonwatched episodes and creates a new adapter with those lists
+            for (int j = 0; j < seasonCounter; j++) {
+                for (int i = 0; i < totalResultsInt.get(j); i++) {
+                    season.add("Episode " + (i + 1) + ":  " + title.get(j).get(i));
+                }
+                seasons.add(j, season);
+                season = new ArrayList<>();
+            }
+            seriesCollection = new LinkedHashMap<>();
+            seriesCollectionWatched = new LinkedHashMap<>();
+            int c = 0;
+            for (String compareString : seasonList) {
+                c++;
+                if (compareString.equals("Staffel " + c)) {
+                    loadChild(seasons.get(c - 1));
+                    loadChildWatched(seasonsWatchedTemp.get(c - 1));
+                }
+                seriesCollection.put(compareString, episodeList);
+                seriesCollectionWatched.put(compareString, episodeListWatched);
+                initAdapter();
+            }
         }else{
-            seasonsWatchedTemp = new ArrayList<>();
-            seasonsWatchedTemp = (ArrayList<ArrayList<Integer>>) xStream.fromXML(db.getSeriesItem(guideboxName).getWatched());
-        }
-
-        //Creates a list of epiosdes and a list of watched/nonwatched episodes and creates a new adapter with those lists
-        for(int j=0;j<seasonCounter;j++) {
-            for (int i = 0; i < totalResultsInt.get(j); i++) {
-                season.add("Episode " +(i+1)+ ":  " + title.get(j).get(i));
-            }
-            seasons.add(j, season);
-            season= new ArrayList<>();
-        }
-        seriesCollection = new LinkedHashMap<>();
-        seriesCollectionWatched = new LinkedHashMap<>();
-        int c=0;
-        for (String compareString : seasonList) {
-            c++;
-            if (compareString.equals("Staffel "+ c)) {
-                loadChild(seasons.get(c - 1));
-                loadChildWatched(seasonsWatchedTemp.get(c - 1));
-            }
-            seriesCollection.put(compareString, episodeList);
-            seriesCollectionWatched.put(compareString, episodeListWatched);
-            initAdapter();
+            noListPresent.setVisibility(View.VISIBLE);
         }
     }
 

@@ -22,7 +22,7 @@
         android:id="@+id/accept_Button"
         android:layout_below="@+id/user_editText"
         android:layout_centerHorizontal="true"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/black"
         android:layout_margin="10dp"
         android:background="@drawable/style_for_buttons"/>
 
@@ -34,9 +34,9 @@
         android:layout_below="@+id/accept_Button"
         android:layout_centerHorizontal="true"
         android:background="@drawable/style_for_buttons"
-        android:textStyle="bold"
         android:textColor="@color/red"
-        android:layout_margin="10dp"/>
+        android:layout_margin="10dp"
+        android:textStyle="bold|italic" />
 
 
 </RelativeLayout>

@@ -1,16 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape>
-            <solid android:color="#40403F"/>
-            <corners android:radius="10dp"/>
 
-            <padding
-                android:left="5dp"
-                android:top="5dp"
-                android:right="5dp"
-                android:bottom="5dp"/>
+    <item android:state_pressed="false">
+        <layer-list>
 
-        </shape>
+            <item>
+                <shape>
+                    <solid android:color="#FFFFFF"/>
+                    <corners android:radius="15dp"/>
+                </shape>
+            </item>
+
+            <item android:bottom="5px">
+                <shape>
+                    <padding android:bottom="5dp"/>
+                    <corners
+                        android:radius="15dp"/>
+                    <padding
+                        android:left="10dp"
+                        android:top="10dp"
+                        android:right="10dp"
+                        android:bottom="10dp"/>
+                </shape>
+            </item>
+        </layer-list>
     </item>
+
+    <item android:state_pressed="true">
+        <layer-list>
+
+            <item>
+                <shape>
+                    <solid android:color="#BBBBBB"/>
+                    <corners android:radius="15dp"/>
+                </shape>
+            </item>
+
+            <item android:bottom="5px">
+                <shape>
+                    <padding android:bottom="5dp"/>
+
+                    <corners
+                        android:radius="15dp"/>
+                    <padding
+                        android:left="10dp"
+                        android:top="10dp"
+                        android:right="10dp"
+                        android:bottom="10dp"/>
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+
 </selector>

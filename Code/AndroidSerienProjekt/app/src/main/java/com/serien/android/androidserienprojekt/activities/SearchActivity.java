@@ -3,8 +3,9 @@ package com.serien.android.androidserienprojekt.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -26,7 +27,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 //Dies ist die SearchActivity, in welcher Serien per AsyncTask gesucht und falls vorhanden angezeigt werden
-public class SearchActivity extends ActionBarActivity implements SeriesDataProvider.OnSeriesDataProvidedListener, ImageDownloader.OnImageProvidedListener {
+public class SearchActivity extends AppCompatActivity implements SeriesDataProvider.OnSeriesDataProvidedListener, ImageDownloader.OnImageProvidedListener {
 
 
     private String tempString;
@@ -183,6 +184,9 @@ public class SearchActivity extends ActionBarActivity implements SeriesDataProvi
     @Override
     public void onImageReceived(Bitmap Image, Integer topListNumber) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        if(Image == null){
+            Image = BitmapFactory.decodeResource(getResources(), R.mipmap.placeholder_image);
+        }
         Image.compress(Bitmap.CompressFormat.PNG, 100, bos);
         byte[] bArray = bos.toByteArray();
         String encoded = Base64.encodeToString(bArray, Base64.DEFAULT);

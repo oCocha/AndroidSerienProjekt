@@ -23,7 +23,6 @@ public class SeriesOverviewActivity extends AppCompatActivity implements ViewPag
     private SeriesRepository db;
     private ViewPager viewPager;
     private TabHost tabHost;
-    private Intent intent;
     private SeriesItem specificSeries;
 
     static boolean active = false;
@@ -60,7 +59,7 @@ public class SeriesOverviewActivity extends AppCompatActivity implements ViewPag
 
     //Gets the data from the previous activity
     public void getData() {
-        intent = getIntent();
+        Intent intent = getIntent();
         specificSeries = (SeriesItem) intent.getSerializableExtra("seriesItem");
     }
 

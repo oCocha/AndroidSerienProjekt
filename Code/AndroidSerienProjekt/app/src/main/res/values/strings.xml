@@ -22,6 +22,7 @@
     <string name="series_Top_30">Top 10</string>
     <string name="series_Main">Start</string>
     <string name="series_Friend">Freunde</string>
+    <string name="no_seasons">Leider ist die Liste für diese Serie nicht verfügbar.</string>
 
     <string name="title_activity_test">TestActivity</string>
     <string name="title_activity_search">Suche</string>

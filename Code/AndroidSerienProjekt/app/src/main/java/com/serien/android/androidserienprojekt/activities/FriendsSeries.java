@@ -2,6 +2,7 @@ package com.serien.android.androidserienprojekt.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
@@ -26,12 +27,10 @@ import java.util.ArrayList;
  */
 public class FriendsSeries extends AppCompatActivity implements SeriesDataProvider.OnSeriesDataProvidedListener,ImageDownloader.OnImageProvidedListener{
 
-    private SeriesDataProvider sdp;
     private ListView list;
 
     private SeriesRepository db;
     private ArrayList<String> seriesNamesInLocalDB = new ArrayList<>();
-
     private ArrayList<String> friendSeriesItems = new ArrayList<>();
     private ArrayList<SeriesItem> series = new ArrayList<>();
 
@@ -121,7 +120,7 @@ public class FriendsSeries extends AppCompatActivity implements SeriesDataProvid
     //Gets data for each series item which is inside the list of the specific friend
     private void initSeriesView() {
         for(int i = 0; i < friendSeriesItems.size(); i++){
-            sdp = new SeriesDataProvider();
+            SeriesDataProvider sdp = new SeriesDataProvider();
             sdp.startSeriesFetching(this, friendSeriesItems.get(i), i);
         }
     }
@@ -145,9 +144,10 @@ public class FriendsSeries extends AppCompatActivity implements SeriesDataProvid
     @Override
     public void onImageReceived(Bitmap Image, Integer topListNumber) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        if(Image != null){
-            Image.compress(Bitmap.CompressFormat.PNG, 100, bos);
+        if(Image == null){
+            Image = BitmapFactory.decodeResource(getResources(), R.mipmap.placeholder_image);
         }
+        Image.compress(Bitmap.CompressFormat.PNG, 100, bos);
         byte[] bArray = bos.toByteArray();
         String encoded = Base64.encodeToString(bArray, Base64.DEFAULT);
         SeriesItem tempSeriesItem = series.get(topListNumber);

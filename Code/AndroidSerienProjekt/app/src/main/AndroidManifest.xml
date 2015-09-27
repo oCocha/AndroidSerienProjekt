@@ -68,6 +68,7 @@
         </activity>
 
         <activity android:name=".activities.SeriesDetailActivity"
+            android:parentActivityName=".activities.ListActivity"
             android:screenOrientation="portrait"/>
 
         <activity

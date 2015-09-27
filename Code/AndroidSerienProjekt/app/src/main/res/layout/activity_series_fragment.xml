@@ -3,10 +3,9 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:background="@drawable/rounded_corner_with_bg"
         android:padding="15dp">
 
@@ -16,82 +15,108 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="30sp"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"/>
 
         <ImageView
             android:id="@+id/fragment_series_image"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/image_description"
-            android:padding="5dp"/>
+            android:padding="5dp"
+            android:layout_below="@id/fragment_series_name"
+            android:layout_alignParentLeft="true"/>
 
 
 
         <TextView
+            android:id="@+id/rating_headline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="25sp"
-            android:text="@string/fragmentRating" />
+            android:text="@string/fragmentRating"
+            android:layout_toRightOf="@id/fragment_series_image"
+            android:layout_below="@id/fragment_series_name"/>
 
         <TextView
             android:id="@+id/fragment_series_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"/>
+            android:textSize="18sp"
+            android:layout_toRightOf="@id/fragment_series_image"
+            android:layout_below="@id/rating_headline"/>
 
 
 
         <TextView
+            android:id="@+id/year_headline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="25sp"
-            android:text="@string/fragmentYear" />
+            android:text="@string/fragmentYear"
+            android:layout_toRightOf="@id/fragment_series_image"
+            android:layout_below="@id/fragment_series_rating" />
 
         <TextView
             android:id="@+id/fragment_series_year"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"/>
+            android:textSize="18sp"
+            android:layout_toRightOf="@id/fragment_series_image"
+            android:layout_below="@id/year_headline"/>
 
 
 
         <TextView
+            android:id="@+id/actor_headline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
+            android:layout_marginTop="15dp"
             android:textSize="25sp"
-            android:text="@string/fragmentActor" />
+            android:text="@string/fragmentActor"
+            android:layout_below="@id/fragment_series_year" />
 
         <TextView
             android:id="@+id/fragment_series_actors"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"/>
+            android:textSize="18sp"
+            android:layout_below="@id/actor_headline"/>
 
 
 
         <TextView
+            android:id="@+id/plot_headline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
+            android:layout_marginTop="15dp"
             android:textSize="25sp"
-            android:text="@string/fragmentDescription" />
+            android:text="@string/fragmentDescription"
+            android:layout_below="@id/fragment_series_actors" />
 
         <TextView
             android:id="@+id/fragment_series_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"/>
+            android:textSize="18sp"
+            android:layout_below="@id/plot_headline"/>
 
         <Button
             android:id="@+id/fragment_delete_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/deleteButton"/>
+            android:layout_marginTop="20dp"
+            android:text="@string/deleteButton"
+            android:layout_below="@+id/fragment_series_description"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/style_for_buttons"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </ScrollView>

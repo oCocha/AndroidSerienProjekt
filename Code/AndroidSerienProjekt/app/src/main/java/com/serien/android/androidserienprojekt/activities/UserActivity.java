@@ -153,14 +153,14 @@ public class UserActivity extends Activity {
         ArrayList<String> parseSeriesList = allSeriesList.get(allUser.indexOf(username));
 
         if (parseSeriesList != null) {
-            if(parseSeriesList.size() != tempSeriesList.size() || parseSeriesList.isEmpty() && tempSeriesList.isEmpty()){
+            if(parseSeriesList.size() != tempSeriesList.size()){
                 rightUserSeries = false;
             }
         }
 
 
         for(int i = 0; i < tempSeriesList.size(); i++){
-            if (parseSeriesList != null) {
+            if (parseSeriesList != null && !parseSeriesList.isEmpty()) {
                 if(!parseSeriesList.contains(tempSeriesList.get(i))){
                     rightUserSeries = false;
                 }

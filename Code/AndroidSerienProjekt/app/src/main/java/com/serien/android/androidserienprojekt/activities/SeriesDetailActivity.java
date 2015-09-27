@@ -2,6 +2,7 @@ package com.serien.android.androidserienprojekt.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
@@ -21,17 +22,16 @@ import com.serien.android.androidserienprojekt.persistence.ImageDownloader;
 import com.serien.android.androidserienprojekt.persistence.SeriesRepository;
 
 import java.io.ByteArrayOutputStream;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by King Igor on 17.09.2015.
+ * Created by Igor on 17.09.2015.
  */
 public class SeriesDetailActivity extends AppCompatActivity implements ImageDownloader.OnImageProvidedListener {
 
     public static ImageView seriesImageView;
     private SeriesRepository db;
-    private Intent intent;
 
     private SeriesItem specificSeries;
     private Bitmap seriesImage;
@@ -69,7 +69,7 @@ public class SeriesDetailActivity extends AppCompatActivity implements ImageDown
 
     //Get the data from the previous Activity
     public void getData() {
-        intent = getIntent();
+        Intent intent = getIntent();
         specificSeries = (SeriesItem) intent.getSerializableExtra("seriesItem");
     }
 
@@ -127,7 +127,7 @@ public class SeriesDetailActivity extends AppCompatActivity implements ImageDown
                 } else {
                     for (int i = 0; i < list.size(); i++) {
                         if(list.get(i).getString("userName").equals(USERNAME))
-                            list.get(i).addAllUnique("series", Arrays.asList(specificSeries.getName()));
+                            list.get(i).addAllUnique("series", Collections.singletonList(specificSeries.getName()));
                             list.get(i).saveInBackground();
                     }
                 }
@@ -146,8 +146,14 @@ public class SeriesDetailActivity extends AppCompatActivity implements ImageDown
     //If the image data is received it gets updated in the view
     @Override
     public void onImageReceived(Bitmap image, Integer integer) {
-        seriesImageView.setImageBitmap(image);
-        seriesImage = image;
+        if(image == null){
+            image = BitmapFactory.decodeResource(getResources(), R.mipmap.placeholder_image);
+            seriesImage = image;
+        }else{
+            seriesImage = image;
+
+        }
+        seriesImageView.setImageBitmap(seriesImage);
     }
 
 }

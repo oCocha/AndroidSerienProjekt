@@ -12,15 +12,13 @@ import com.serien.android.androidserienprojekt.R;
  */
 public class LoadingActivity extends Activity{
 
-    //Sets the time how long the loading screen is shown
-    private static int SCREEN_TIME_OUT = 2000;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading_screen);
 
+        int SCREEN_TIME_OUT = 2000;
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

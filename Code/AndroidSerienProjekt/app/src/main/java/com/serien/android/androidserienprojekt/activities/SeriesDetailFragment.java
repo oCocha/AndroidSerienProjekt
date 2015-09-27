@@ -22,7 +22,7 @@ import com.parse.ParseQuery;
 import com.serien.android.androidserienprojekt.R;
 import com.serien.android.androidserienprojekt.domain.SeriesItem;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class SeriesDetailFragment extends Fragment {
@@ -70,19 +70,16 @@ public class SeriesDetailFragment extends Fragment {
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> list, ParseException e) {
-                if (e != null) {
-                } else {
-                    for (int i = 0; i < list.size(); i++) {
-                        if (list.get(i).getString("userName").equals(USERNAME)) {
-                            for (int j = 0; j < list.get(i).getJSONArray("series").length(); j++) {
-                                try {
-                                    tempString = list.get(i).getJSONArray("series").getString(j);
-                                } catch (Exception g) {
-                                }
-                                if (tempString.equals(serItem.getName())) {
-                                    list.get(i).removeAll("series", Arrays.asList(serItem.getName()));
-                                    list.get(i).saveInBackground();
-                                }
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.get(i).getString("userName").equals(USERNAME)) {
+                        for (int j = 0; j < list.get(i).getJSONArray("series").length(); j++) {
+                            try {
+                                tempString = list.get(i).getJSONArray("series").getString(j);
+                            } catch (Exception g) {
+                            }
+                            if (tempString.equals(serItem.getName())) {
+                                list.get(i).removeAll("series", Collections.singletonList(serItem.getName()));
+                                list.get(i).saveInBackground();
                             }
                         }
                     }
