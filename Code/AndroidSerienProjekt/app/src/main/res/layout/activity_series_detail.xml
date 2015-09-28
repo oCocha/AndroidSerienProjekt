@@ -4,9 +4,10 @@
     android:layout_height="fill_parent"
     android:background="@mipmap/bg_standart">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:padding="15dp"
         android:background="@drawable/rounded_corner_with_bg">
 
@@ -16,18 +17,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="30sp"
-            android:textColor="@color/black"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"/>
+            android:textColor="@color/black"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
 
         <ImageView
             android:id="@+id/detail_series_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/image_description"
-            android:padding="5dp"
-            android:layout_below="@id/detail_series_name"
-            android:layout_alignParentLeft="true"/>
+            android:padding="5dp"/>
 
 
 
@@ -36,16 +38,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
-            android:textSize="25sp"
+            android:textSize="23sp"
             android:text="@string/fragmentRating"
-            android:layout_toRightOf="@id/detail_series_image"
-            android:layout_below="@id/detail_series_name"/>
+            android:layout_toRightOf="@id/detail_series_image"/>
 
         <TextView
             android:id="@+id/detail_series_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:textSize="17sp"
             android:layout_toRightOf="@id/detail_series_image"
             android:layout_below="@id/rating_head"/>
 
@@ -56,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
-            android:textSize="25sp"
+            android:textSize="23sp"
             android:text="@string/fragmentYear"
             android:layout_toRightOf="@id/detail_series_image"
             android:layout_below="@id/detail_series_rating" />
@@ -65,11 +66,11 @@
             android:id="@+id/detail_series_year"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:textSize="17sp"
             android:layout_toRightOf="@id/detail_series_image"
             android:layout_below="@id/year_head"/>
 
-
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/actor_head"
@@ -78,15 +79,13 @@
             android:textColor="@color/black"
             android:textSize="25sp"
             android:layout_marginTop="15dp"
-            android:text="@string/fragmentActor"
-            android:layout_below="@id/detail_series_year" />
+            android:text="@string/fragmentActor" />
 
         <TextView
             android:id="@+id/detail_series_actors"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:layout_below="@id/actor_head"/>
+            android:textSize="18sp"/>
 
 
 
@@ -97,15 +96,13 @@
             android:textColor="@color/black"
             android:textSize="25sp"
             android:layout_marginTop="15dp"
-            android:text="@string/fragmentDescription"
-            android:layout_below="@id/detail_series_actors" />
+            android:text="@string/fragmentDescription"/>
 
         <TextView
             android:id="@+id/detail_series_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:layout_below="@id/plot_head"/>
+            android:textSize="18sp"/>
 
         <Button
             android:id="@+id/detail_add_button"
@@ -114,10 +111,8 @@
             android:layout_gravity="center"
             android:text="@string/addButton"
             android:layout_marginTop="20dp"
-            android:layout_below="@+id/detail_series_description"
-            android:layout_centerHorizontal="true"
             android:background="@drawable/style_for_buttons"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </ScrollView>

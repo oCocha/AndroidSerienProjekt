@@ -42,7 +42,7 @@ public class Top10Activity extends AppCompatActivity implements SeriesDataProvid
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_top30);
+        setContentView(R.layout.activity_top10);
 
         initDB();
         getDBData();
