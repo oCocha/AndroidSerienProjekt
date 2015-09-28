@@ -23,6 +23,7 @@
     <string name="series_Main">Start</string>
     <string name="series_Friend">Freunde</string>
     <string name="no_seasons">Leider ist die Liste für diese Serie nicht verfügbar.</string>
+    <string name="no_series_in_list">Sie haben keine Serien in ihrer persönlichen Serienliste!</string>
 
     <string name="title_activity_test">TestActivity</string>
     <string name="title_activity_search">Suche</string>

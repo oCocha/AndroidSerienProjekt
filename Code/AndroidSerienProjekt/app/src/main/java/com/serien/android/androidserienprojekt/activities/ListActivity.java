@@ -20,6 +20,7 @@ public class ListActivity extends AppCompatActivity {
 
     private SeriesRepository db;
     private ListView listView;
+    private TextView noSeriesInList;
 
 
     @Override
@@ -52,6 +53,10 @@ public class ListActivity extends AppCompatActivity {
     //Initialises the UI of the activity to show the seriesitems
     private void initUI() {
         listView = (ListView) findViewById(R.id.list_general);
+        noSeriesInList = (TextView) findViewById(R.id.no_list_available);
+        if(db.getAllSeriesItems().isEmpty()){
+            noSeriesInList.setVisibility(View.VISIBLE);
+        }
     }
 
 

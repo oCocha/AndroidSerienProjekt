@@ -12,4 +12,16 @@
         android:listSelector="#00000000"
         />
 
+    <TextView
+        android:id="@+id/no_list_available"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/no_series_in_list"
+        android:textSize="25sp"
+        android:layout_centerInParent="true"
+        android:padding="40dp"
+        android:gravity="center_horizontal"
+        android:textColor="@color/red"
+        android:visibility="gone" />
+
 </RelativeLayout>

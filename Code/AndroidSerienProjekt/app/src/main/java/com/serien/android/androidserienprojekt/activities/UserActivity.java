@@ -132,7 +132,7 @@ public class UserActivity extends Activity {
                 } else if(username.isEmpty()){
                     Toast.makeText(UserActivity.this, "Sie haben keinen validen Benutzernamen eingegeben!", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(UserActivity.this, "Benutzername nicht gefunden. Bitte geben Sie einen validen Usernamen ein oder registrieren Sie sich ", Toast.LENGTH_LONG).show();
+                    Toast.makeText(UserActivity.this, "Benutzername nicht gefunden. Bitte geben Sie einen validen Usernamen ein oder registrieren Sie sich. ", Toast.LENGTH_LONG).show();
                 }
             }
         });
